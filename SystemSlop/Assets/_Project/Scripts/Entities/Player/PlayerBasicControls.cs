@@ -37,6 +37,9 @@ public class PlayerBasicControls : MonoBehaviour
     private float _jumpTimeout = .1f;
     private float _jumpTimeoutDelta;
 
+    private float _fallTimeout = .15f;
+    private float _fallTimeoutDelta;
+
     private void OnEnable()
     {
         InputActions.FindActionMap("Player").Enable();
@@ -74,14 +77,10 @@ public class PlayerBasicControls : MonoBehaviour
         if (_jumpAction.WasPressedThisFrame())
         {
             Debug.Log("Jump");// Placeholder
+            _jumpRequested = true;
         }
     }
-   
-    private void GroundedCheck()
-    {
-
-    }
-
+  
     private void HandleMovement()
     {
         float targetSpeed = movementSpeed;
@@ -136,11 +135,73 @@ public class PlayerBasicControls : MonoBehaviour
         return direction.normalized;
     }
 
+    // --------------- GRAVITY & JUMP ---------------
+    private void GroundedCheck()
+    {
+        Vector3 spherePos = new Vector3(transform.position.x,
+                                        transform.position.y + groundedOffset,
+                                        transform.position.z);
 
-
+        _isGrounded = Physics.CheckSphere(
+            spherePos, groundedRadius, groundLayers, QueryTriggerInteraction.Ignore);
+    }
     private void HandleGravityAndJump()
     {
+        HandleGroundedState();
+        HandleJumpRequest();
+        ApplyGravity();
+       
+    }
+    private void HandleGroundedState()
+    {
+        if (_isGrounded)
+        {
+            _fallTimeoutDelta = _fallTimeout;
 
+            // Stick to the ground (prevent floaty behaviour)
+            if (_verticalVelocity < 0f) _verticalVelocity = -2f;
+        }
+        else
+        {
+
+            _jumpTimeoutDelta = _jumpTimeout;
+        }
+    }
+    private void HandleJumpRequest()
+    {
+        if (!_isGrounded) return;
+
+        if (_jumpTimeoutDelta > 0f)
+        {
+            _jumpTimeoutDelta -= Time.deltaTime;
+            return;
+        }
+        if (!_jumpRequested) return;
+
+        //EXECUTE JUMP
+        _verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+
+        _jumpRequested = false;
+        _jumpTimeoutDelta = _jumpTimeout;
+    }
+    private void ApplyGravity()
+    {
+        if (_verticalVelocity < terminalVelocity)
+        {
+            _verticalVelocity += gravity * Time.deltaTime;
+        }
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        if (!Application.isPlaying)
+            return;
+
+        Gizmos.color = _isGrounded ? Color.yellow : Color.red;
+
+        Vector3 spherePos = new Vector3(transform.position.x, transform.position.y + groundedOffset, transform.position.z);
+
+        Gizmos.DrawWireSphere(spherePos, groundedRadius);
+    }
 }
+
