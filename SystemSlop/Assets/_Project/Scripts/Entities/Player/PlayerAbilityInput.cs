@@ -39,8 +39,23 @@ public class PlayerAbilityInput : MonoBehaviour
 
     private void Update()
     {
-        if(_ability1.WasPressedThisFrame())
+        if (_ability1.WasPressedThisFrame())
+        {
+
             abilityUser.UseAbility(0, GetTarget());
+        }
+        if (_ability2.WasPressedThisFrame())
+        {
+            abilityUser.UseAbility(1, GetTarget());
+        }
+        if (_ability3.WasPressedThisFrame())
+        {
+            abilityUser.UseAbility(2, GetTarget());
+        }
+        if (_ability4.WasPressedThisFrame())
+        {
+            abilityUser.UseAbility(3, GetTarget());
+        }
     }
 
     private GameObject GetTarget()

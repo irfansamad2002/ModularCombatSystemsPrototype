@@ -17,3 +17,4 @@ MonoBehaviour:
   effects:
   - {fileID: 11400000, guid: 2ebed502e72e5bb4abcaeeb0d179aeab, type: 2}
   - {fileID: 11400000, guid: 13abe55a07d5d554291a03ee01807abb, type: 2}
+  projectile: {fileID: 11400000, guid: 142c179459eb79f41921cb566189c0bd, type: 2}

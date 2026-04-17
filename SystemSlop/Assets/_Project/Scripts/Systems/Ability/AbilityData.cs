@@ -7,4 +7,5 @@ public class AbilityData : ScriptableObject
     public float cooldown;
 
     public List<EffectData> effects;
+    public ProjectileData projectile;
 }
