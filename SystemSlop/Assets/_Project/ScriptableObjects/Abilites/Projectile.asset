@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd17e6f74ae58b54aa36ba9a749203a8, type: 3}
   m_Name: Projectile
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileData
-  prefab: {fileID: 1393702463764444104, guid: d38ea3d517081084196d253b447b6759, type: 3}
+  prefab: {fileID: 6528202118250364702, guid: 3d49b77a03a94544ba626ca012da64dd, type: 3}
   speed: 10
   lifetime: 5

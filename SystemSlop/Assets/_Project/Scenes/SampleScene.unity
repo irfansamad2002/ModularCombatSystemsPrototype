@@ -1090,6 +1090,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityUser
   abilities:
   - {fileID: 11400000, guid: 75b5d207da10823439a2277082ff9b5a, type: 2}
+  - {fileID: 11400000, guid: d3b7887de4a212743a8367d99d8e07a5, type: 2}
   firePoint: {fileID: 330585546}
 --- !u!1 &1376300507
 GameObject:
