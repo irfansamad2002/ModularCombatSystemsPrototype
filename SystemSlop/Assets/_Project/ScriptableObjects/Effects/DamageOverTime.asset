@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc9999b6fb4aebb4e9b4a32ed7abd0e6, type: 3}
-  m_Name: Burn
+  m_Name: DamageOverTime
   m_EditorClassIdentifier: Assembly-CSharp::BurnEffect
   tickRate: 1
   damagePerTick: 1

@@ -824,6 +824,7 @@ GameObject:
   - component: {fileID: 547920986}
   - component: {fileID: 547920985}
   - component: {fileID: 547920988}
+  - component: {fileID: 547920989}
   m_Layer: 0
   m_Name: Knife
   m_TagString: Untagged
@@ -846,6 +847,7 @@ MonoBehaviour:
   effects:
   - {fileID: 11400000, guid: 2ebed502e72e5bb4abcaeeb0d179aeab, type: 2}
   - {fileID: 11400000, guid: 13abe55a07d5d554291a03ee01807abb, type: 2}
+  abilityUser: {fileID: 547920989}
 --- !u!65 &547920986
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -910,6 +912,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &547920989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 547920984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69433e58ca1e5694ab3e671967896aec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityUser
+  abilities: []
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -970,6 +985,8 @@ GameObject:
   - component: {fileID: 946442420}
   - component: {fileID: 946442421}
   - component: {fileID: 946442422}
+  - component: {fileID: 946442423}
+  - component: {fileID: 946442424}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1044,6 +1061,36 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &946442423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946442419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0662e6b7dd45c541a4c7ac7c88b9113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAbilityInput
+  inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  abilityUser: {fileID: 946442424}
+--- !u!114 &946442424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946442419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69433e58ca1e5694ab3e671967896aec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityUser
+  abilities:
+  - {fileID: 11400000, guid: d3b7887de4a212743a8367d99d8e07a5, type: 2}
+  - {fileID: 11400000, guid: 75b5d207da10823439a2277082ff9b5a, type: 2}
+  - {fileID: 11400000, guid: 974b19cb345432a4ab83570f607c4896, type: 2}
 --- !u!1 &1376300507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1681,7 +1728,7 @@ GameObject:
   - component: {fileID: 6228014876553018916}
   m_Layer: 0
   m_Name: Dummy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1823,7 +1870,7 @@ Transform:
   m_GameObject: {fileID: 2401986240924086302}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: -0.9500003, z: 4.9513593}
+  m_LocalPosition: {x: 0, y: -1, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2462,8 +2509,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2196177297133997642}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000014106499, y: -2.2547471e-17, z: -1.3372032e-16, w: 1}
-  m_LocalPosition: {x: -7.116815e-10, y: 4.1128104e-10, z: 7.3134127e-10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

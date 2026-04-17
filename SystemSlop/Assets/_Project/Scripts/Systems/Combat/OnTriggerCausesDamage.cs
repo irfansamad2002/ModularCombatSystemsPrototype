@@ -4,6 +4,7 @@ using UnityEngine;
 public class OnTriggerCausesDamage : MonoBehaviour
 {
     [SerializeField] private List<EffectData> effects;
+    [SerializeField] private AbilityUser abilityUser;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -12,15 +13,20 @@ public class OnTriggerCausesDamage : MonoBehaviour
         var health = other.GetComponent<Health>();
         if (health == null) return;
         
-        foreach (var effect in effects)
+        //foreach (var effect in effects)
+        //{
+        //    if (effect == null)
+        //    {
+        //        Debug.Log("effect at Element " + effects.IndexOf(effect) + " is null, skipping");
+        //        continue;
+        //    }
+        //    effect.Apply(other.gameObject);
+        //}
+
+        if (abilityUser != null)
         {
-            if (effect == null)
-            {
-                Debug.Log("effect at Element " + effects.IndexOf(effect) + " is null, skipping");
-                continue;
-            }
-            effect.Apply(other.gameObject);
+            abilityUser.UseAbility(0, other.gameObject);
         }
-        
+
     }
 }
