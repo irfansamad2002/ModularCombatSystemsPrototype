@@ -41,7 +41,6 @@ public class PlayerAbilityInput : MonoBehaviour
     {
         if (_ability1.WasPressedThisFrame())
         {
-
             abilityUser.UseAbility(0, GetTarget());
         }
         if (_ability2.WasPressedThisFrame())
