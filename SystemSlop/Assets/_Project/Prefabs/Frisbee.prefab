@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2547805885534404598}
   - component: {fileID: 78646295130510787}
   - component: {fileID: -6370142362439198448}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Frisbee
   m_TagString: Untagged
   m_Icon: {fileID: 0}

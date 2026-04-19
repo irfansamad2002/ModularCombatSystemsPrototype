@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AbilityUser : MonoBehaviour
 {
     [SerializeField] private List<AbilityData> abilities;
     [SerializeField] private Transform firePoint;
+    [SerializeField] private float offsetForFirePointZAxis = 1f;
 
     private Dictionary<AbilityData, float> _cooldowns = new Dictionary<AbilityData, float>();
 
@@ -70,12 +72,14 @@ public class AbilityUser : MonoBehaviour
     {
         var projectileGO = Instantiate(
             ability.projectile.prefab,
-            firePoint.position,
+            firePoint.position + firePoint.forward * offsetForFirePointZAxis    ,
             firePoint.rotation
         );
 
         var projectile = projectileGO.GetComponent<Projectile>();
-        projectile.Init(ability.effects, ability.projectile.speed);
+        projectile.Init(ability.effects, ability.projectile.speed, ability.projectile.explosionRadius, ability.projectile.targetLayers);
+        var playerCollider = GetComponent<Collider>();
+        projectile.SetOwner(playerCollider);
         Destroy(projectileGO, ability.projectile.lifetime);
     }
 
@@ -103,6 +107,8 @@ public class AbilityUser : MonoBehaviour
             GUILayout.Label($"{kvp.Key.name}: {kvp.Value:F2}");
         }
     }
+
+    
 
 
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fireball
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   abilityName: Fireball
-  cooldown: 3
+  cooldown: 0
   effects:
   - {fileID: 11400000, guid: 2ebed502e72e5bb4abcaeeb0d179aeab, type: 2}
   - {fileID: 11400000, guid: 13abe55a07d5d554291a03ee01807abb, type: 2}

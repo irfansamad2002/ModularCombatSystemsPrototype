@@ -15,3 +15,7 @@ MonoBehaviour:
   prefab: {fileID: 6528202118250364702, guid: 3d49b77a03a94544ba626ca012da64dd, type: 3}
   speed: 10
   lifetime: 5
+  explosionRadius: 1
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 128
