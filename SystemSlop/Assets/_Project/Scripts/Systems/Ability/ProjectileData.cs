@@ -9,4 +9,6 @@ public class ProjectileData : ScriptableObject
     [Header("AOE")]
     public float explosionRadius = 0f;
     public LayerMask targetLayers;
+    [Header("VFX")]
+    public GameObject impactVFX;
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -9,6 +10,7 @@ public class Projectile : MonoBehaviour
     private LayerMask _targetLayers;
     private Collider _ownerCollider;
     private bool _hasHit;
+    private GameObject _impactVFX;
 
     public void SetOwner(Collider owner)
     {
@@ -20,12 +22,13 @@ public class Projectile : MonoBehaviour
         }   
     }
 
-    public void Init(List<EffectData> effects, float speed, float radius, LayerMask layers)
+    public void Init(List<EffectData> effects, float speed, float radius, LayerMask layers, GameObject impactVFX)
     {
         _effects = effects;
         _speed = speed;
         _explosionRadius = radius;
         _targetLayers = layers;
+        _impactVFX = impactVFX;
     }
 
     private void Update()
@@ -56,6 +59,8 @@ public class Projectile : MonoBehaviour
     }
     private void Explode()
     {
+        SpawnImpactVFX();
+
         // draw debug sphere at impact point
         DebugDrawSphere(transform.position, _explosionRadius, Color.yellow, 2f);
 
@@ -94,5 +99,18 @@ public class Projectile : MonoBehaviour
 
             Debug.DrawLine(p1, p2, color, duration);
         }
+    }
+
+    private void SpawnImpactVFX()
+    {
+        if(_impactVFX == null) return;
+
+        var vfx = Instantiate(_impactVFX, transform.position, Quaternion.identity);
+
+        //scale to match explosion raidus
+        float diameter = _explosionRadius * 2f;
+        vfx.transform.localScale = Vector3.one * diameter;
+
+        Destroy(vfx, 2f);// Cleanup
     }
 }

@@ -72,12 +72,12 @@ public class AbilityUser : MonoBehaviour
     {
         var projectileGO = Instantiate(
             ability.projectile.prefab,
-            firePoint.position + firePoint.forward * offsetForFirePointZAxis    ,
+            firePoint.position + firePoint.forward * offsetForFirePointZAxis,
             firePoint.rotation
         );
 
         var projectile = projectileGO.GetComponent<Projectile>();
-        projectile.Init(ability.effects, ability.projectile.speed, ability.projectile.explosionRadius, ability.projectile.targetLayers);
+        projectile.Init(ability.effects, ability.projectile.speed, ability.projectile.explosionRadius, ability.projectile.targetLayers, ability.projectile.impactVFX);
         var playerCollider = GetComponent<Collider>();
         projectile.SetOwner(playerCollider);
         Destroy(projectileGO, ability.projectile.lifetime);
