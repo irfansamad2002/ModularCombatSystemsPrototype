@@ -77,9 +77,9 @@ public class AbilityUser : MonoBehaviour
         );
 
         var projectile = projectileGO.GetComponent<Projectile>();
-        projectile.Init(ability.effects, ability.projectile.speed, ability.projectile.explosionRadius, ability.projectile.targetLayers, ability.projectile.impactVFX);
+        projectile.Init(ability.effects, ability.projectile.speed, ability.projectile.explosionRadius, ability.projectile.targetLayers, ability.projectile.impactVFX, ability.projectile.minDistanceThreshold, ability.projectile.minFalloff);
         var playerCollider = GetComponent<Collider>();
-        projectile.SetOwner(playerCollider);
+        //projectile.SetOwner(playerCollider);
         Destroy(projectileGO, ability.projectile.lifetime);
     }
 

@@ -16,6 +16,8 @@ MonoBehaviour:
   speed: 10
   lifetime: 5
   explosionRadius: 1
+  minDistanceThreshold: 0.1
+  minFalloff: 0.1
   targetLayers:
     serializedVersion: 2
     m_Bits: 128

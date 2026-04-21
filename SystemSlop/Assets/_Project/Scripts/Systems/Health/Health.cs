@@ -2,17 +2,18 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    public int maxHealth = 100;
-    public int currentHealth;
+    public float maxHealth = 100f;
+    public float currentHealth;
 
     private void Awake()
     {
         currentHealth = maxHealth;
     }
     
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         //Debug.Log($"{gameObject.name} took {damage} damage. Current health: {currentHealth}");
 
         if (currentHealth <= 0)

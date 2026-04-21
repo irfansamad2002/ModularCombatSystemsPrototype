@@ -1,33 +1,29 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    [SerializeField] private Material transparentMaterial;
     private List<EffectData> _effects;
     private float _speed;
     private float _explosionRadius;
-    private LayerMask _targetLayers;
-    private Collider _ownerCollider;
-    private bool _hasHit;
+    private LayerMask _damageLayers;
     private GameObject _impactVFX;
+    private float _minDistanceThreshold;
+    private float _minFalloff;
 
-    public void SetOwner(Collider owner)
-    {
-        _ownerCollider = owner; 
-        var myCollider = GetComponent<Collider>();
-        if(myCollider != null && _ownerCollider != null)
-        {
-            Physics.IgnoreCollision(myCollider, _ownerCollider);
-        }   
-    }
+    private bool _hasHit;
 
-    public void Init(List<EffectData> effects, float speed, float radius, LayerMask layers, GameObject impactVFX)
+    
+
+    public void Init(List<EffectData> effects, float speed, float radius, LayerMask damageLayers, GameObject impactVFX, float minDistanceThreshold, float minFalloff)
     {
         _effects = effects;
         _speed = speed;
         _explosionRadius = radius;
-        _targetLayers = layers;
+        _damageLayers = damageLayers;
+        _minDistanceThreshold = minDistanceThreshold;
+        _minFalloff = minFalloff;
         _impactVFX = impactVFX;
     }
 
@@ -40,72 +36,78 @@ public class Projectile : MonoBehaviour
     {
         if(_hasHit) return; // prevent multiple hits
         _hasHit = true;
-        if (_effects == null) return;
 
-        if (_explosionRadius > 0f)
-        {
-            Explode();
-        }
-        else
-        {
-            // single target still needs filtering
-            if (((1 << other.gameObject.layer) & _targetLayers) != 0)
-            {
-                ApplyEffects(other.gameObject);
-            }
-        }
+        Explode();
 
+        
+        SpawnDebugSphere(transform.position, _explosionRadius);
         Destroy(gameObject);
+
     }
     private void Explode()
     {
-        SpawnImpactVFX();
+        Vector3 explosionCenter = transform.position;
 
-        // draw debug sphere at impact point
-        DebugDrawSphere(transform.position, _explosionRadius, Color.yellow, 2f);
+        SpawnImpactVFX(explosionCenter);
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, _explosionRadius, _targetLayers);
+        Collider[] hitColliders = Physics.OverlapSphere(explosionCenter, _explosionRadius, _damageLayers);
 
-        foreach (Collider hit in hitColliders)
+        foreach (var hitCollider in hitColliders)
         {
-            ApplyEffects(hit.gameObject);
+           
+            ApplyAOE(hitCollider, explosionCenter);
         }
     }
 
-    private void ApplyEffects(GameObject target)
+    private void ApplyAOE(Collider hitCollider, Vector3 explosionCenter)
     {
-        var health = target.GetComponent<Health>();
-        if (health == null) return;
+        var health = hitCollider.GetComponent<Health>();
+        if(health == null) return;
+
+        float distance = Vector3.Distance(explosionCenter, hitCollider.ClosestPoint(explosionCenter));
+
+        if(distance <= _minDistanceThreshold)
+        {
+            distance = 0f; // treat as direct hit
+        }
+
+        float normalized = distance / _explosionRadius;
+        normalized = Mathf.Clamp01(normalized);
+
+        float falloff = Mathf.Pow(1f - normalized, .5f); // quadratic falloff
+
+        falloff = Mathf.Max(falloff, _minFalloff); // ensure minimum effect
 
         foreach (var effect in _effects)
         {
-            effect.Apply(target);
+            effect.Apply(health.gameObject, falloff);
         }
-        
+
     }
 
-    void DebugDrawSphere(Vector3 center, float radius, Color color, float duration)
+   
+    private void SpawnDebugSphere(Vector3 position, float radius)
     {
-        int segments = 20;
-        float angleStep = 360f / segments;
+        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
-        for (int i = 0; i < segments; i++)
-        {
-            float angle1 = Mathf.Deg2Rad * (i * angleStep);
-            float angle2 = Mathf.Deg2Rad * ((i + 1) * angleStep);
+        sphere.transform.position = position;
+        sphere.transform.localScale = Vector3.one * radius * 2f; // scale to match explosion radius
 
-            Vector3 p1 = center + new Vector3(Mathf.Cos(angle1), 0, Mathf.Sin(angle1)) * radius;
-            Vector3 p2 = center + new Vector3(Mathf.Cos(angle2), 0, Mathf.Sin(angle2)) * radius;
+        // remove collider so it doesn't interfere
+        Destroy(sphere.GetComponent<Collider>());
 
-            Debug.DrawLine(p1, p2, color, duration);
-        }
+        // optional: make it semi-transparent
+        var renderer = sphere.GetComponent<Renderer>();
+        renderer.material = transparentMaterial;
+
+        Destroy(sphere, 1f); // auto cleanup
     }
 
-    private void SpawnImpactVFX()
+    private void SpawnImpactVFX(Vector3 position)
     {
         if(_impactVFX == null) return;
 
-        var vfx = Instantiate(_impactVFX, transform.position, Quaternion.identity);
+        var vfx = Instantiate(_impactVFX, position, Quaternion.identity);
 
         //scale to match explosion raidus
         float diameter = _explosionRadius * 2f;

@@ -4920,7 +4920,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.38
+  m_Radius: 0.11
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &7597892640657537508
 Rigidbody:
@@ -4961,3 +4961,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c27c30ffe0e93754a84e8f85576af9b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
+  transparentMaterial: {fileID: 2100000, guid: f9c0d1d464da298458562a96a3dcf080, type: 2}

@@ -3,16 +3,16 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Effects/Damage")]
 public class DamageEffect : EffectData
 {
-    public int damage;
+    public float damage;
 
-    public override void Apply(GameObject target)
+    public override void Apply(GameObject target, float multiplier = 1f)
     {
         var health = target.GetComponent<Health>();
+        if (health == null) return;
 
-        if ((health != null))
-        {
-            Debug.Log("DamageEffect applied to " + target.name + " for " + damage + " damage.");
-            health.TakeDamage(damage);
-        }
+        float finalDamage = damage * multiplier;
+        health.TakeDamage(finalDamage);
+        Debug.Log($"Applied {finalDamage} damage to {target.name}");
+
     }
 }

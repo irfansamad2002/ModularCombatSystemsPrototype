@@ -8,7 +8,7 @@ public class DamageOverTimeEffect : EffectData
     public int damagePerTick;
     public float duration;
 
-    public override void Apply(GameObject target)
+    public override void Apply(GameObject target, float multiplier = 1f)
     {
         var health = target.GetComponent<Health>();
         if (health != null)
