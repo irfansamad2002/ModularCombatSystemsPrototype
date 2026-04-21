@@ -1,20 +1,20 @@
 # High Level Architecture
 Player Input
-    ↓
+    →
 AbilityUser
-    ↓
+    →
 AbilityData (ScriptableObject)
-    ↓
+    →
 Projectile (spawned)
-    ↓
+    →
 OnTriggerEnter → Explode
-    ↓
+    →
 OverlapSphere (AoE detection)
-    ↓
+    →
 Falloff Calculation
-    ↓
+    →
 EffectData.Apply(target, multiplier)
-    ↓
+    →
 Health.TakeDamage()
 
 # Input → Ability
