@@ -1,26 +1,30 @@
+using Project.Core.Health;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBar : MonoBehaviour
+namespace Project.Core.Health
 {
-    [SerializeField] private Health health;
-    [SerializeField] private Image fillImage;
-
-    private Camera cam;
-
-    private void Start()
+    public class HealthBar : MonoBehaviour
     {
-        cam = Camera.main;
-    }
+        [SerializeField] private Health health;
+        [SerializeField] private Image fillImage;
 
-    private void Update()
-    {
-        float ratio = health.maxHealth > 0 ? (float)health.currentHealth / health.maxHealth : 0f;
-        fillImage.fillAmount = ratio;
-    }
+        private Camera cam;
 
-    private void LateUpdate()
-    {
-        transform.forward = cam.transform.forward; 
+        private void Start()
+        {
+            cam = Camera.main;
+        }
+
+        private void Update()
+        {
+            float ratio = health.maxHealth > 0 ? (float)health.currentHealth / health.maxHealth : 0f;
+            fillImage.fillAmount = ratio;
+        }
+
+        private void LateUpdate()
+        {
+            transform.forward = cam.transform.forward;
+        }
     }
 }

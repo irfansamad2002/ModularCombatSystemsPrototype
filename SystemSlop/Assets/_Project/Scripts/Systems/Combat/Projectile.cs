@@ -1,118 +1,123 @@
+using Project.Core.Health;
+using Project.Systems.Effects;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+namespace Project.Systems.Combat
 {
-    [SerializeField] private Material transparentMaterial;
-    private List<EffectData> _effects;
-    private float _speed;
-    private float _explosionRadius;
-    private LayerMask _damageLayers;
-    private GameObject _impactVFX;
-    private float _minDistanceThreshold;
-    private float _minFalloff;
-
-    private bool _hasHit;
-
-    
-
-    public void Init(List<EffectData> effects, float speed, float radius, LayerMask damageLayers, GameObject impactVFX, float minDistanceThreshold, float minFalloff)
+    public class Projectile : MonoBehaviour
     {
-        _effects = effects;
-        _speed = speed;
-        _explosionRadius = radius;
-        _damageLayers = damageLayers;
-        _minDistanceThreshold = minDistanceThreshold;
-        _minFalloff = minFalloff;
-        _impactVFX = impactVFX;
-    }
+        [SerializeField] private Material transparentMaterial;
+        private List<EffectData> _effects;
+        private float _speed;
+        private float _explosionRadius;
+        private LayerMask _damageLayers;
+        private GameObject _impactVFX;
+        private float _minDistanceThreshold;
+        private float _minFalloff;
 
-    private void Update()
-    {
-        transform.position += transform.forward * _speed * Time.deltaTime;
-    }
+        private bool _hasHit;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(_hasHit) return; // prevent multiple hits
-        _hasHit = true;
 
-        Explode();
 
-        
-        SpawnDebugSphere(transform.position, _explosionRadius);
-        Destroy(gameObject);
-
-    }
-    private void Explode()
-    {
-        Vector3 explosionCenter = transform.position;
-
-        SpawnImpactVFX(explosionCenter);
-
-        Collider[] hitColliders = Physics.OverlapSphere(explosionCenter, _explosionRadius, _damageLayers);
-
-        foreach (var hitCollider in hitColliders)
+        public void Init(List<EffectData> effects, float speed, float radius, LayerMask damageLayers, GameObject impactVFX, float minDistanceThreshold, float minFalloff)
         {
-           
-            ApplyAOE(hitCollider, explosionCenter);
-        }
-    }
-
-    private void ApplyAOE(Collider hitCollider, Vector3 explosionCenter)
-    {
-        var health = hitCollider.GetComponent<Health>();
-        if(health == null) return;
-
-        float distance = Vector3.Distance(explosionCenter, hitCollider.ClosestPoint(explosionCenter));
-
-        if(distance <= _minDistanceThreshold)
-        {
-            distance = 0f; // treat as direct hit
+            _effects = effects;
+            _speed = speed;
+            _explosionRadius = radius;
+            _damageLayers = damageLayers;
+            _minDistanceThreshold = minDistanceThreshold;
+            _minFalloff = minFalloff;
+            _impactVFX = impactVFX;
         }
 
-        float normalized = distance / _explosionRadius;
-        normalized = Mathf.Clamp01(normalized);
-
-        float falloff = Mathf.Pow(1f - normalized, .5f); // quadratic falloff
-
-        falloff = Mathf.Max(falloff, _minFalloff); // ensure minimum effect
-
-        foreach (var effect in _effects)
+        private void Update()
         {
-            effect.Apply(health.gameObject, falloff);
+            transform.position += transform.forward * _speed * Time.deltaTime;
         }
 
-    }
+        private void OnTriggerEnter(Collider other)
+        {
+            if (_hasHit) return; // prevent multiple hits
+            _hasHit = true;
 
-   
-    private void SpawnDebugSphere(Vector3 position, float radius)
-    {
-        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            Explode();
 
-        sphere.transform.position = position;
-        sphere.transform.localScale = Vector3.one * radius * 2f; // scale to match explosion radius
 
-        // remove collider so it doesn't interfere
-        Destroy(sphere.GetComponent<Collider>());
+            SpawnDebugSphere(transform.position, _explosionRadius);
+            Destroy(gameObject);
 
-        // optional: make it semi-transparent
-        var renderer = sphere.GetComponent<Renderer>();
-        renderer.material = transparentMaterial;
+        }
+        private void Explode()
+        {
+            Vector3 explosionCenter = transform.position;
 
-        Destroy(sphere, 1f); // auto cleanup
-    }
+            SpawnImpactVFX(explosionCenter);
 
-    private void SpawnImpactVFX(Vector3 position)
-    {
-        if(_impactVFX == null) return;
+            Collider[] hitColliders = Physics.OverlapSphere(explosionCenter, _explosionRadius, _damageLayers);
 
-        var vfx = Instantiate(_impactVFX, position, Quaternion.identity);
+            foreach (var hitCollider in hitColliders)
+            {
 
-        //scale to match explosion raidus
-        float diameter = _explosionRadius * 2f;
-        vfx.transform.localScale = Vector3.one * diameter;
+                ApplyAOE(hitCollider, explosionCenter);
+            }
+        }
 
-        Destroy(vfx, 2f);// Cleanup
+        private void ApplyAOE(Collider hitCollider, Vector3 explosionCenter)
+        {
+            var health = hitCollider.GetComponent<Health>();
+            if (health == null) return;
+
+            float distance = Vector3.Distance(explosionCenter, hitCollider.ClosestPoint(explosionCenter));
+
+            if (distance <= _minDistanceThreshold)
+            {
+                distance = 0f; // treat as direct hit
+            }
+
+            float normalized = distance / _explosionRadius;
+            normalized = Mathf.Clamp01(normalized);
+
+            float falloff = Mathf.Pow(1f - normalized, .5f); // quadratic falloff
+
+            falloff = Mathf.Max(falloff, _minFalloff); // ensure minimum effect
+
+            foreach (var effect in _effects)
+            {
+                effect.Apply(health.gameObject, falloff);
+            }
+
+        }
+
+
+        private void SpawnDebugSphere(Vector3 position, float radius)
+        {
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+            sphere.transform.position = position;
+            sphere.transform.localScale = Vector3.one * radius * 2f; // scale to match explosion radius
+
+            // remove collider so it doesn't interfere
+            Destroy(sphere.GetComponent<Collider>());
+
+            // optional: make it semi-transparent
+            var renderer = sphere.GetComponent<Renderer>();
+            renderer.material = transparentMaterial;
+
+            Destroy(sphere, 1f); // auto cleanup
+        }
+
+        private void SpawnImpactVFX(Vector3 position)
+        {
+            if (_impactVFX == null) return;
+
+            var vfx = Instantiate(_impactVFX, position, Quaternion.identity);
+
+            //scale to match explosion raidus
+            float diameter = _explosionRadius * 2f;
+            vfx.transform.localScale = Vector3.one * diameter;
+
+            Destroy(vfx, 2f);// Cleanup
+        }
     }
 }

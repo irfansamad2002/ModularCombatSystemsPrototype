@@ -1,29 +1,32 @@
 using UnityEngine;
 
-public class DamageNumberSpawner : MonoBehaviour
+namespace Project.Systems.UI.DamageNumbers
 {
-    public static DamageNumberSpawner Instance;
-
-    [SerializeField] private DamageNumber prefab;
-    private Transform _canvas;
-
-
-    private void Awake()
+    public class DamageNumberSpawner : MonoBehaviour
     {
-        if (Instance != null && Instance != this)
+        public static DamageNumberSpawner Instance;
+
+        [SerializeField] private DamageNumber prefab;
+        private Transform _canvas;
+
+
+        private void Awake()
         {
-            Debug.LogError("Multiple DamageNumberSpawners in scene!");
-            Destroy(gameObject);
-            return;
+            if (Instance != null && Instance != this)
+            {
+                Debug.LogError("Multiple DamageNumberSpawners in scene!");
+                Destroy(gameObject);
+                return;
+            }
+            _canvas = transform;
+            Instance = this;
         }
-        _canvas = transform;
-        Instance = this;
-    }
 
-    public void Spawn(float damage, Vector3 worldPos)
-    {
-        var obj = Instantiate(prefab, _canvas);
-        obj.transform.position = worldPos;
-        obj.Setup(damage);
+        public void Spawn(float damage, Vector3 worldPos)
+        {
+            var obj = Instantiate(prefab, _canvas);
+            obj.transform.position = worldPos;
+            obj.Setup(damage);
+        }
     }
 }

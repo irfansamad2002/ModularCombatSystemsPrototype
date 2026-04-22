@@ -1,3 +1,5 @@
+using Project.Core.Health;
+using Project.Systems.Effects;
 using System.Collections;
 using UnityEngine;
 //TODO: Refactor using Status effect System & Buff/Debuff handlers

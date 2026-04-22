@@ -1,3 +1,5 @@
+using Project.Core.Health;
+using Project.Systems.Effects;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Effects/Damage")]

@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public abstract class EffectData : ScriptableObject
+namespace Project.Systems.Effects
 {
-    public abstract void Apply(GameObject target, float multiplier = 1f);
+    public abstract class EffectData : ScriptableObject
+    {
+        public abstract void Apply(GameObject target, float multiplier = 1f);
+    }
 }
