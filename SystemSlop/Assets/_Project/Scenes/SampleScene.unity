@@ -1334,8 +1334,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 249208843697698491, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1373936102}
   m_SourcePrefab: {fileID: 100100000, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
+--- !u!1 &1373936101 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 249208843697698491, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
+  m_PrefabInstance: {fileID: 1373936100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1373936102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373936101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71235538621ee254dbe08047b33bed9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Systems.Effects.EffectHandler
 --- !u!1 &1376300507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1572,8 +1592,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 249208843697698491, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8608220831557622667}
   m_SourcePrefab: {fileID: 100100000, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
+--- !u!1 &8608220831557622666 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 249208843697698491, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
+  m_PrefabInstance: {fileID: 8608220831557622665}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8608220831557622667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8608220831557622666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71235538621ee254dbe08047b33bed9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Systems.Effects.EffectHandler
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,0 +1,24 @@
+using UnityEngine;
+
+namespace Project.Systems.Effects
+{
+    [CreateAssetMenu(menuName = "Effects/Burn")]
+    public class BurnEffect : EffectData
+    {
+        public float damagePerTick = 1f;
+        public float tickRate = 1f;
+        public float duration = 5f;
+
+
+        public override void Apply(GameObject target, float multiplier = 1)
+        {
+            var handler = target.GetComponent<EffectHandler>();
+            if (handler == null) return;
+
+            var instance = new BurnInstance(damagePerTick * multiplier, tickRate, duration);
+            instance.Init(target, duration);
+
+            handler.AddEffect(instance);
+        }
+    }
+}
