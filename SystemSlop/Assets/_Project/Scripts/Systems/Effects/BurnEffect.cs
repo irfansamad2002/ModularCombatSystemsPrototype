@@ -15,7 +15,11 @@ namespace Project.Systems.Effects
             var handler = target.GetComponent<EffectHandler>();
             if (handler == null) return;
 
-            var instance = new BurnInstance(damagePerTick * multiplier, tickRate, duration);
+            var instance = new BurnInstance(
+                damagePerTick * multiplier,
+                tickRate,
+                duration);
+
             instance.Init(target, duration);
 
             handler.AddEffect(instance);

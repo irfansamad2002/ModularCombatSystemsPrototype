@@ -4,6 +4,8 @@ namespace Project.Systems.Effects
 {
     public abstract class EffectInstance
     {
+        public string EffectId { get; protected set; }
+
         protected GameObject _target;
         protected float _duration;
         protected float _timer;
@@ -25,6 +27,8 @@ namespace Project.Systems.Effects
         {
             return _timer >= _duration;
         }
+
+        public virtual void OnReapply(EffectInstance newInstance) { }
 
         protected abstract void OnStart();
         protected abstract void OnTick(float deltaTime);

@@ -23,9 +23,17 @@ namespace Project.Systems.Effects
             }
         }
 
-        public void AddEffect(EffectInstance instance)
+        public void AddEffect(EffectInstance newEffect)
         {
-            _activeEffects.Add(instance);
+            for (int i = 0; i < _activeEffects.Count; i++)
+            {
+                if (_activeEffects[i].EffectId == newEffect.EffectId)
+                {
+                    _activeEffects[i].OnReapply(newEffect);
+                    return;
+                }
+            }
+            _activeEffects.Add(newEffect);
         }
     }
 }
