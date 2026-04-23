@@ -991,7 +991,7 @@ GameObject:
   - component: {fileID: 946442424}
   m_Layer: 9
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1338,6 +1338,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 249208843697698491, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1373936102}
+    - targetCorrespondingSourceObject: {fileID: 249208843697698491, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1373936107}
   m_SourcePrefab: {fileID: 100100000, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
 --- !u!1 &1373936101 stripped
 GameObject:
@@ -1356,6 +1359,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71235538621ee254dbe08047b33bed9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project.Systems.Effects.EffectHandler
+--- !u!114 &1373936107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373936101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd3d9308da5d09945a63a3df38928e99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleEnemyAI
+  target: {fileID: 0}
+  baseMoveSpeed: 1
+  stopDistance: 1.5
 --- !u!1 &1376300507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1596,6 +1614,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 249208843697698491, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8608220831557622667}
+    - targetCorrespondingSourceObject: {fileID: 249208843697698491, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8608220831557622672}
   m_SourcePrefab: {fileID: 100100000, guid: 696ce4f42e52ac44b88621e6f802380a, type: 3}
 --- !u!1 &8608220831557622666 stripped
 GameObject:
@@ -1614,6 +1635,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71235538621ee254dbe08047b33bed9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project.Systems.Effects.EffectHandler
+--- !u!114 &8608220831557622672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8608220831557622666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd3d9308da5d09945a63a3df38928e99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleEnemyAI
+  target: {fileID: 0}
+  baseMoveSpeed: 1
+  stopDistance: 1.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

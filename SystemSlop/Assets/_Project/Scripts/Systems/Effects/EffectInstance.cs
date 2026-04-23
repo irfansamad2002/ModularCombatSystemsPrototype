@@ -29,6 +29,7 @@ namespace Project.Systems.Effects
         }
 
         public virtual void OnReapply(EffectInstance newInstance) { }
+        public virtual void OnEnd() { }
 
         protected abstract void OnStart();
         protected abstract void OnTick(float deltaTime);

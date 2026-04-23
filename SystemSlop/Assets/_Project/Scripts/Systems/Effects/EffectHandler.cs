@@ -18,6 +18,7 @@ namespace Project.Systems.Effects
 
                 if(effects.IsFinished())
                 {
+                    effects.OnEnd();
                     _activeEffects.RemoveAt(i);
                 }
             }
