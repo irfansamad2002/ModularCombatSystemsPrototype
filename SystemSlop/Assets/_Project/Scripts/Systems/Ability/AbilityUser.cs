@@ -13,7 +13,13 @@ namespace Project.Systems.Ability
         [SerializeField] private Transform firePoint;
         [SerializeField] private float offsetForFirePointZAxis = 1f;
 
-        private Dictionary<AbilityData, float> _cooldowns = new Dictionary<AbilityData, float>();
+        //private Dictionary<AbilityData, float> _cooldowns = new Dictionary<AbilityData, float>();
+        private float[] _cooldowns;
+
+        private void Awake()
+        {
+            _cooldowns = new float[abilities.Count];
+        }
 
         public void UseAbility(int index, GameObject target)
         {
@@ -31,14 +37,14 @@ namespace Project.Systems.Ability
 
             var ability = abilities[index];
 
-            if (IsOnCooldown(ability))
+            if (IsOnCooldown(index))
             {
                 Debug.Log($"Ability {ability.abilityName} is on cooldown");
                 return;
             }
 
             ExecuteAbility(ability, target);
-            StartCooldown(ability);
+            StartCooldown(index,ability);
 
 
         }
@@ -61,14 +67,14 @@ namespace Project.Systems.Ability
             }
         }
 
-        private bool IsOnCooldown(AbilityData ability)
+        private bool IsOnCooldown(int index)
         {
-            return _cooldowns.ContainsKey(ability);
+            return _cooldowns[index] > 0f;
         }
 
-        private void StartCooldown(AbilityData ability)
+        private void StartCooldown(int index, AbilityData ability)
         {
-            _cooldowns[ability] = ability.cooldown;
+            _cooldowns[index] = ability.cooldown;
         }
 
 
@@ -89,15 +95,16 @@ namespace Project.Systems.Ability
 
         private void Update()
         {
-            var keys = new List<AbilityData>(_cooldowns.Keys);
-
-            foreach (var ability in keys)
+            for (int i = 0; i < _cooldowns.Length; i++)
             {
-                _cooldowns[ability] -= Time.deltaTime;
-
-                if (_cooldowns[ability] <= 0)
+                if (_cooldowns[i] > 0f)
                 {
-                    _cooldowns.Remove(ability);
+                    _cooldowns[i] -= Time.deltaTime;
+
+                    if (_cooldowns[i] < 0f)
+                    {
+                        _cooldowns[i] = 0f;
+                    }
                 }
             }
         }
@@ -106,9 +113,9 @@ namespace Project.Systems.Ability
         {
             GUILayout.Label("Cooldowns:");
 
-            foreach (var kvp in _cooldowns)
+            for( int i = 0; i < abilities.Count; i++)
             {
-                GUILayout.Label($"{kvp.Key.name}: {kvp.Value:F2}");
+                GUILayout.Label($"{abilities[i].abilityName}: {_cooldowns[i]:F2}");
             }
         }
 
