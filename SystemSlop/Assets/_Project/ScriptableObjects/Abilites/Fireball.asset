@@ -15,5 +15,6 @@ MonoBehaviour:
   abilityName: Fireball
   cooldown: 0
   effects:
+  - {fileID: 11400000, guid: 2ebed502e72e5bb4abcaeeb0d179aeab, type: 2}
   - {fileID: 11400000, guid: 4926fe30ee46b324f9dc64997e8467c4, type: 2}
   projectile: {fileID: 11400000, guid: 142c179459eb79f41921cb566189c0bd, type: 2}

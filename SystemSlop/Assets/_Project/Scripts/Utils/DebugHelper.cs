@@ -1,16 +1,9 @@
 using UnityEngine;
 
-public class DebugHelper : MonoBehaviour
+public class DebugHelper
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+   public static void WarnMissing(GameObject target, string componentName)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Debug.LogWarning($"[{componentName}] Missing on {target.name}", target);
     }
 }

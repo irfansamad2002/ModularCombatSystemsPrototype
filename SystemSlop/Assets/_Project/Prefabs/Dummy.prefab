@@ -43,6 +43,8 @@ GameObject:
   - component: {fileID: 2049503252749674498}
   - component: {fileID: 4424049002847977702}
   - component: {fileID: 8442361778099903249}
+  - component: {fileID: 8080094643411389951}
+  - component: {fileID: 7694132181892235861}
   m_Layer: 7
   m_Name: Dummy
   m_TagString: Enemy
@@ -127,6 +129,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
   currentHealth: 0
+--- !u!114 &8080094643411389951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249208843697698491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71235538621ee254dbe08047b33bed9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Systems.Effects.EffectHandler
+--- !u!114 &7694132181892235861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249208843697698491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd3d9308da5d09945a63a3df38928e99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleEnemyAI
+  target: {fileID: 0}
+  baseMoveSpeed: 1
+  stopDistance: 1.5
+  currentMoveSpeed: 0
 --- !u!1 &777779623820047744
 GameObject:
   m_ObjectHideFlags: 0
@@ -1551,7 +1581,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0

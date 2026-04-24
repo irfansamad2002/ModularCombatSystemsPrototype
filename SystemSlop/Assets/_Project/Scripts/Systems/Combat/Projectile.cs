@@ -65,9 +65,7 @@ namespace Project.Systems.Combat
 
         private void ApplyAOE(Collider hitCollider, Vector3 explosionCenter)
         {
-            var health = hitCollider.GetComponent<Health>();
-            if (health == null) return;
-
+          
             float distance = Vector3.Distance(explosionCenter, hitCollider.ClosestPoint(explosionCenter));
 
             if (distance <= _minDistanceThreshold)
@@ -84,7 +82,7 @@ namespace Project.Systems.Combat
 
             foreach (var effect in _effects)
             {
-                effect.Apply(health.gameObject, falloff);
+                effect.Apply(hitCollider.gameObject, falloff);
             }
 
         }

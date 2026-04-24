@@ -15,7 +15,11 @@ public class SlowInstance : EffectInstance
     protected override void OnStart()
     {
         _ai = _target.GetComponent<SimpleEnemyAI>();
-        if (_ai == null) return;
+        if (_ai == null)
+        {
+            DebugHelper.WarnMissing(_target, nameof(SimpleEnemyAI));
+            return;
+        }
 
         _ai.ApplySlow(_slowMultiplier);
     }
@@ -32,7 +36,11 @@ public class SlowInstance : EffectInstance
 
     public override void OnEnd()
     {
-        if (_ai == null) return;
+        if (_ai == null)
+        {
+            DebugHelper.WarnMissing(_target, nameof(SimpleEnemyAI));
+            return;
+        }
 
         _ai.ResetSpeed();
         //restore speed

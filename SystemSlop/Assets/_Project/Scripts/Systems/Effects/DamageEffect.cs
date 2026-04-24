@@ -10,7 +10,11 @@ public class DamageEffect : EffectData
     public override void Apply(GameObject target, float multiplier = 1f)
     {
         var health = target.GetComponent<Health>();
-        if (health == null) return;
+        if (health == null)
+        {
+            DebugHelper.WarnMissing(target, nameof(Health));
+            return;
+        }
 
         float finalDamage = damage * multiplier;
         health.TakeDamage(finalDamage);
