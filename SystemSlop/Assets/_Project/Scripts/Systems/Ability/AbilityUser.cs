@@ -119,7 +119,15 @@ namespace Project.Systems.Ability
             }
         }
 
+        public float GetCooldownRemaining(int index)
+        {
+            return _cooldowns[index];
+        }
 
+        public float GetCooldownMax(int index)
+        {
+            return abilities[index].cooldown;
+        }
 
 
     }
