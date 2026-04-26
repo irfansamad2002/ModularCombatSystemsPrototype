@@ -129,6 +129,41 @@ namespace Project.Systems.Ability
             return abilities[index].cooldown;
         }
 
+        public AbilityData GetAbility(int index)
+        {
+            return abilities[index];
+        }
+
+        public void UseAbilityAtPoint(int index, Vector3 point)
+        {
+            if (index < 0 || index >= abilities.Count) return;
+
+            var ability = abilities[index];
+
+            if (IsOnCooldown(index)) return;
+
+            if (ability.projectile != null)
+            {
+                SpawnProjectileAtPoint(ability, point);
+            }
+
+            StartCooldown(index, ability);
+        }
+
+        private void SpawnProjectileAtPoint(AbilityData ability, Vector3 point)
+        {
+            Vector3 dir = (point - firePoint.position).normalized;
+
+            var projectileGO = Instantiate(
+                ability.projectile.prefab,
+                firePoint.position,
+                Quaternion.LookRotation(dir));
+
+            var projectile =  projectileGO.GetComponent<Projectile>();
+            projectile.Init(ability.effects, ability.projectile.speed, ability.projectile.explosionRadius, ability.projectile.targetLayers, ability.projectile.impactVFX, ability.projectile.minDistanceThreshold, ability.projectile.minFalloff);
+
+            Destroy(projectileGO, ability.projectile.lifetime);
+        }
 
     }
 }

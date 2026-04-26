@@ -1865,6 +1865,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAbilityInput
   inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   abilityUser: {fileID: 946442424}
+  aoeIndicatorPrefab: {fileID: 4494617534100734494, guid: e8bb9b30648bf9f4ba3f443154fb55a1, type: 3}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  cam: {fileID: 330585545}
 --- !u!114 &946442424
 MonoBehaviour:
   m_ObjectHideFlags: 0
