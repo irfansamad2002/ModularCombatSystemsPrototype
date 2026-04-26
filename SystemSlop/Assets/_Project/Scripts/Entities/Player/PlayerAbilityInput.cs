@@ -50,15 +50,27 @@ namespace Project.Entities.Player
 
         private void Update()
         {
+            if (_ability1.WasPressedThisFrame())
+            {
+                StartIndicator(0);
+
+            }
+
             if (_ability1.IsPressed())
             {
-                if (_currentIndicator == null)
-                    StartIndicator(0);
+                UpdateIndicator();
             }
 
             if (_ability1.WasReleasedThisFrame())
             {
-                ConfirmCast();
+                if (TryGetGroundPoint(out var point))
+                {
+                    ConfirmCast();
+                }
+                else
+                {
+                    CancelCast();
+                }
             }
 
 
@@ -79,13 +91,6 @@ namespace Project.Entities.Player
                 abilityUser.UseAbility(3, GetTarget());
             }
 
-            if (_currentIndicator != null)
-            {
-                if (TryGetGroundPoint(out Vector3 point))
-                {
-                    _currentIndicator.SetPosition(point);
-                }
-            }
         }
 
         private GameObject GetTarget()
@@ -111,9 +116,13 @@ namespace Project.Entities.Player
         {
             if (_currentIndicator == null) return;
 
-            Vector3 targetPoint = _currentIndicator.GetCurrentPosition();
+            if (!TryGetGroundPoint(out Vector3 point))
+            {
+                CancelCast();
+                return;
+            }
 
-            abilityUser.UseAbilityAtPoint(_currentAbilityIndex, targetPoint);
+            abilityUser.UseAbilityAtPoint(_currentAbilityIndex, point);
 
             Destroy(_currentIndicator.gameObject);
             _currentIndicator = null;
@@ -122,7 +131,26 @@ namespace Project.Entities.Player
 
         private bool TryGetGroundPoint(out Vector3 point)
         {
-            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            //Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+            //if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
+            //{
+            //    point = hit.point;
+            //    return true;
+            //}
+
+            //point = Vector3.zero;
+            //return false;
+
+            if (Mouse.current == null)
+            {
+                point = Vector3.zero;
+                return false;
+            }
+
+            Vector2 mousePos = Mouse.current.position.ReadValue();
+
+            Ray ray = cam.ScreenPointToRay(mousePos);
 
             if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
             {
@@ -135,6 +163,45 @@ namespace Project.Entities.Player
 
         }
 
-        
+        private void UpdateIndicator()
+        {
+            if (_currentIndicator == null) return;
+
+            if (TryGetGroundPoint(out Vector3 point))
+            {
+                if (!_currentIndicator.gameObject.activeSelf)
+                    _currentIndicator.gameObject.SetActive(true);
+
+                _currentIndicator.SetPosition(point);
+            }
+            else
+            {
+                if (_currentIndicator.gameObject.activeSelf)
+                    _currentIndicator.gameObject.SetActive(false);
+            }
+
+        }
+
+        private void OnDrawGizmos()
+        {
+            if(cam == null || Mouse.current == null) return;
+
+
+            Vector2 mousePos = Mouse.current.position.ReadValue();
+            Ray ray = cam.ScreenPointToRay(mousePos);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(ray.origin, ray.direction * 50f);
+        }
+
+        private void CancelCast()
+        {
+            if (_currentIndicator != null)
+            {
+                Destroy(_currentIndicator.gameObject);
+                _currentIndicator = null;
+                _currentAbilityIndex = -1;
+            }
+        }
     }
 }

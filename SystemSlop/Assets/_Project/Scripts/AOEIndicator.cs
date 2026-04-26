@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class AOEIndicator : MonoBehaviour
 {
-    [SerializeField] private LayerMask groundLayer;
 
     private float _radius;
 
