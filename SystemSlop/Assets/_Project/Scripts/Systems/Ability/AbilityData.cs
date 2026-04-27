@@ -5,11 +5,14 @@ using UnityEngine;
 
 namespace Project.Systems.Abilities
 {
+
+    
     [CreateAssetMenu(menuName = "Abilities/Ability")]
     public class AbilityData : ScriptableObject
     {
         public string abilityName;
         public float cooldown;
+        public float castRange = 10f;
 
         public List<EffectData> effects;
         public ProjectileData projectile;

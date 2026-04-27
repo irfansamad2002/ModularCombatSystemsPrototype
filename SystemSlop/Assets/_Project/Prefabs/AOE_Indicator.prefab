@@ -45,9 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f7c9a67d5735cc4e8f340eaafc5a204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AOEIndicator
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
+  _renderer: {fileID: 9175174140860316747}
 --- !u!1 &5392953960173621171
 GameObject:
   m_ObjectHideFlags: 0

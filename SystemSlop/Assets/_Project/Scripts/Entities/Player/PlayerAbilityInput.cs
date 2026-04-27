@@ -169,10 +169,25 @@ namespace Project.Entities.Player
 
             if (TryGetGroundPoint(out Vector3 point))
             {
+                Vector3 origin = abilityUser.transform.position;
+
+                float range = abilityUser.GetAbility(_currentAbilityIndex).castRange;
+
+                Vector3 dir = point - origin;
+                float dist = dir.magnitude;
+                if (dist > range) {
+                    dir = dir.normalized * range;
+                    point = origin + dir;
+
+                    
+                }
+                bool isValid = dist <= range;
+                _currentIndicator.SetValid(isValid);
+                _currentIndicator.SetPosition(point);
+
                 if (!_currentIndicator.gameObject.activeSelf)
                     _currentIndicator.gameObject.SetActive(true);
 
-                _currentIndicator.SetPosition(point);
             }
             else
             {
