@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 475f92113eaec0e4898e7553ba98371b, type: 3}
   m_Name: Burn
   m_EditorClassIdentifier: Assembly-CSharp::Project.Systems.Effects.BurnEffect
+  effectId: Burn
   damagePerTick: 1
   tickRate: 1
   duration: 5

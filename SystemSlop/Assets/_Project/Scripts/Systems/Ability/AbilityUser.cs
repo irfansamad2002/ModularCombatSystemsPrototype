@@ -1,5 +1,6 @@
 using Project.Systems.Abilities;
 using Project.Systems.Combat;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
@@ -21,7 +22,7 @@ namespace Project.Systems.Ability
             _cooldowns = new float[abilities.Count];
         }
 
-        public void UseAbility(int index, GameObject target)
+        public void UseAbility(int index, AbilityContext context)
         {
             if (index < 0)
             {
@@ -33,8 +34,6 @@ namespace Project.Systems.Ability
                 Debug.Log("Dont have ability assigned to that slot");
                 return;
             }
-
-
             var ability = abilities[index];
 
             if (IsOnCooldown(index))
@@ -43,28 +42,89 @@ namespace Project.Systems.Ability
                 return;
             }
 
-            ExecuteAbility(ability, target);
-            StartCooldown(index,ability);
-
-
+            ExecuteAbility(ability, context);
+            StartCooldown(index, ability);
         }
 
-        private void ExecuteAbility(AbilityData ability, GameObject target)
+        //public void UseAbility(int index, GameObject target)
+        //{
+        //    if (index < 0)
+        //    {
+        //        return;
+        //    }
+
+        //    if (index >= abilities.Count)
+        //    {
+        //        Debug.Log("Dont have ability assigned to that slot");
+        //        return;
+        //    }
+
+
+        //    var ability = abilities[index];
+
+        //    if (IsOnCooldown(index))
+        //    {
+        //        Debug.Log($"Ability {ability.abilityName} is on cooldown");
+        //        return;
+        //    }
+
+
+
+        //    ExecuteAbility(ability, target);
+        //    StartCooldown(index,ability);
+
+
+        //}
+
+        private void ExecuteAbility(AbilityData ability, AbilityContext context)
         {
-            if (ability.projectile != null)
+            switch (ability.targetingType)
             {
-                //Debug.Log($"Using ability: {ability.abilityName} with projectile");
-                SpawnProjectile(ability);
+                case TargetingType.None:
+                    break;
+                case TargetingType.Point:
+                    SpawnProjectileAtPoint(ability, context.point);
+                    break;
+                case TargetingType.Target:
+                    ApplyToTarget(ability, context.target);
+                    break;
+                case TargetingType.Self:
+                    ApplyToTarget(ability, gameObject);
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                //Debug.Log($"Using ability: {ability.abilityName} instantly");
-                //fallback: instant
-                foreach (var effect in ability.effects)
-                {
-                    effect.Apply(target);
-                }
-            }
+            //if (ability.deliveryType == DeliveryType.Projectile)
+            //{
+            //    if (ability.projectile == null)
+            //    {
+            //        Debug.LogWarning("ability: " + ability.name + " delivery type is projectile but dont have prohjectileData");
+            //    }
+            //    SpawnProjectile(ability);
+            //}
+            //else
+            //{
+            //    foreach (var effect in ability.effects)
+            //    {
+            //        effect.Apply(target);
+            //    }
+            //}
+
+
+            //if (ability.projectile != null)
+            //{
+            //    //Debug.Log($"Using ability: {ability.abilityName} with projectile");
+            //    SpawnProjectile(ability);
+            //}
+            //else
+            //{
+            //    //Debug.Log($"Using ability: {ability.abilityName} instantly");
+            //    //fallback: instant
+            //    foreach (var effect in ability.effects)
+            //    {
+            //        effect.Apply(target);
+            //    }
+            //}
         }
 
         private bool IsOnCooldown(int index)
@@ -134,21 +194,21 @@ namespace Project.Systems.Ability
             return abilities[index];
         }
 
-        public void UseAbilityAtPoint(int index, Vector3 point)
-        {
-            if (index < 0 || index >= abilities.Count) return;
+        //public void UseAbilityAtPoint(int index, Vector3 point)
+        //{
+        //    if (index < 0 || index >= abilities.Count) return;
 
-            var ability = abilities[index];
+        //    var ability = abilities[index];
 
-            if (IsOnCooldown(index)) return;
+        //    if (IsOnCooldown(index)) return;
 
-            if (ability.projectile != null)
-            {
-                SpawnProjectileAtPoint(ability, point);
-            }
+        //    if (ability.projectile != null)
+        //    {
+        //        SpawnProjectileAtPoint(ability, point);
+        //    }
 
-            StartCooldown(index, ability);
-        }
+        //    StartCooldown(index, ability);
+        //}
 
         private void SpawnProjectileAtPoint(AbilityData ability, Vector3 point)
         {
@@ -164,6 +224,31 @@ namespace Project.Systems.Ability
 
             Destroy(projectileGO, ability.projectile.lifetime);
         }
+        private void ApplyToTarget(AbilityData ability, Vector3 point)
+        {
 
+            //if (IsOnCooldown()) return;
+
+            if (ability.projectile != null)
+            {
+                SpawnProjectileAtPoint(ability, point);
+            }
+
+            //StartCooldown(index, ability);
+        }
+        private void ApplyToTarget(AbilityData ability, GameObject targetGameObject)
+        {
+            foreach (var effect in ability.effects)
+            {
+                effect.Apply(targetGameObject);
+            }
+        }
     }
+
+}
+
+public struct AbilityContext
+{
+    public GameObject target;
+    public Vector3 point;
 }

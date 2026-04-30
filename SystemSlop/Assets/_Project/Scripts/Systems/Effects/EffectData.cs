@@ -4,7 +4,12 @@ namespace Project.Systems.Effects
 {
     public abstract class EffectData : ScriptableObject
     {
-        public string effectId;
+        /// <summary>
+        /// Inside your EffectHandler / EffectInstance logic
+        /// if (existingEffect.effectid == newEffect.effectId)
+        ///     existingEffect.onReapply();
+        /// </summary>
+        public string effectId; // So that dont apply effects, u apply them repeatdly over time
 
         public abstract void Apply(GameObject target, float multiplier = 1f);
     }

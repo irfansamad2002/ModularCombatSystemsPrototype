@@ -17,7 +17,7 @@ public class SlowInstance : EffectInstance
         _ai = _target.GetComponent<SimpleEnemyAI>();
         if (_ai == null)
         {
-            DebugHelper.WarnMissing(_target, nameof(SimpleEnemyAI));
+            DebugHelper.WarnMissingComponent(_target, nameof(SimpleEnemyAI));
             return;
         }
 
@@ -38,7 +38,7 @@ public class SlowInstance : EffectInstance
     {
         if (_ai == null)
         {
-            DebugHelper.WarnMissing(_target, nameof(SimpleEnemyAI));
+            DebugHelper.WarnMissingComponent(_target, nameof(SimpleEnemyAI));
             return;
         }
 

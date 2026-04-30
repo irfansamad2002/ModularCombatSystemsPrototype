@@ -12,7 +12,7 @@ public class DamageEffect : EffectData
         var health = target.GetComponent<Health>();
         if (health == null)
         {
-            DebugHelper.WarnMissing(target, nameof(Health));
+            DebugHelper.WarnMissingComponent(target, nameof(Health));
             return;
         }
 

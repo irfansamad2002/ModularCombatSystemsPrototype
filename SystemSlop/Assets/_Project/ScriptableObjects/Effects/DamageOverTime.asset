@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc9999b6fb4aebb4e9b4a32ed7abd0e6, type: 3}
   m_Name: DamageOverTime
   m_EditorClassIdentifier: Assembly-CSharp::BurnEffect
+  effectId: DamageOverTime
   tickRate: 1
   damagePerTick: 1
   duration: 3

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc5ccb5a6777fe4da9ae5887a2ad59d, type: 3}
   m_Name: Slow
   m_EditorClassIdentifier: Assembly-CSharp::Project.Systems.Effects.SlowEffect
-  effectId: slow
+  effectId: Slow
   slowMultiplier: 0.5
   duration: 3
