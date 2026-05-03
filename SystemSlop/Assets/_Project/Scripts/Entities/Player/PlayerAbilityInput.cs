@@ -17,8 +17,11 @@ namespace Project.Entities.Player
         private InputAction _thirdAbility;
         private InputAction _fourthAbility;
 
-        private AOEIndicator _currentIndicator;
-        private AbilityData _currentAbility;
+        //private AOEIndicator _currentIndicator;
+        //private AbilityData _currentAbility;
+        //private int _currentIndex;
+
+        private CastSession _currentCast;
 
         public bool newAbilityCancelsOldOne;
 
@@ -53,7 +56,6 @@ namespace Project.Entities.Player
             if (_firstAbility.WasPressedThisFrame())
             {
                 HandleAbilityPressed(0);
-
             }
 
             if (_firstAbility.IsPressed())
@@ -91,17 +93,17 @@ namespace Project.Entities.Player
 
             //AbilityData ability = abilityUser.GetAbility(_currentAbility);
             Debug.Log("name: " 
-                +_currentAbility.name 
+                +_currentCast.ability.name 
                 + " CD:" 
-                + _currentAbility.cooldown 
+                + _currentCast.ability.cooldown 
                 + " castRange:" 
-                + _currentAbility.castRange
+                + _currentCast.ability.castRange
                 + " targetingType: " 
-                + _currentAbility.targetingType
+                + _currentCast.ability.targetingType
                 + " deliveryType: " 
-                + _currentAbility.deliveryType 
+                + _currentCast.ability.deliveryType 
                 + " Num of effects: " 
-                + _currentAbility.effects.Count
+                + _currentCast.ability.effects.Count
                 );
             
             
@@ -111,106 +113,86 @@ namespace Project.Entities.Player
         private void HandleAbilityReleased(int index)
         {
             
-            if (_currentIndicator == null) return;
+            if (_currentCast == null) return;
 
-            var ability = abilityUser.GetAbility(index);
+            if (_currentCast.index != index) return;
 
-            if (_currentAbility != ability) return;
-
-            if (TryGetGroundPoint(out var point))
+            if (_currentCast.indicator != null)
             {
-                ConfirmCast(index);
+                if (!TryGetGroundPoint(out _))
+                {
+                    CancelCast();
+                    return;
+                }
             }
-            else
-            {
-                CancelCast();
-            }
+            ConfirmCast();
         }
 
         private void HandleAbilityPressed(int index)
         {
             if (newAbilityCancelsOldOne)
-                if (_currentAbility != null)//Cancel previous
+                if (_currentCast.ability != null)//Cancel previous
                     CancelCast();
             else
-                if (_currentAbility != null)//Block input
+                if (_currentCast.ability != null)//Block input
                     return;
-            
 
-            _currentAbility = abilityUser.GetAbility(index);
-            DebugAbilitiesInfos(index);
+            var ability = abilityUser.GetAbility(index);
 
-            switch (_currentAbility.targetingType)
+            _currentCast = new CastSession()
+            {
+                ability = ability,
+                index = index,
+                context = new AbilityContext()
+            };
+
+            //DebugAbilitiesInfos(index);
+
+            switch (ability.targetingType)
             {
                 case TargetingType.None:
-                    //abilityUser.UseAbility(index, null);
-                    Debug.Log("No need any target for ability");
+                    ConfirmCast();
                     break;
                 case TargetingType.Point:
-                    StartIndicator(index);
-                    Debug.Log("somewhere in the world will be the target for ability");
+                    StartIndicator();
                     break;
                 case TargetingType.Target:
-                    //abilityUser.UseAbility(index, GetTarget());
-                    Debug.Log("needa  target for ability");
+                    _currentCast.context.target = GetTarget(); //Temp
+                    ConfirmCast();
                     break;
                 case TargetingType.Self:
-                    //abilityUser.UseAbility(index, gameObject);
-                    Debug.Log("cast on self for ability");
+                    _currentCast.context.target = gameObject;
+                    ConfirmCast();
                     break;
                 default:
-                    Debug.LogWarning("TargetingType prolly not set");
+                    Debug.LogWarning("HandleAbilityPressed switch ability.targetingType went into default for some reason");
                     break;
             }
-
-            //if (_currentAbility.requiresIndicator)
-            //    {
-            //        StartIndicator(index);
-            //    }
-            //else
-            //{
-            //    abilityUser.UseAbility(index, GetTarget());
-            //    _currentAbility = null;
-            //}
-
-
         }
 
-        private GameObject GetTarget()
+        private void StartIndicator()
         {
-            return GameObject.FindWithTag("Enemy"); // Temp
-        }
+            if (_currentCast.ability.indicatorPrefab == null) return;
 
-        private void StartIndicator(int index)
-        {
-            //if (_currentAbility.projectile == null) return;
+            var obj = Instantiate(_currentCast.ability.indicatorPrefab);
+            _currentCast.indicator= obj.GetComponent<AOEIndicator>();
 
-            
-            var obj = Instantiate(_currentAbility.indicatorPrefab);
-            _currentIndicator = obj.GetComponent<AOEIndicator>();
-
-            _currentIndicator.Init(_currentAbility.projectile.explosionRadius);
+            _currentCast.indicator.Init(_currentCast.ability.projectile.explosionRadius);
         }
         
-        private void ConfirmCast(int index)
+        private void ConfirmCast()
         {
-            var context = new AbilityContext();
+            if (_currentCast == null) return;
 
-            if (_currentIndicator == null) return;
+            abilityUser.UseAbility(_currentCast.index, _currentCast.context);
 
-            if (!TryGetGroundPoint(out Vector3 point))
+            if (_currentCast.indicator != null)
             {
-                CancelCast();
-                return;
+                Destroy(_currentCast.indicator.gameObject);
             }
 
-            context.point = point;
-
-            //abilityUser.useab
-            abilityUser.UseAbility(index, context);
-
-            Destroy(_currentIndicator.gameObject);
-            _currentIndicator = null;
+            _currentCast = null;
+           
         }
 
         private bool TryGetGroundPoint(out Vector3 point)
@@ -218,7 +200,7 @@ namespace Project.Entities.Player
             //On Center Screen
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-            if (Physics.Raycast(ray, out RaycastHit hit, _currentAbility.castRange, pointLayer))
+            if (Physics.Raycast(ray, out RaycastHit hit, _currentCast.ability.castRange, pointLayer))
             {
                 point = hit.point;
                 return true;
@@ -252,13 +234,14 @@ namespace Project.Entities.Player
 
         private void UpdateIndicator()
         {
-            if (_currentIndicator == null) return;
+            if (_currentCast == null) return;
+            if (_currentCast.indicator == null) return;
 
             if (TryGetGroundPoint(out Vector3 point))
             {
                 Vector3 origin = abilityUser.transform.position;
+                float range = _currentCast.ability.castRange;
 
-                float range = _currentAbility.castRange;
 
                 Vector3 dir = point - origin;
                 float dist = dir.magnitude;
@@ -268,17 +251,16 @@ namespace Project.Entities.Player
                     point = origin + dir;
                 }
                 bool isValid = dist <= range;
-                _currentIndicator.SetValid(isValid);
-                _currentIndicator.SetPosition(point);
 
-                if (!_currentIndicator.gameObject.activeSelf)
-                    _currentIndicator.gameObject.SetActive(true);
+                _currentCast.indicator.SetValid(isValid);
+                _currentCast.indicator.SetPosition(point);
+
+                _currentCast.context.point = point;
 
             }
             else
             {
-                if (_currentIndicator.gameObject.activeSelf)
-                    _currentIndicator.gameObject.SetActive(false);
+                _currentCast.indicator.gameObject.SetActive(false);
             }
 
         }
@@ -297,11 +279,29 @@ namespace Project.Entities.Player
 
         private void CancelCast()
         {
-            if (_currentIndicator != null)
+            if (_currentCast == null) return;
+
+            if (_currentCast.indicator != null)
             {
-                Destroy(_currentIndicator.gameObject);
-                _currentIndicator = null;
+                Destroy(_currentCast.indicator.gameObject);
             }
+
+            _currentCast = null;
+        }
+
+        private GameObject GetTarget()
+        {
+            return GameObject.FindWithTag("Enemy");//Temp
+        }
+
+        private class CastSession
+        {
+            public AbilityData ability;
+            public int index;
+            public AbilityContext context;
+
+            public AOEIndicator indicator;
         }
     }
+
 }
