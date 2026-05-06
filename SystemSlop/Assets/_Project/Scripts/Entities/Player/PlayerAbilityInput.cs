@@ -157,7 +157,7 @@ namespace Project.Entities.Player
                     StartIndicator();
                     break;
                 case TargetingType.Target:
-                    _currentCast.context.target = GetTarget(); //Temp
+                    _currentCast.context.target = GetTarget();
                     ConfirmCast();
                     break;
                 case TargetingType.Self:
@@ -197,19 +197,6 @@ namespace Project.Entities.Player
 
         private bool TryGetGroundPoint(out Vector3 point)
         {
-            //On Center Screen
-            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-
-            if (Physics.Raycast(ray, out RaycastHit hit, _currentCast.ability.castRange, pointLayer))
-            {
-                point = hit.point;
-                return true;
-            }
-
-            point = Vector3.zero;
-            return false;
-
-
             //On Mouse Cursor
             //if (Mouse.current == null)
             //{
@@ -221,14 +208,17 @@ namespace Project.Entities.Player
 
             //Ray ray = cam.ScreenPointToRay(mousePos);
 
-            //if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
-            //{
-            //    point = hit.point;
-            //    return true;
-            //}
+            //On Center Screen
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-            //point = Vector3.zero;
-            //return false;
+            if (Physics.Raycast(ray, out RaycastHit hit, _currentCast.ability.castRange, pointLayer))
+            {
+                point = hit.point;
+                return true;
+            }
+
+            point = Vector3.zero;
+            return false;
 
         }
 
@@ -291,7 +281,17 @@ namespace Project.Entities.Player
 
         private GameObject GetTarget()
         {
-            return GameObject.FindWithTag("Enemy");//Temp
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f))//TODO: Set a range for the raycast hit 
+            {
+                if (hit.collider.CompareTag("Enemy"))
+                {
+                    return hit.collider.gameObject;
+                }
+            }
+
+            return null;                
         }
 
         private class CastSession

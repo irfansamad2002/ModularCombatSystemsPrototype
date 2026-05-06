@@ -12,7 +12,7 @@ namespace Project.Systems.Ability
     {
         [SerializeField] private List<AbilityData> abilities;
         [SerializeField] private Transform firePoint;
-        [SerializeField] private float offsetForFirePointZAxis = 1f;
+        //[SerializeField] private float offsetForFirePointZAxis = 1f;
 
         private float[] _cooldowns;
 
