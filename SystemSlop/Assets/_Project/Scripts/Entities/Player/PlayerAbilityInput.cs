@@ -218,7 +218,7 @@ namespace Project.Entities.Player
             //only validate if indicator exist
             if (_currentCast.indicator != null)
             {
-                if (!_currentCast.indicator.isValid())
+                if (!_currentCast.indicator.IsValid())
                 {
                     CancelCast();
                     return;
