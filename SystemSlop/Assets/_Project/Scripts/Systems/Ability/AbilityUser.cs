@@ -68,7 +68,7 @@ namespace Project.Systems.Ability
 
             if (target == null)
             {
-                DebugHelper.WarnMissingComponent(target, nameof(GameObject));
+                //DebugHelper.WarnMissingComponent(target, nameof(GameObject));
                 return;
             }
 

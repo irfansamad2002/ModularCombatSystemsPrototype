@@ -36,6 +36,16 @@ namespace Project.Core.Health
                 Die();
             }
         }
+
+        public void HealsUp(float amountOfHeathRestored)
+        {
+            currentHealth += amountOfHeathRestored;
+            if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+        }
+
         private void Die()
         {
             Destroy(gameObject);

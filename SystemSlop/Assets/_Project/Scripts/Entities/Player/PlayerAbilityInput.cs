@@ -71,19 +71,50 @@ namespace Project.Entities.Player
 
             }
 
-
             if (_secondAbility.WasPressedThisFrame())
             {
-                //abilityUser.UseAbility(1, GetTarget());
+                HandleAbilityPressed(1);
             }
+
+            if (_secondAbility.IsPressed())
+            {
+                UpdateIndicator();
+            }
+
+            if (_secondAbility.WasReleasedThisFrame())
+            {
+                HandleAbilityReleased(1);
+                //DebugAbilitiesInfos(0);
+            }
+
             if (_thirdAbility.WasPressedThisFrame())
             {
-                //abilityUser.UseAbility(2, GetTarget());
+                HandleAbilityPressed(2);
             }
-            if (_fourthAbility.WasPressedThisFrame())
+
+            if (_thirdAbility.IsPressed())
             {
-                //abilityUser.UseAbility(3, GetTarget());
+                UpdateIndicator();
             }
+
+            if (_thirdAbility.WasReleasedThisFrame())
+            {
+                HandleAbilityReleased(2);
+                //DebugAbilitiesInfos(0);
+            }
+
+            //if (_secondAbility.WasPressedThisFrame())
+            //{
+            //    HandleAbilityPressed(1);
+            //}
+            //if (_thirdAbility.WasPressedThisFrame())
+            //{
+            //    UpdateIndicator();
+            //}
+            //if (_fourthAbility.WasPressedThisFrame())
+            //{
+            //    HandleAbilityReleased(1);
+            //}
 
         }
 
@@ -283,7 +314,7 @@ namespace Project.Entities.Player
         {
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f))//TODO: Set a range for the raycast hit 
+            if (Physics.Raycast(ray, out RaycastHit hit, _currentCast.ability.castRange))//TODO: Set a range for the raycast hit 
             {
                 if (hit.collider.CompareTag("Enemy"))
                 {

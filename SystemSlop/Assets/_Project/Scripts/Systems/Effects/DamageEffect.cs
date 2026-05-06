@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Effects/Damage")]
 public class DamageEffect : EffectData
 {
-    public float damage;
+    public float damage;    
 
     public override void Apply(GameObject target, float multiplier = 1f)
     {

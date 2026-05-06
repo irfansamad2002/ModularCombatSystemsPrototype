@@ -1777,6 +1777,7 @@ GameObject:
   - component: {fileID: 946442422}
   - component: {fileID: 946442423}
   - component: {fileID: 946442424}
+  - component: {fileID: 946442425}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -1884,9 +1885,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityUser
   abilities:
   - {fileID: 11400000, guid: 75b5d207da10823439a2277082ff9b5a, type: 2}
+  - {fileID: 11400000, guid: 8af1a3ea78430c34f9f14754987e112a, type: 2}
   - {fileID: 11400000, guid: d3b7887de4a212743a8367d99d8e07a5, type: 2}
   firePoint: {fileID: 299118869}
-  offsetForFirePointZAxis: 1
+--- !u!114 &946442425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946442419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2a0da5f4ee530940a440083067de361, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Core.Health.Health
+  maxHealth: 100
+  currentHealth: 0
 --- !u!1 &948261379
 GameObject:
   m_ObjectHideFlags: 0
