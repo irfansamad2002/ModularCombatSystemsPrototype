@@ -8,10 +8,13 @@ public class AOEIndicator : MonoBehaviour
     private Color _invalidColor = new Color(1, 0, 0, .3f);
     private float _radius;
     private Vector3 _targetPosition;
+    private bool _isValid;
 
     public void SetValid(bool isValid)
     {
+        _isValid = isValid;
         _renderer.material.color = isValid ? _validColor : _invalidColor;
+        //gameObject.SetActive(isValid);
     }
 
     public void Init(float radius)
@@ -40,5 +43,11 @@ public class AOEIndicator : MonoBehaviour
         //_targetPosition,
         //Time.deltaTime * 15f);
     }
+
+    public bool IsValid()
+    {
+        return _isValid;
+    }
+   
 
 }

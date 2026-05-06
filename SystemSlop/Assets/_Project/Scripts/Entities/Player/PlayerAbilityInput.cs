@@ -215,6 +215,16 @@ namespace Project.Entities.Player
         {
             if (_currentCast == null) return;
 
+            //only validate if indicator exist
+            if (_currentCast.indicator != null)
+            {
+                if (!_currentCast.indicator.isValid())
+                {
+                    CancelCast();
+                    return;
+                }
+            }
+
             abilityUser.UseAbility(_currentCast.index, _currentCast.context);
 
             if (_currentCast.indicator != null)
@@ -242,7 +252,7 @@ namespace Project.Entities.Player
             //On Center Screen
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-            if (Physics.Raycast(ray, out RaycastHit hit, _currentCast.ability.castRange, pointLayer))
+            if (Physics.Raycast(ray, out RaycastHit hit, /*_currentCast.ability.castRange*/ 100f, pointLayer))
             {
                 point = hit.point;
                 return true;
@@ -260,6 +270,8 @@ namespace Project.Entities.Player
 
             if (TryGetGroundPoint(out Vector3 point))
             {
+                _currentCast.indicator.gameObject.SetActive(true);
+
                 Vector3 origin = abilityUser.transform.position;
                 float range = _currentCast.ability.castRange;
 
@@ -272,7 +284,7 @@ namespace Project.Entities.Player
                     point = origin + dir;
                 }
                 bool isValid = dist <= range;
-
+                //Debug.Log(isValid);
                 _currentCast.indicator.SetValid(isValid);
                 _currentCast.indicator.SetPosition(point);
 
@@ -291,11 +303,13 @@ namespace Project.Entities.Player
             if(cam == null || Mouse.current == null) return;
 
 
-            Vector2 mousePos = Mouse.current.position.ReadValue();
-            Ray ray = cam.ScreenPointToRay(mousePos);
+            //Vector2 mousePos = Mouse.current.position.ReadValue();
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
 
             Gizmos.color = Color.red;
-            Gizmos.DrawRay(ray.origin, ray.direction * 50f);
+            //if(_currentCast != null)
+                Gizmos.DrawRay(ray.origin, ray.direction * 10f);
         }
 
         private void CancelCast()
@@ -306,7 +320,7 @@ namespace Project.Entities.Player
             {
                 Destroy(_currentCast.indicator.gameObject);
             }
-
+            _currentCast.indicator.SetValid(false);
             _currentCast = null;
         }
 
@@ -330,7 +344,7 @@ namespace Project.Entities.Player
             public AbilityData ability;
             public int index;
             public AbilityContext context;
-
+                
             public AOEIndicator indicator;
         }
     }

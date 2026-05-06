@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   abilityName: Simple Strike
   cooldown: 1
-  castRange: 100
+  castRange: 10
   targetingType: 2
   deliveryType: 0
   effects:
