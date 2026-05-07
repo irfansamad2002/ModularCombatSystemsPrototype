@@ -21,25 +21,13 @@ namespace Project.Systems.Ability
             _cooldowns = new float[abilities.Count];
         }
 
-        public void UseAbility(int index, AbilityContext context)
+        public void UseAbility(AbilityData ability, AbilityContext context)
         {
-            if (index < 0)
-            {
-                return;
-            }
+            int index = abilities.IndexOf(ability);
+            
+            if (index < 0) return;
 
-            if (index >= abilities.Count)
-            {
-                Debug.Log("Dont have ability assigned to that slot");
-                return;
-            }
-            var ability = abilities[index];
-
-            if (IsOnCooldown(index))
-            {
-                Debug.Log($"Ability {ability.abilityName} is on cooldown");
-                return;
-            }
+            if (IsOnCooldown(index)) return;
 
             ExecuteAbility(ability, context);
             StartCooldown(index, ability);

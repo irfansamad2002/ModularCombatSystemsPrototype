@@ -60,15 +60,12 @@ namespace Project.Entities.Player
 
             if (_firstAbility.IsPressed())
             {
-                UpdateIndicator();
+                _currentCast?.Update(cam, pointLayer);
             }
 
             if (_firstAbility.WasReleasedThisFrame())
             {
-                HandleAbilityReleased(0);
-                //DebugAbilitiesInfos(0);
-
-
+                _currentCast?.Confirm();
             }
 
             if (_secondAbility.WasPressedThisFrame())
@@ -78,13 +75,12 @@ namespace Project.Entities.Player
 
             if (_secondAbility.IsPressed())
             {
-                UpdateIndicator();
+                _currentCast?.Update(cam, pointLayer);
             }
 
             if (_secondAbility.WasReleasedThisFrame())
             {
-                HandleAbilityReleased(1);
-                //DebugAbilitiesInfos(0);
+                _currentCast?.Confirm();
             }
 
             if (_thirdAbility.WasPressedThisFrame())
@@ -94,208 +90,28 @@ namespace Project.Entities.Player
 
             if (_thirdAbility.IsPressed())
             {
-                UpdateIndicator();
+                _currentCast?.Update(cam, pointLayer);
             }
 
             if (_thirdAbility.WasReleasedThisFrame())
             {
-                HandleAbilityReleased(2);
-                //DebugAbilitiesInfos(0);
+                _currentCast?.Confirm();
             }
 
-            //if (_secondAbility.WasPressedThisFrame())
-            //{
-            //    HandleAbilityPressed(1);
-            //}
-            //if (_thirdAbility.WasPressedThisFrame())
-            //{
-            //    UpdateIndicator();
-            //}
-            //if (_fourthAbility.WasPressedThisFrame())
-            //{
-            //    HandleAbilityReleased(1);
-            //}
-
+          
         }
 
-        private void DebugAbilitiesInfos(int index)
-        {
 
-
-            //AbilityData ability = abilityUser.GetAbility(_currentAbility);
-            Debug.Log("name: " 
-                +_currentCast.ability.name 
-                + " CD:" 
-                + _currentCast.ability.cooldown 
-                + " castRange:" 
-                + _currentCast.ability.castRange
-                + " targetingType: " 
-                + _currentCast.ability.targetingType
-                + " deliveryType: " 
-                + _currentCast.ability.deliveryType 
-                + " Num of effects: " 
-                + _currentCast.ability.effects.Count
-                );
-            
-            
-            
-        }
-
-        private void HandleAbilityReleased(int index)
-        {
-            
-            if (_currentCast == null) return;
-
-            if (_currentCast.index != index) return;
-
-            if (_currentCast.indicator != null)
-            {
-                if (!TryGetGroundPoint(out _))
-                {
-                    CancelCast();
-                    return;
-                }
-            }
-            ConfirmCast();
-        }
 
         private void HandleAbilityPressed(int index)
         {
-            if (newAbilityCancelsOldOne)
-                if (_currentCast.ability != null)//Cancel previous
-                    CancelCast();
-            else
-                if (_currentCast.ability != null)//Block input
-                    return;
-
+            if (_currentCast != null && _currentCast.IsActive)
+            {
+                _currentCast.Cancel();
+            }
             var ability = abilityUser.GetAbility(index);
 
-            _currentCast = new CastSession()
-            {
-                ability = ability,
-                index = index,
-                context = new AbilityContext()
-            };
-
-            //DebugAbilitiesInfos(index);
-
-            switch (ability.targetingType)
-            {
-                case TargetingType.None:
-                    ConfirmCast();
-                    break;
-                case TargetingType.Point:
-                    StartIndicator();
-                    break;
-                case TargetingType.Target:
-                    _currentCast.context.target = GetTarget();
-                    ConfirmCast();
-                    break;
-                case TargetingType.Self:
-                    _currentCast.context.target = gameObject;
-                    ConfirmCast();
-                    break;
-                default:
-                    Debug.LogWarning("HandleAbilityPressed switch ability.targetingType went into default for some reason");
-                    break;
-            }
-        }
-
-        private void StartIndicator()
-        {
-            if (_currentCast.ability.indicatorPrefab == null) return;
-
-            var obj = Instantiate(_currentCast.ability.indicatorPrefab);
-            _currentCast.indicator= obj.GetComponent<AOEIndicator>();
-
-            _currentCast.indicator.Init(_currentCast.ability.projectile.explosionRadius);
-        }
-        
-        private void ConfirmCast()
-        {
-            if (_currentCast == null) return;
-
-            //only validate if indicator exist
-            if (_currentCast.indicator != null)
-            {
-                if (!_currentCast.indicator.IsValid())
-                {
-                    CancelCast();
-                    return;
-                }
-            }
-
-            abilityUser.UseAbility(_currentCast.index, _currentCast.context);
-
-            if (_currentCast.indicator != null)
-            {
-                Destroy(_currentCast.indicator.gameObject);
-            }
-
-            _currentCast = null;
-           
-        }
-
-        private bool TryGetGroundPoint(out Vector3 point)
-        {
-            //On Mouse Cursor
-            //if (Mouse.current == null)
-            //{
-            //    point = Vector3.zero;
-            //    return false;
-            //}
-
-            //Vector2 mousePos = Mouse.current.position.ReadValue();
-
-            //Ray ray = cam.ScreenPointToRay(mousePos);
-
-            //On Center Screen
-            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-
-            if (Physics.Raycast(ray, out RaycastHit hit, /*_currentCast.ability.castRange*/ 100f, pointLayer))
-            {
-                point = hit.point;
-                return true;
-            }
-
-            point = Vector3.zero;
-            return false;
-
-        }
-
-        private void UpdateIndicator()
-        {
-            if (_currentCast == null) return;
-            if (_currentCast.indicator == null) return;
-
-            if (TryGetGroundPoint(out Vector3 point))
-            {
-                _currentCast.indicator.gameObject.SetActive(true);
-
-                Vector3 origin = abilityUser.transform.position;
-                float range = _currentCast.ability.castRange;
-
-
-                Vector3 dir = point - origin;
-                float dist = dir.magnitude;
-                if (dist > range)
-                {
-                    dir = dir.normalized * range;
-                    point = origin + dir;
-                }
-                bool isValid = dist <= range;
-                //Debug.Log(isValid);
-                _currentCast.indicator.SetValid(isValid);
-                _currentCast.indicator.SetPosition(point);
-
-                _currentCast.context.point = point;
-
-            }
-            else
-            {
-                _currentCast.indicator.gameObject.SetActive(false);
-            }
-
+            _currentCast = new CastSession(abilityUser, ability);
         }
 
         private void OnDrawGizmos()
@@ -312,41 +128,6 @@ namespace Project.Entities.Player
                 Gizmos.DrawRay(ray.origin, ray.direction * 10f);
         }
 
-        private void CancelCast()
-        {
-            if (_currentCast == null) return;
-
-            if (_currentCast.indicator != null)
-            {
-                Destroy(_currentCast.indicator.gameObject);
-            }
-            _currentCast.indicator.SetValid(false);
-            _currentCast = null;
-        }
-
-        private GameObject GetTarget()
-        {
-            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-
-            if (Physics.Raycast(ray, out RaycastHit hit, _currentCast.ability.castRange))//TODO: Set a range for the raycast hit 
-            {
-                if (hit.collider.CompareTag("Enemy"))
-                {
-                    return hit.collider.gameObject;
-                }
-            }
-
-            return null;                
-        }
-
-        private class CastSession
-        {
-            public AbilityData ability;
-            public int index;
-            public AbilityContext context;
-                
-            public AOEIndicator indicator;
-        }
     }
 
 }
