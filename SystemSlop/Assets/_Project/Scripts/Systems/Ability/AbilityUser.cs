@@ -13,7 +13,7 @@ namespace Project.Systems.Ability
         [SerializeField] private List<AbilityData> abilities;
         [SerializeField] private Transform firePoint;
         //[SerializeField] private float offsetForFirePointZAxis = 1f;
-
+        public Transform Firepoint => firePoint;
         private float[] _cooldowns;
 
         private void Awake()
@@ -24,7 +24,7 @@ namespace Project.Systems.Ability
         public void UseAbility(AbilityData ability, AbilityContext context)
         {
             int index = abilities.IndexOf(ability);
-            
+
             if (index < 0) return;
 
             if (IsOnCooldown(index)) return;
@@ -33,7 +33,7 @@ namespace Project.Systems.Ability
             StartCooldown(index, ability);
         }
 
-       
+
         private void ExecuteAbility(AbilityData ability, AbilityContext context)
         {
             switch (ability.deliveryType)
@@ -87,7 +87,7 @@ namespace Project.Systems.Ability
                 ability.projectile.minFalloff
                 );
 
-            Destroy(projectileGO, ability.projectile.lifetime );
+            Destroy(projectileGO, ability.projectile.lifetime);
         }
 
         private GameObject ResolveTarget(AbilityData ability, AbilityContext context)
@@ -112,7 +112,7 @@ namespace Project.Systems.Ability
             switch (ability.targetingType)
             {
                 case TargetingType.Point:
-                    return context.point;   
+                    return context.point;
                 case TargetingType.Self:
                     return transform.position;
                 case TargetingType.Target:
@@ -153,7 +153,7 @@ namespace Project.Systems.Ability
         {
             GUILayout.Label("Cooldowns:");
 
-            for( int i = 0; i < abilities.Count; i++)
+            for (int i = 0; i < abilities.Count; i++)
             {
                 GUILayout.Label($"{abilities[i].abilityName}: {_cooldowns[i]:F2}");
             }
@@ -173,36 +173,13 @@ namespace Project.Systems.Ability
         {
             return abilities[index];
         }
-
-        private void SpawnProjectileAtPoint(AbilityData ability, Vector3 point)
-        {
-            Vector3 dir = (point - firePoint.position).normalized;
-
-            var projectileGO = Instantiate(
-                ability.projectile.prefab,
-                firePoint.position,
-                Quaternion.LookRotation(dir));
-
-            var projectile =  projectileGO.GetComponent<Projectile>();
-            projectile.Init(ability.effects, ability.projectile.speed, ability.projectile.explosionRadius, ability.projectile.targetLayers, ability.projectile.impactVFX, ability.projectile.minDistanceThreshold, ability.projectile.minFalloff);
-
-            Destroy(projectileGO, ability.projectile.lifetime);
-        }
-
-        private void ApplyToTarget(AbilityData ability, GameObject targetGameObject)
-        {
-            foreach (var effect in ability.effects)
-            {
-                effect.Apply(targetGameObject);
-            }
-        }
-
     }
-
 }
     
 public struct AbilityContext
 {
     public GameObject target;
+
     public Vector3 point;
+    public bool hasPoint;
 }

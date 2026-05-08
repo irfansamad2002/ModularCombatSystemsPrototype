@@ -9,7 +9,8 @@ namespace Project.Entities.Player
     {
         [SerializeField] private InputActionAsset inputActions;
         [SerializeField] private AbilityUser abilityUser;
-        [SerializeField] private LayerMask pointLayer;
+        [SerializeField] private LayerMask worldLayer;
+        [SerializeField] private LayerMask targetLayer;
         [SerializeField] private Camera cam;
 
         private InputAction _firstAbility;
@@ -17,13 +18,11 @@ namespace Project.Entities.Player
         private InputAction _thirdAbility;
         private InputAction _fourthAbility;
 
-        //private AOEIndicator _currentIndicator;
-        //private AbilityData _currentAbility;
-        //private int _currentIndex;
-
         private CastSession _currentCast;
 
         public bool newAbilityCancelsOldOne;
+    
+
 
         private void Awake()
         {
@@ -60,11 +59,11 @@ namespace Project.Entities.Player
 
             if (_firstAbility.IsPressed())
             {
-                _currentCast?.Update(cam, pointLayer);
+                _currentCast?.Update();
             }
 
             if (_firstAbility.WasReleasedThisFrame())
-            {
+            {   
                 _currentCast?.Confirm();
             }
 
@@ -75,7 +74,7 @@ namespace Project.Entities.Player
 
             if (_secondAbility.IsPressed())
             {
-                _currentCast?.Update(cam, pointLayer);
+                _currentCast?.Update();
             }
 
             if (_secondAbility.WasReleasedThisFrame())
@@ -90,7 +89,7 @@ namespace Project.Entities.Player
 
             if (_thirdAbility.IsPressed())
             {
-                _currentCast?.Update(cam, pointLayer);
+                _currentCast?.Update();
             }
 
             if (_thirdAbility.WasReleasedThisFrame())
@@ -111,22 +110,10 @@ namespace Project.Entities.Player
             }
             var ability = abilityUser.GetAbility(index);
 
-            _currentCast = new CastSession(abilityUser, ability);
+            _currentCast = new CastSession(abilityUser, ability, cam, worldLayer, targetLayer);
         }
 
-        private void OnDrawGizmos()
-        {
-            if(cam == null || Mouse.current == null) return;
-
-
-            //Vector2 mousePos = Mouse.current.position.ReadValue();
-            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-
-
-            Gizmos.color = Color.red;
-            //if(_currentCast != null)
-                Gizmos.DrawRay(ray.origin, ray.direction * 10f);
-        }
+       
 
     }
 
