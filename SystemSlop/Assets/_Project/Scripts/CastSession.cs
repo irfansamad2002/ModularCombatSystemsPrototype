@@ -22,6 +22,9 @@ public class CastSession
 
     private float _maxDistanceForRays = 100f;
 
+    private bool _isValidCast;
+    public bool IsValidCast => _isValidCast;
+
     public CastSession(
         AbilityUser user,
         AbilityData ability,
@@ -65,9 +68,9 @@ public class CastSession
                 break;
             case TargetingType.Self:
                 break;
-            default:
-                break;
         }
+
+        _isValidCast = CanConfirmCast();
     }
 
     private void UpdateTargetTargeting()
@@ -122,28 +125,10 @@ public class CastSession
     {
         if (!_isActive) return;
 
-        switch (_ability.targetingType)
+        if (!CanConfirmCast())
         {
-            case TargetingType.None:
-                break;
-            case TargetingType.Point:
-                if (_indicator == null || !_indicator.IsValid())
-                {
-                    Cancel();
-                    return;
-                }
-                break;
-            case TargetingType.Target:
-                if (_context.target == null)
-                {
-                    Cancel();
-                    return;
-                }
-                break;
-            case TargetingType.Self:
-                break;
-            default:
-                break;
+            Cancel();
+            return;
         }
 
 
@@ -189,6 +174,43 @@ public class CastSession
         float distance = Vector3.Distance(_user.transform.position, target.transform.position);
 
         return distance <= _ability.castRange;
+    }
+
+    private bool CanConfirmCast()
+    {
+        switch (_ability.targetingType)
+        {
+            case TargetingType.None:
+                return true;
+            case TargetingType.Point:
+                return _context.hasPoint;
+            case TargetingType.Target:
+                return _context.target != null;
+            case TargetingType.Self:
+                return true;
+        }
+
+        return false;
+    }
+
+    public void DrawDebug()
+    {
+        GUILayout.Label($"Ability: {_ability.abilityName}");
+        GUILayout.Label($"Active: {_isActive}");
+        GUILayout.Label($"Valid: {_isValidCast}");
+        GUILayout.Label($"Targeting: {_ability.targetingType}");
+
+        switch (_ability.targetingType)
+        {
+            case TargetingType.Point:
+                GUILayout.Label($"Point: {_context.point}");
+                GUILayout.Label($"HasPoint: {_context.hasPoint}");
+                break;
+
+            case TargetingType.Target:
+                GUILayout.Label($"Target: {_context.target}");
+                break;
+        }
     }
 
     

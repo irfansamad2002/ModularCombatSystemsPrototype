@@ -149,15 +149,15 @@ namespace Project.Systems.Ability
             }
         }
 
-        private void OnGUI()
-        {
-            GUILayout.Label("Cooldowns:");
+        //private void OnGUI()
+        //{
+        //    GUILayout.Label("Cooldowns:");
 
-            for (int i = 0; i < abilities.Count; i++)
-            {
-                GUILayout.Label($"{abilities[i].abilityName}: {_cooldowns[i]:F2}");
-            }
-        }
+        //    for (int i = 0; i < abilities.Count; i++)
+        //    {
+        //        GUILayout.Label($"{abilities[i].abilityName}: {_cooldowns[i]:F2}");
+        //    }
+        //}
 
         public float GetCooldownRemaining(int index)
         {

@@ -145,6 +145,13 @@ namespace Project.Entities.Player
             _currentCast = null;
         }
 
-    }
+        private void OnGUI()
+        {
+            if (_currentCast != null && _currentCast.IsActive)
+            {
+                _currentCast.DrawDebug();
+            }
+        }
 
+    }
 }

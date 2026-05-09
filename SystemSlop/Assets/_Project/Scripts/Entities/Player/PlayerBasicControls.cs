@@ -79,7 +79,6 @@ namespace Project.Entities.Player
 
             if (_jumpAction.WasPressedThisFrame())
             {
-                Debug.Log("Jump");// Placeholder
                 _jumpRequested = true;
             }
         }
