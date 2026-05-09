@@ -12,13 +12,10 @@ namespace Project.Entities.Player
         [SerializeField] private LayerMask worldLayer;
         [SerializeField] private LayerMask targetLayer;
         [SerializeField] private Camera cam;
-
-        //private InputAction _firstAbility;
-        //private InputAction _secondAbility;
-        //private InputAction _thirdAbility;
-        //private InputAction _fourthAbility;
-
         private InputAction[] _abilityActions;
+
+        private InputAction _confirmCast;
+        private InputAction _cancelCast;
 
         private CastSession _currentCast;
 
@@ -36,6 +33,9 @@ namespace Project.Entities.Player
                 map.FindAction("Third Ability"),
                 map.FindAction("Fourth Ability")
             };
+
+            _confirmCast = map.FindAction("Confirm Cast");
+            _cancelCast = map.FindAction("Cancel Cast");
         }
 
         private void OnEnable()
@@ -44,6 +44,8 @@ namespace Project.Entities.Player
             {
                 action.Enable();
             }
+            _cancelCast.Enable();
+            _confirmCast.Enable();
         }
 
         private void OnDisable()
@@ -52,15 +54,49 @@ namespace Project.Entities.Player
             {
                 action.Disable();
             }
+            _cancelCast.Disable();
+            _confirmCast.Disable();
         }
 
         private void Update()
         {
             HandleAbilityInputs();
 
+            HandleCastControls();
+
             _currentCast?.Update();
+
+
           
         }
+
+        private void HandleCastControls()
+        {
+            if (_currentCast == null)
+            {
+                return;
+            }
+
+            if (_confirmCast.WasPressedThisFrame())
+            {
+                ConfirmCurrentCast();
+            }
+
+            if (_cancelCast.WasPressedThisFrame())
+            {
+                CancelCurrentCast();
+            }
+        }
+        
+        private void CancelCurrentCast()
+        {
+            if (_currentCast == null) return;
+
+            _currentCast.Cancel();
+            ClearCurrentCast();
+        }
+
+
 
         private void HandleAbilityInputs()
         {
@@ -69,11 +105,6 @@ namespace Project.Entities.Player
                 if (_abilityActions[i].WasPressedThisFrame())
                 {
                     StartAbilityCast(i);
-                }
-
-                if (_abilityActions[i].WasReleasedThisFrame())
-                {
-                    ConfirmAbilityCast();
                 }
             }
         }
@@ -90,7 +121,7 @@ namespace Project.Entities.Player
             _currentCast = new CastSession(abilityUser, ability, cam, worldLayer, targetLayer);
         }
 
-       private void ConfirmAbilityCast()
+       private void ConfirmCurrentCast()
         {
             if (_currentCast == null)
             {
@@ -99,12 +130,18 @@ namespace Project.Entities.Player
 
             if (!_currentCast.IsActive)
             {
-                _currentCast = null;
+                ClearCurrentCast();
+
                 return;
             }
 
             _currentCast.Confirm();
 
+            ClearCurrentCast();
+       }
+
+        private void ClearCurrentCast()
+        {
             _currentCast = null;
         }
 
