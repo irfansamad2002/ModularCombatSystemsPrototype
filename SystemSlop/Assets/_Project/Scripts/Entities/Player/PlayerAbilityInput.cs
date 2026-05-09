@@ -13,10 +13,12 @@ namespace Project.Entities.Player
         [SerializeField] private LayerMask targetLayer;
         [SerializeField] private Camera cam;
 
-        private InputAction _firstAbility;
-        private InputAction _secondAbility;
-        private InputAction _thirdAbility;
-        private InputAction _fourthAbility;
+        //private InputAction _firstAbility;
+        //private InputAction _secondAbility;
+        //private InputAction _thirdAbility;
+        //private InputAction _fourthAbility;
+
+        private InputAction[] _abilityActions;
 
         private CastSession _currentCast;
 
@@ -27,82 +29,57 @@ namespace Project.Entities.Player
         private void Awake()
         {
             var map = inputActions.FindActionMap("Player");
-
-            _firstAbility = map.FindAction("First Ability");
-            _secondAbility = map.FindAction("Second Ability");
-            _thirdAbility = map.FindAction("Third Ability");
-            _fourthAbility = map.FindAction("Fourth Ability");
+            _abilityActions = new InputAction[]
+            {
+                map.FindAction("First Ability"),
+                map.FindAction("Second Ability"),
+                map.FindAction("Third Ability"),
+                map.FindAction("Fourth Ability")
+            };
         }
 
         private void OnEnable()
         {
-            _firstAbility.Enable();
-            _secondAbility.Enable();
-            _thirdAbility.Enable();
-            _fourthAbility.Enable();
+            foreach (InputAction action in _abilityActions)
+            {
+                action.Enable();
+            }
         }
 
         private void OnDisable()
         {
-            _firstAbility.Disable();
-            _secondAbility.Disable();
-            _thirdAbility.Disable();
-            _fourthAbility.Disable();
+            foreach (InputAction action in _abilityActions)
+            {
+                action.Disable();
+            }
         }
 
         private void Update()
         {
-            if (_firstAbility.WasPressedThisFrame())
-            {
-                HandleAbilityPressed(0);
-            }
+            HandleAbilityInputs();
 
-            if (_firstAbility.IsPressed())
-            {
-                _currentCast?.Update();
-            }
-
-            if (_firstAbility.WasReleasedThisFrame())
-            {   
-                _currentCast?.Confirm();
-            }
-
-            if (_secondAbility.WasPressedThisFrame())
-            {
-                HandleAbilityPressed(1);
-            }
-
-            if (_secondAbility.IsPressed())
-            {
-                _currentCast?.Update();
-            }
-
-            if (_secondAbility.WasReleasedThisFrame())
-            {
-                _currentCast?.Confirm();
-            }
-
-            if (_thirdAbility.WasPressedThisFrame())
-            {
-                HandleAbilityPressed(2);
-            }
-
-            if (_thirdAbility.IsPressed())
-            {
-                _currentCast?.Update();
-            }
-
-            if (_thirdAbility.WasReleasedThisFrame())
-            {
-                _currentCast?.Confirm();
-            }
-
+            _currentCast?.Update();
           
         }
 
+        private void HandleAbilityInputs()
+        {
+            for (int i = 0; i < _abilityActions.Length; i++)
+            {
+                if (_abilityActions[i].WasPressedThisFrame())
+                {
+                    StartAbilityCast(i);
+                }
+
+                if (_abilityActions[i].WasReleasedThisFrame())
+                {
+                    ConfirmAbilityCast();
+                }
+            }
+        }
 
 
-        private void HandleAbilityPressed(int index)
+        private void StartAbilityCast(int index)
         {
             if (_currentCast != null && _currentCast.IsActive)
             {
@@ -113,7 +90,23 @@ namespace Project.Entities.Player
             _currentCast = new CastSession(abilityUser, ability, cam, worldLayer, targetLayer);
         }
 
-       
+       private void ConfirmAbilityCast()
+        {
+            if (_currentCast == null)
+            {
+                return;
+            }
+
+            if (!_currentCast.IsActive)
+            {
+                _currentCast = null;
+                return;
+            }
+
+            _currentCast.Confirm();
+
+            _currentCast = null;
+        }
 
     }
 
