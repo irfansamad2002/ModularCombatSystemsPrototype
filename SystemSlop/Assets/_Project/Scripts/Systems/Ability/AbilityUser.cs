@@ -25,9 +25,10 @@ namespace Project.Systems.Ability
         {
             int index = abilities.IndexOf(ability);
 
-            if (index < 0) return;
-
-            if (IsOnCooldown(index)) return;
+            if (!CanUseAbility(ability, context))
+            {
+                return;
+            }
 
             ExecuteAbility(ability, context);
             StartCooldown(index, ability);
@@ -149,16 +150,6 @@ namespace Project.Systems.Ability
             }
         }
 
-        //private void OnGUI()
-        //{
-        //    GUILayout.Label("Cooldowns:");
-
-        //    for (int i = 0; i < abilities.Count; i++)
-        //    {
-        //        GUILayout.Label($"{abilities[i].abilityName}: {_cooldowns[i]:F2}");
-        //    }
-        //}
-
         public float GetCooldownRemaining(int index)
         {
             return _cooldowns[index];
@@ -173,6 +164,36 @@ namespace Project.Systems.Ability
         {
             return abilities[index];
         }
+
+        public bool CanUseAbility(AbilityData ability, AbilityContext context)
+        {
+            int index = abilities.IndexOf(ability);
+
+            if (index < 0)
+            {
+                return false;
+            }
+
+            if (IsOnCooldown(index))
+            {
+                return false;
+            }
+
+            switch (ability.targetingType)
+            {
+                case TargetingType.Point:
+                    return context.hasPoint;
+
+                case TargetingType.Target:
+                    return context.target != null;
+
+                case TargetingType.Self:
+                case TargetingType.None:
+                    return true;
+            }
+            return false;
+        }
+
     }
 }
     

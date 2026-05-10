@@ -135,11 +135,12 @@ public class CastSession
     {
         if (!_isActive) return;
 
-        if (!CanConfirmCast())
-        {
+       if (!_user.CanUseAbility(_ability, _context))
+       {
             Cancel();
             return;
-        }
+       }
+
 
 
         _user.UseAbility(_ability, _context);
