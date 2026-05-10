@@ -38,10 +38,6 @@ public class AOEIndicator : MonoBehaviour
     private void Update()
     {
         transform.position = _targetPosition;
-        //transform.position = Vector3.Lerp(
-        //transform.position,
-        //_targetPosition,
-        //Time.deltaTime * 15f);
     }
 
     public bool IsValid()

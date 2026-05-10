@@ -56,6 +56,8 @@ public class CastSession
     {
         if (!IsActive) return;
 
+        ResetContext();
+
         switch (_ability.targetingType)
         {
             case TargetingType.None:
@@ -93,13 +95,21 @@ public class CastSession
 
     private void UpdatePointTargeting()
     {
-        TryGetAimPoint(out var point);
+        if (!TryGetAimPoint(out var point))
+        {
+            if (_indicator != null)
+            {
+                _indicator.gameObject.SetActive(false);
+            }
+
+            return;
+        }
 
         Vector3 origin = _user.Firepoint.position;
 
         Vector3 toPoint = point - origin;
-        float dist = toPoint.magnitude;
 
+        float dist = toPoint.magnitude;
         float range = _ability.castRange;
 
         //Clamp to range
@@ -191,6 +201,11 @@ public class CastSession
         }
 
         return false;
+    }
+
+    private void ResetContext()
+    {
+        _context = new AbilityContext();
     }
 
     public void DrawDebug()

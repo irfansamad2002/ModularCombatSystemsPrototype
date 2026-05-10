@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   abilityName: Fireball
   cooldown: 2
-  castRange: 101
+  castRange: 100
   targetingType: 1
   deliveryType: 1
   effects:
