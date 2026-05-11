@@ -54,7 +54,7 @@ namespace Project.Systems.Ability
         private void ExecuteInstant(AbilityData ability, AbilityContext context)
         {
             GameObject target = ResolveTarget(ability, context);
-
+                
             if (target == null)
             {
                 //DebugHelper.WarnMissingComponent(target, nameof(GameObject));

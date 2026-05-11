@@ -19,6 +19,8 @@ namespace Project.Entities.Player
 
         private CastSession _currentCast;
 
+        private AbilityTargetResolver _targetResolver;
+
         public bool newAbilityCancelsOldOne;
     
 
@@ -36,6 +38,8 @@ namespace Project.Entities.Player
 
             _confirmCast = map.FindAction("Confirm Cast");
             _cancelCast = map.FindAction("Cancel Cast");
+
+            _targetResolver = new AbilityTargetResolver(cam, worldLayer, targetLayer);
         }
 
         private void OnEnable()
@@ -143,11 +147,11 @@ namespace Project.Entities.Player
                 case TargetingType.None:
                 case TargetingType.Self:
                     context.target = abilityUser.gameObject;
-                    context.direction = GetAimDirection();
+                    context.direction = _targetResolver.GetAimDirection();
                     break;
 
                 case TargetingType.Point:
-                    if (TryGetAimPoint(out Vector3 point))
+                    if (_targetResolver.TryGetAimPoint(out Vector3 point))
                     {
                         context.point = point;
                         context.hasPoint = true;
@@ -158,7 +162,7 @@ namespace Project.Entities.Player
                         break;
 
                 case TargetingType.Target:
-                    context.target = RaycastEnemy();
+                    context.target = _targetResolver.RaycastEnemy();
                     if (context.target != null)
                     {
                         Vector3 dir = context.target.transform.position - abilityUser.transform.position;
@@ -171,35 +175,7 @@ namespace Project.Entities.Player
             return context;
         }
 
-        private bool TryGetAimPoint(out Vector3 point)
-        {
-            Ray ray = cam.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-
-            int mask = worldLayer | targetLayer;
-
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, mask))
-            {
-                point = hit.point;
-                return true;
-            }
-
-            point = ray.origin + ray.direction * 100f;
-            return true;
-        }
-
-
-
-        private GameObject RaycastEnemy()
-        {
-            Ray ray = cam.ViewportPointToRay(new Vector3(.5f, .5f, 0f));
-
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f, targetLayer))
-            {
-                return hit.collider.gameObject;
-            }
-
-            return null;
-        }
+       
 
         private void StartConfirmCast(AbilityData ability)
         {
@@ -208,7 +184,7 @@ namespace Project.Entities.Player
                 _currentCast.Cancel();
             }
 
-            _currentCast = new CastSession(abilityUser, ability, cam, worldLayer, targetLayer);
+            _currentCast = new CastSession(abilityUser, ability, _targetResolver);
         } 
 
        private void ConfirmCurrentCast()
@@ -233,15 +209,6 @@ namespace Project.Entities.Player
         private void ClearCurrentCast()
         {
             _currentCast = null;
-        }
-
-        private Vector3 GetAimDirection()
-        {
-            Vector3 direction = cam.transform.forward;
-
-            direction.y = 0f;
-
-            return direction.normalized;
         }
 
         private void OnGUI()

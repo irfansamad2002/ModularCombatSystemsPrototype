@@ -9,7 +9,6 @@ public class CastSession
 {
     private AbilityData _ability;
     private AbilityUser _user;
-    private Camera _cam;
 
     private AOEIndicator _indicator;
     private AbilityContext _context;
@@ -17,26 +16,21 @@ public class CastSession
     private bool _isActive;
     public bool IsActive => _isActive;
 
-    private LayerMask _worldLayer;
-    private LayerMask _targetLayer;
-
     private float _maxDistanceForRays = 100f;
 
     private bool _isValidCast;
     public bool IsValidCast => _isValidCast;
 
+    private AbilityTargetResolver _targetResolver;
+
     public CastSession(
         AbilityUser user,
         AbilityData ability,
-        Camera cam,
-        LayerMask worldLayer,
-        LayerMask targetLayer)
+        AbilityTargetResolver targetResolver)
     {
         _user = user;
         _ability = ability;
-        _cam = cam;
-        _worldLayer = worldLayer;
-        _targetLayer = targetLayer;
+        _targetResolver = targetResolver;
 
         _isActive = true;
 
@@ -79,37 +73,32 @@ public class CastSession
     private void UpdateSelfTargeting()
     {
         _context.target = _user.gameObject;
-        _context.hasPoint = true;
-
-        Vector3 forward = _cam.transform.forward;
-        forward.y = 0f;
-        forward.Normalize();
-
-        _context.direction = forward;
-        Debug.Log(_context.direction);
+        _context.direction = _targetResolver.GetAimDirection();
     }
 
     private void UpdateTargetTargeting()
     {
-        Ray ray = _cam.ViewportPointToRay(new Vector3(0.5f,0.5f,0f));
+        GameObject target = _targetResolver.RaycastEnemy();
 
-        if (Physics.Raycast(ray, out RaycastHit hit, _maxDistanceForRays, _targetLayer))
+        if (target == null)
         {
-            GameObject target = hit.collider.gameObject;
-
-            if (IsTargetInRange(target))
-            {
-                _context.target = target;
-                return;
-            }
+            _context.target = null;
+            return;
         }
-        _context.target = null;
-       
+
+        if (!IsTargetInRange(target))
+        {
+            _context.target = null;
+            return;
+        }
+
+        _context.target = target;
+
     }
 
     private void UpdatePointTargeting()
     {
-        if (!TryGetAimPoint(out var point))
+        if (!_targetResolver.TryGetAimPoint(out var point))
         {
             if (_indicator != null)
             {
@@ -175,24 +164,6 @@ public class CastSession
 
         _isActive = false;
     }
-
-    private bool TryGetAimPoint(out Vector3 point)
-    {
-        Ray ray = _cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-
-        // Only world + enemies, NEVER indicator layer
-        int mask = _worldLayer | _targetLayer;
-
-        if (Physics.Raycast(ray, out RaycastHit hit, _maxDistanceForRays, mask))
-        {
-            point = hit.point;
-            return true;
-        }
-
-        point = ray.origin + ray.direction * 100f;
-        return true;  
-    }
-
 
     private bool IsTargetInRange(GameObject target)
     {
