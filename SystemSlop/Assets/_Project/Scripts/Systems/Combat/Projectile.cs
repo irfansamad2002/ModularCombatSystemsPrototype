@@ -82,9 +82,9 @@ namespace Project.Systems.Combat
 
             foreach (var effect in _effects)
             {
-                effect.Apply(hitCollider.gameObject, falloff);
+                effect.Apply(hitCollider.gameObject,default, falloff);
             }
-
+                
         }
 
 

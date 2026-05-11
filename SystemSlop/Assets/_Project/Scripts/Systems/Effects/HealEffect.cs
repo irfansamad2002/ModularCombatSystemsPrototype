@@ -7,7 +7,7 @@ public class HealEffect : EffectData
 {
     public float healAmount;
 
-    public override void Apply(GameObject target, float multiplier = 1)
+    public override void Apply(GameObject target,AbilityContext context, float multiplier = 1)
     {
         var health = target.GetComponent<Health>();
         if (health == null)

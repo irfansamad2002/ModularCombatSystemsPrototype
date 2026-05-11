@@ -63,7 +63,7 @@ namespace Project.Systems.Ability
 
             foreach (var effect in ability.effects)
             {
-                effect.Apply(target);
+                effect.Apply(target, context);
             }
         }
 
@@ -203,4 +203,6 @@ public struct AbilityContext
 
     public Vector3 point;
     public bool hasPoint;
+
+    public Vector3 direction;
 }

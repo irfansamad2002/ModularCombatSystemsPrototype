@@ -11,6 +11,19 @@ namespace Project.Systems.Effects
         /// </summary>
         public string effectId; // So that dont apply effects, u apply them repeatdly over time
 
-        public abstract void Apply(GameObject target, float multiplier = 1f);
+        public virtual void Apply(
+         GameObject target,
+         AbilityContext context = default,
+         float multiplier = 1f)
+        {
+            Apply(target, multiplier);
+        }
+
+        public virtual void Apply(
+            GameObject target,
+            float multiplier = 1f)
+        {
+            // fallback implementation
+        }
     }
 }

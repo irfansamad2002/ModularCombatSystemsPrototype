@@ -8,7 +8,7 @@ namespace Project.Systems.Effects
         public float slowMultiplier = .5f;
         public float duration = 3f;
 
-        public override void Apply(GameObject target, float multiplier = 1)
+        public override void Apply(GameObject target,AbilityContext context, float multiplier = 1)
         {
             var handler = target.GetComponent<EffectHandler>();
             if (handler == null) return;

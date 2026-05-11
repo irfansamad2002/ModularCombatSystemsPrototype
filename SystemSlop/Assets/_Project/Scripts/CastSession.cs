@@ -69,10 +69,24 @@ public class CastSession
                 UpdateTargetTargeting();
                 break;
             case TargetingType.Self:
+                UpdateSelfTargeting();
                 break;
         }
 
         _isValidCast = CanConfirmCast();
+    }
+
+    private void UpdateSelfTargeting()
+    {
+        _context.target = _user.gameObject;
+        _context.hasPoint = true;
+
+        Vector3 forward = _cam.transform.forward;
+        forward.y = 0f;
+        forward.Normalize();
+
+        _context.direction = forward;
+        Debug.Log(_context.direction);
     }
 
     private void UpdateTargetTargeting()
@@ -108,7 +122,7 @@ public class CastSession
         Vector3 origin = _user.Firepoint.position;
 
         Vector3 toPoint = point - origin;
-
+        _context.direction = toPoint.normalized;
         float dist = toPoint.magnitude;
         float range = _ability.castRange;
 

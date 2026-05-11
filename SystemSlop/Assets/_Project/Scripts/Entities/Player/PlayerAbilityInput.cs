@@ -142,6 +142,8 @@ namespace Project.Entities.Player
             {
                 case TargetingType.None:
                 case TargetingType.Self:
+                    context.target = abilityUser.gameObject;
+                    context.direction = GetAimDirection();
                     break;
 
                 case TargetingType.Point:
@@ -149,11 +151,20 @@ namespace Project.Entities.Player
                     {
                         context.point = point;
                         context.hasPoint = true;
+                        Vector3 origin = abilityUser.Firepoint.position;
+
+                        context.direction = (point - origin).normalized;
                     }
                         break;
 
                 case TargetingType.Target:
                     context.target = RaycastEnemy();
+                    if (context.target != null)
+                    {
+                        Vector3 dir = context.target.transform.position - abilityUser.transform.position;
+
+                        context.direction = dir.normalized;
+                    }
                     break;
             }
 
@@ -222,6 +233,15 @@ namespace Project.Entities.Player
         private void ClearCurrentCast()
         {
             _currentCast = null;
+        }
+
+        private Vector3 GetAimDirection()
+        {
+            Vector3 direction = cam.transform.forward;
+
+            direction.y = 0f;
+
+            return direction.normalized;
         }
 
         private void OnGUI()
