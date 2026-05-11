@@ -2995,7 +2995,7 @@ GameObject:
   - component: {fileID: 1521810221}
   - component: {fileID: 1521810220}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Crossair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -17,6 +17,8 @@ namespace Project.Systems.Abilities
         public List<EffectData> effects;
         public ProjectileData projectile; //Optional
         public GameObject indicatorPrefab;//Optional : if null which mean no need indicators
+
+        public CastMode castMode;
     }
 }
 
@@ -32,4 +34,10 @@ public enum DeliveryType
 {
     Instant,
     Projectile
+}
+
+public enum CastMode
+{
+    Instant,    //Cast immediately on press
+    Confirm     //enter targeting mode first
 }
