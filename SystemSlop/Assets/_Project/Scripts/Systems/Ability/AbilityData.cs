@@ -9,6 +9,9 @@ namespace Project.Systems.Abilities
     public class AbilityData : ScriptableObject
     {
         public string abilityName;
+        public string description;
+        public Sprite icon;
+
         public float cooldown;
         public float castRange = 10f; //Optional
         public TargetingType targetingType;

@@ -198,7 +198,7 @@ namespace Project.Entities.Player
             }
 
             _currentCast = new CastSession(abilityUser, ability, cam, worldLayer, targetLayer);
-        }
+        } 
 
        private void ConfirmCurrentCast()
         {

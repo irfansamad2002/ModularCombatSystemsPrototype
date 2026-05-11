@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Simple Strike
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   abilityName: Simple Strike
+  description: Instantly strike a targeted enemy with a burst of damage.
+  icon: {fileID: 0}
   cooldown: 1
   castRange: 10
   targetingType: 2
