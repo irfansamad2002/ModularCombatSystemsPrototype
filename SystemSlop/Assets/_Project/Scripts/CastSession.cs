@@ -68,6 +68,9 @@ public class CastSession
         }
 
         _isValidCast = CanConfirmCast();
+
+        Debug.DrawRay(_user.Firepoint.position, _context.direction * 5f, Color.blueViolet);
+        Debug.Log("test");
     }
 
     private void UpdateSelfTargeting()

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Dash
   m_EditorClassIdentifier: Assembly-CSharp::Project.Systems.Effects.DashEffect
   effectId: Dash
-  dashDistance: 1
+  dashDistance: 0.1

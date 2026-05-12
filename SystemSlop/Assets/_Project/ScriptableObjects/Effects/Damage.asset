@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Damage
   m_EditorClassIdentifier: Assembly-CSharp::DamageEffect
   effectId: Damage
-  damage: 20.95
+  damage: 6.6

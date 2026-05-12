@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.LowLevelPhysics2D;
 
 namespace Project.Systems.Ability
 {
@@ -53,8 +54,26 @@ namespace Project.Systems.Ability
 
         private void ExecuteInstant(AbilityData ability, AbilityContext context)
         {
+           
+
+            switch (ability.areaShape)
+            {
+                case AreaShape.None:
+                    ExecuteSingleTargetInstant(ability, context);
+                    break;
+                case AreaShape.Sphere:
+                    ExecuteSphereInstant(ability, context);
+                    break;
+                case AreaShape.Cone:
+                    ExecuteConeInstant(ability, context);
+                    break;
+            }
+        }
+
+        private void ExecuteSingleTargetInstant(AbilityData ability, AbilityContext context)
+        {
             GameObject target = ResolveTarget(ability, context);
-                
+
             if (target == null)
             {
                 //DebugHelper.WarnMissingComponent(target, nameof(GameObject));
@@ -66,6 +85,74 @@ namespace Project.Systems.Ability
                 effect.Apply(target, context);
             }
         }
+
+        private void ExecuteSphereInstant(AbilityData ability, AbilityContext context)
+        {
+            Vector3 center = ResolvePoint(ability, context);
+
+            Collider[] hits = Physics.OverlapSphere(center, ability.radius);
+
+            foreach (var hit in hits)
+            {
+                foreach (var effect in ability.effects)
+                {
+                    effect.Apply(hit.gameObject, context);
+                }
+            }
+        }
+
+        private void ExecuteConeInstant(AbilityData ability, AbilityContext context)
+        {
+            Vector3 origin = transform.position;
+
+            Collider[] hits = Physics.OverlapSphere(origin, ability.radius);
+
+            Vector3 forward = context.direction.normalized;
+            float halfAngle = ability.coneAngle * 0.5f;
+            Vector3 leftEdge = Quaternion.Euler(0f, -halfAngle, 0f) * forward;
+            Vector3 rightEdge = Quaternion.Euler(0f, halfAngle, 0f) * forward;
+
+            Debug.DrawRay(
+                origin,
+                forward * ability.radius,
+                Color.red,
+                1f);
+
+            Debug.DrawRay(
+                origin,
+                leftEdge * ability.radius,
+                Color.green,
+                1f);
+
+            Debug.DrawRay(
+                origin,
+                rightEdge * ability.radius,
+                Color.green,
+                1f);
+
+            foreach (var hit in hits)
+            {
+                if (hit.transform.root == transform.root)
+                    continue;
+               
+                Vector3 dirToTarget = (hit.transform.position - origin).normalized;
+
+                float angle = Vector3.Angle(context.direction, dirToTarget);
+
+                if (angle > ability.coneAngle)
+                {
+                    continue;
+                }
+                
+                
+                Debug.Log($"{hit.name} | Angle: {angle}");
+                foreach (var effect in ability.effects)
+                {
+                    effect.Apply(hit.gameObject, context);
+                }
+            }
+        }
+
 
         private void ExecuteProjectile(AbilityData ability, AbilityContext context)
         {

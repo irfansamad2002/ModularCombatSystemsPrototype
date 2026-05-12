@@ -22,6 +22,12 @@ namespace Project.Systems.Abilities
         public GameObject indicatorPrefab;//Optional : if null which mean no need indicators
 
         public CastMode castMode;
+
+        [Header("Area")]
+        public AreaShape areaShape;
+        public float radius = 3f;
+        [Range(0f, 360f)]
+        public float coneAngle = 90f;
     }
 }
 
@@ -43,4 +49,11 @@ public enum CastMode
 {
     Instant,    //Cast immediately on press
     Confirm     //enter targeting mode first
+}
+
+public enum AreaShape
+{
+    None,
+    Sphere,
+    Cone
 }
