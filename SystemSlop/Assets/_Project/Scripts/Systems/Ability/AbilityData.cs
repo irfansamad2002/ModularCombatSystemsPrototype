@@ -28,6 +28,9 @@ namespace Project.Systems.Abilities
         public float radius = 3f;
         [Range(0f, 360f)]
         public float coneAngle = 90f;
+
+        [Header("Delayed")]
+        public float delay = 1f;
     }
 }
 
@@ -42,7 +45,8 @@ public enum TargetingType
 public enum DeliveryType
 {
     Instant,
-    Projectile
+    Projectile,
+    Delayed
 }
 
 public enum CastMode

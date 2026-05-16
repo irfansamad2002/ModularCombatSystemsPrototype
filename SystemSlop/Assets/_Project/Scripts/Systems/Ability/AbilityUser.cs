@@ -46,10 +46,40 @@ namespace Project.Systems.Ability
                 case DeliveryType.Projectile:
                     ExecuteProjectile(ability, context);
                     break;
+                case DeliveryType.Delayed:
+                    ExecuteDelayed(ability, context);
+                    break;
                 default:
                     break;
             }
 
+        }
+
+        public void ExecuteDelayedImpact(AbilityData ability, AbilityContext context)
+        {
+            switch (ability.areaShape)
+            {
+                case AreaShape.None:
+                    ExecuteSingleTargetInstant(ability, context);
+                    break;
+                case AreaShape.Sphere:
+                    ExecuteSphereInstant(ability, context);
+                    break;
+                case AreaShape.Cone:
+                    ExecuteConeInstant(ability, context);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ExecuteDelayed(AbilityData ability, AbilityContext context)
+        {
+            GameObject runnerGO = new GameObject("Delayed Ability");
+
+            var runner = runnerGO.AddComponent<DelayedAbilityRunner>();
+
+            runner.Init(this, ability, context);
         }
 
         private void ExecuteInstant(AbilityData ability, AbilityContext context)
