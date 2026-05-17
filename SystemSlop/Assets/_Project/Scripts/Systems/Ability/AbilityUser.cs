@@ -171,13 +171,13 @@ namespace Project.Systems.Ability
 
                 float angle = Vector3.Angle(forward, toTarget);
 
-                Debug.Log(toTarget);
+                
                 Debug.DrawRay(
                            origin,
                            toTarget,
                            Color.dodgerBlue,
                            1f);
-                Debug.Log(angle);
+                
 
                 if (angle > halfAngle)
                 {
