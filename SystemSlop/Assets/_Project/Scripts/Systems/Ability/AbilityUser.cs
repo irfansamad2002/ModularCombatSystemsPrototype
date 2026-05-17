@@ -13,6 +13,8 @@ namespace Project.Systems.Ability
     {
         [SerializeField] private List<AbilityData> abilities;
         [SerializeField] private Transform firePoint;
+        [SerializeField] private Material tempDebugMaterial;
+
         //[SerializeField] private float offsetForFirePointZAxis = 1f;
         public Transform Firepoint => firePoint;
         private float[] _cooldowns;
@@ -79,7 +81,7 @@ namespace Project.Systems.Ability
 
             var runner = runnerGO.AddComponent<DelayedAbilityRunner>();
 
-            runner.Init(this, ability, context);
+            runner.Init(this, ability, context, tempDebugMaterial);
         }
 
         private void ExecuteInstant(AbilityData ability, AbilityContext context)
