@@ -25,5 +25,6 @@ MonoBehaviour:
   indicatorPrefab: {fileID: 0}
   castMode: 0
   areaShape: 2
-  radius: 4
-  coneAngle: 30
+  radius: 3
+  coneAngle: 60
+  delay: 0

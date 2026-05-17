@@ -147,8 +147,6 @@ public class CastSession
             return;
        }
 
-
-
         _user.UseAbility(_ability, _context);
         CleanUp();
     }

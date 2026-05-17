@@ -3,6 +3,7 @@ using Project.Systems.Combat;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.LowLevelPhysics2D;
@@ -14,6 +15,7 @@ namespace Project.Systems.Ability
         [SerializeField] private List<AbilityData> abilities;
         [SerializeField] private Transform firePoint;
         [SerializeField] private Material tempDebugMaterial;
+        [SerializeField] private LayerMask _targetLayer;
 
         //[SerializeField] private float offsetForFirePointZAxis = 1f;
         public Transform Firepoint => firePoint;
@@ -36,7 +38,6 @@ namespace Project.Systems.Ability
             ExecuteAbility(ability, context);
             StartCooldown(index, ability);
         }
-
 
         private void ExecuteAbility(AbilityData ability, AbilityContext context)
         {
@@ -87,7 +88,6 @@ namespace Project.Systems.Ability
         private void ExecuteInstant(AbilityData ability, AbilityContext context)
         {
            
-
             switch (ability.areaShape)
             {
                 case AreaShape.None:
@@ -137,9 +137,10 @@ namespace Project.Systems.Ability
         {
             Vector3 origin = transform.position;
 
-            Collider[] hits = Physics.OverlapSphere(origin, ability.radius);
+            Collider[] hits = Physics.OverlapSphere(origin, ability.radius, _targetLayer);
 
-            Vector3 forward = context.direction.normalized;
+            Vector3 forward = Vector3.ProjectOnPlane(context.direction, Vector3.up).normalized;
+            
             float halfAngle = ability.coneAngle * 0.5f;
             Vector3 leftEdge = Quaternion.Euler(0f, -halfAngle, 0f) * forward;
             Vector3 rightEdge = Quaternion.Euler(0f, halfAngle, 0f) * forward;
@@ -166,12 +167,19 @@ namespace Project.Systems.Ability
             {
                 if (hit.transform.root == transform.root)
                     continue;
-               
-                Vector3 dirToTarget = (hit.transform.position - origin).normalized;
+                Vector3 toTarget = Vector3.ProjectOnPlane(hit.transform.position - origin, Vector3.up).normalized;
 
-                float angle = Vector3.Angle(context.direction, dirToTarget);
+                float angle = Vector3.Angle(forward, toTarget);
 
-                if (angle > ability.coneAngle)
+                Debug.Log(toTarget);
+                Debug.DrawRay(
+                           origin,
+                           toTarget,
+                           Color.dodgerBlue,
+                           1f);
+                Debug.Log(angle);
+
+                if (angle > halfAngle)
                 {
                     continue;
                 }
@@ -184,7 +192,6 @@ namespace Project.Systems.Ability
                 }
             }
         }
-
 
         private void ExecuteProjectile(AbilityData ability, AbilityContext context)
         {
@@ -251,7 +258,6 @@ namespace Project.Systems.Ability
         {
             _cooldowns[index] = ability.cooldown;
         }
-
 
         private void Update()
         {

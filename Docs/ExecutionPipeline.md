@@ -60,3 +60,40 @@ Effects are applied to valid targets.
 - execution paths stay reusable
 - new abilities require less custom logic
 - supports future NPC reuse
+
+## Execution Semantics (Important Rules)
+
+### Snapshot Rule (Delayed Abilities)
+All delayed abilities operate on a snapshot of cast-time targeting data.
+
+This includes:
+- target
+- point
+- direction
+
+These values are NOT recomputed after delay.
+
+---
+
+### Live Resolution Rule (Area Queries)
+Area-based effects (Sphere, Cone, etc.) are evaluated at impact time using the current world state.
+
+This means:
+- which objects are inside the area is determined at impact time
+- physics queries (OverlapSphere, etc.) are always live
+
+---
+
+### Why This Rule Exists
+This prevents desynchronization between:
+- player intent at cast time
+- world state at impact time
+
+It ensures delayed abilities behave deterministically and consistently.
+
+---
+
+### System Implication
+Any system that modifies AbilityContext after cast initiation will NOT affect delayed execution outcomes.
+
+Delayed systems must treat AbilityContext as immutable after scheduling.
