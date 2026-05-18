@@ -137,58 +137,42 @@ namespace Project.Systems.Ability
         {
             Vector3 origin = transform.position;
 
-            Collider[] hits = Physics.OverlapSphere(origin, ability.radius, _targetLayer);
-
-            Vector3 forward = Vector3.ProjectOnPlane(context.direction, Vector3.up).normalized;
-            
-            float halfAngle = ability.coneAngle * 0.5f;
-            Vector3 leftEdge = Quaternion.Euler(0f, -halfAngle, 0f) * forward;
-            Vector3 rightEdge = Quaternion.Euler(0f, halfAngle, 0f) * forward;
-
-            Debug.DrawRay(
+            var sphereTargets = AreaQuery.GetTargetsSphere(
                 origin,
-                forward * ability.radius,
-                Color.red,
-                1f);
+                ability.radius,
+                _targetLayer,
+                transform);
 
-            Debug.DrawRay(
+            var coneTargets = AreaQuery.FilterCone(
+                sphereTargets,
                 origin,
-                leftEdge * ability.radius,
-                Color.green,
-                1f);
+                context.direction,
+                ability.coneAngle);
 
-            Debug.DrawRay(
-                origin,
-                rightEdge * ability.radius,
-                Color.green,
-                1f);
+           
+            //Debug.DrawRay(
+            //    origin,
+            //    forward * ability.radius,
+            //    Color.red,
+            //    1f);
 
-            foreach (var hit in hits)
+            //Debug.DrawRay(
+            //    origin,
+            //    leftEdge * ability.radius,
+            //    Color.green,
+            //    1f);
+
+            //Debug.DrawRay(
+            //    origin,
+            //    rightEdge * ability.radius,
+            //    Color.green,
+            //    1f);
+
+            foreach (var target in coneTargets)
             {
-                if (hit.transform.root == transform.root)
-                    continue;
-                Vector3 toTarget = Vector3.ProjectOnPlane(hit.transform.position - origin, Vector3.up).normalized;
-
-                float angle = Vector3.Angle(forward, toTarget);
-
-                
-                Debug.DrawRay(
-                           origin,
-                           toTarget,
-                           Color.dodgerBlue,
-                           1f);
-                
-
-                if (angle > halfAngle)
-                {
-                    continue;
-                }
-                
-                
-                Debug.Log($"{hit.name} | Angle: {angle}");
                 foreach (var effect in ability.effects)
                 {
-                    effect.Apply(hit.gameObject, context);
+                    effect.Apply(target, context);
                 }
             }
         }
