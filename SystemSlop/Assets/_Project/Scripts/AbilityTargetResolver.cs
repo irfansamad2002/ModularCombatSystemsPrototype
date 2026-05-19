@@ -1,5 +1,8 @@
 using UnityEngine;
-
+/// <summary>
+/// Converts player input and aiming information into usable gameplay targeting data.
+/// Acts as the targeting stage of the combat pipeline.
+/// </summary>
 public class AbilityTargetResolver
 {
     private Camera _cam;

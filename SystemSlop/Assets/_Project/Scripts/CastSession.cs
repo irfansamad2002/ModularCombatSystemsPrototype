@@ -1,10 +1,11 @@
 using Project.Systems.Abilities;
 using Project.Systems.Ability;
-using Unity.VectorGraphics;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
-
+/// <summary>
+/// Represents an ability that the player has started casting, but has not finished using yet.
+/// Stores temporary information during the casting process (like selected targets, aiming position, or charging state).
+/// Keeps temporary casting data seperate from permanent gameplay systems like AbilityUser
+/// </summary>
 public class CastSession
 {
     private AbilityData _ability;
@@ -16,7 +17,7 @@ public class CastSession
     private bool _isActive;
     public bool IsActive => _isActive;
 
-    private float _maxDistanceForRays = 100f;
+    //private float _maxDistanceForRays = 100f;
 
     private bool _isValidCast;
     public bool IsValidCast => _isValidCast;
@@ -70,7 +71,6 @@ public class CastSession
         _isValidCast = CanConfirmCast();
 
         Debug.DrawRay(_user.Firepoint.position, _context.direction * 5f, Color.blueViolet);
-        Debug.Log("test");
     }
 
     private void UpdateSelfTargeting()

@@ -23,8 +23,6 @@ namespace Project.Entities.Player
 
         public bool newAbilityCancelsOldOne;
     
-
-
         private void Awake()
         {
             var map = inputActions.FindActionMap("Player");
@@ -70,8 +68,6 @@ namespace Project.Entities.Player
 
             _currentCast?.Update();
 
-
-          
         }
 
         private void HandleCastControls()
@@ -100,8 +96,6 @@ namespace Project.Entities.Player
             ClearCurrentCast();
         }
 
-
-
         private void HandleAbilityInputs()
         {
             for (int i = 0; i < _abilityActions.Length; i++)
@@ -112,7 +106,6 @@ namespace Project.Entities.Player
                 }
             }
         }
-
 
         private void StartAbilityCast(int index)
         {
@@ -127,8 +120,6 @@ namespace Project.Entities.Player
                     StartConfirmCast(ability);
                     break;
             }
-
-           
         }
 
         private void CastInstantAbility(AbilityData ability)
@@ -159,7 +150,7 @@ namespace Project.Entities.Player
 
                         context.direction = (point - origin).normalized;
                     }
-                        break;
+                    break;
 
                 case TargetingType.Target:
                     context.target = _targetResolver.RaycastEnemy();
@@ -175,8 +166,6 @@ namespace Project.Entities.Player
             return context;
         }
 
-       
-
         private void StartConfirmCast(AbilityData ability)
         {
             if (_currentCast != null && _currentCast.IsActive)
@@ -187,7 +176,7 @@ namespace Project.Entities.Player
             _currentCast = new CastSession(abilityUser, ability, _targetResolver);
         } 
 
-       private void ConfirmCurrentCast()
+        private void ConfirmCurrentCast()
         {
             if (_currentCast == null)
             {

@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Handles spatial target collection for area-based abilities.
+/// Determines which targets are affected based on AreaShape rules.
+/// </summary>
 public static class AreaQuery
 {
     public static List<GameObject> GetTargetsSphere(

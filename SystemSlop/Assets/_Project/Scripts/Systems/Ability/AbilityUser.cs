@@ -1,15 +1,14 @@
 using Project.Systems.Abilities;
 using Project.Systems.Combat;
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.LowLevelPhysics2D;
 
 namespace Project.Systems.Ability
 {
+    /// <summary>
+    /// Coordinates ability execution, cooldowns,
+    /// and execution routing for abilities.
+    /// </summary>
     public class AbilityUser : MonoBehaviour
     {
         [SerializeField] private List<AbilityData> abilities;

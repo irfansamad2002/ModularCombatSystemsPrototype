@@ -23,7 +23,7 @@ MonoBehaviour:
   effects:
   - {fileID: 11400000, guid: 2ebed502e72e5bb4abcaeeb0d179aeab, type: 2}
   projectile: {fileID: 0}
-  indicatorPrefab: {fileID: 0}
+  indicatorPrefab: {fileID: 4494617534100734494, guid: e8bb9b30648bf9f4ba3f443154fb55a1, type: 3}
   castMode: 1
   areaShape: 1
   radius: 5
