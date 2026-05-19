@@ -25,6 +25,11 @@ namespace Project.Systems.Ability
             _cooldowns = new float[abilities.Count];
         }
 
+        /// <summary>
+        /// Entry point for executing an ability after validation.
+        /// Routes the ability into the correct execution pipeline
+        /// based on DeliveryType and starts cooldown management.
+        /// </summary>
         public void UseAbility(AbilityData ability, AbilityContext context)
         {
             int index = abilities.IndexOf(ability);
@@ -56,7 +61,11 @@ namespace Project.Systems.Ability
             }
 
         }
-
+        /// <summary>
+        /// Handles the impact phase of delayed abilities after delay completion.
+        /// Resolves final area shape (None, Sphere, Cone) and applies effects
+        /// using the stored AbilityContext snapshot.
+        /// </summary>
         public void ExecuteDelayedImpact(AbilityData ability, AbilityContext context)
         {
             switch (ability.areaShape)
@@ -305,7 +314,11 @@ namespace Project.Systems.Ability
 
     }
 }
-    
+/// <summary>
+/// Runtime data container that stores all targeting and execution-relevant
+/// information for a single ability cast.
+/// Acts as the shared data snapshot between targeting, execution, and effects.
+/// </summary>
 public struct AbilityContext
 {
     public GameObject target;

@@ -3,7 +3,10 @@ using Project.Systems.Ability;
 using System.Collections;
 using UnityEngine;
 /// <summary>
-/// 
+/// Executes delayed ability impact after a fixed delay.
+/// Acts as a temporary runtime runner that waits, then triggers
+/// the AbilityUser delayed impact pipeline using stored AbilityContext.
+/// Handles lifetime of delayed VFX/debug visuals and self-destruction.
 /// </summary>
 public class DelayedAbilityRunner : MonoBehaviour
 {

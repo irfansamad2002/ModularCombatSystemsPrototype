@@ -6,6 +6,11 @@ using UnityEngine;
 /// </summary>
 public static class AreaQuery
 {
+    /// <summary>
+    /// Returns all valid combat targets within a spherical radius.
+    /// Performs physics overlap query and basic filtering (e.g. self exclusion, layer filtering).
+    /// Used as the base spatial query for AoE abilities.
+    /// </summary>
     public static List<GameObject> GetTargetsSphere(
         Vector3 center,
         float radius,
