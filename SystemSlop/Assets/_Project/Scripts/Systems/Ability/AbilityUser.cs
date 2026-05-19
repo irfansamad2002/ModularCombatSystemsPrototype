@@ -122,13 +122,13 @@ namespace Project.Systems.Ability
         {
             Vector3 center = ResolvePoint(ability, context);
 
-            Collider[] hits = Physics.OverlapSphere(center, ability.radius);
+            var targets = AreaQuery.GetTargetsSphere(center, ability.radius, _targetLayer, transform);
 
-            foreach (var hit in hits)
+            foreach (var target in targets)
             {
                 foreach (var effect in ability.effects)
                 {
-                    effect.Apply(hit.gameObject, context);
+                    effect.Apply(target, context);
                 }
             }
         }
@@ -229,6 +229,7 @@ namespace Project.Systems.Ability
                 case TargetingType.Target:
                 case TargetingType.None:
                 default:
+                    Debug.Log("Default ResolvePoint: firePoint.position + firePoint.forward * 10f");
                     return firePoint.position + firePoint.forward * 10f;
             }
         }
