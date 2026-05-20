@@ -75,7 +75,7 @@ public class CastSession
 
     private void UpdateSelfTargeting()
     {
-        _context.target = _user.gameObject;
+        _context.castTarget = _user.gameObject;
         _context.direction = _targetResolver.GetAimDirection();
     }
 
@@ -85,17 +85,17 @@ public class CastSession
 
         if (target == null)
         {
-            _context.target = null;
+            _context.castTarget = null;
             return;
         }
 
         if (!IsTargetInRange(target))
         {
-            _context.target = null;
+            _context.castTarget = null;
             return;
         }
 
-        _context.target = target;
+        _context.castTarget = target;
 
     }
 
@@ -182,7 +182,7 @@ public class CastSession
             case TargetingType.Point:
                 return _context.hasPoint;
             case TargetingType.Target:
-                return _context.target != null;
+                return _context.castTarget != null;
             case TargetingType.Self:
                 return true;
         }
@@ -210,7 +210,7 @@ public class CastSession
                 break;
 
             case TargetingType.Target:
-                GUILayout.Label($"Target: {_context.target}");
+                GUILayout.Label($"Target: {_context.castTarget}");
                 break;
         }
     }

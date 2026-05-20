@@ -64,20 +64,27 @@ namespace Project.Systems.Ability
         /// <summary>
         /// Handles the impact phase of delayed abilities after delay completion.
         /// Resolves final area shape (None, Sphere, Cone) and applies effects
-        /// using the stored AbilityContext snapshot.
+        /// using ImpactContext contex
         /// </summary>
-        public void ResolveAreaImpact(AbilityData ability, AbilityContext context)
+        public void ResolveAreaImpact(AbilityData ability, ImpactContext context)
         {
-            switch (ability.areaShape)
+            AbilityContext converted = new AbilityContext
+            {
+                point = context.point,
+                direction = context.direction,
+                castTarget = null, //AOE no need target
+                hasPoint = true
+            };
+            switch (ability.areaShape)  
             {
                 case AreaShape.None:
-                    ExecuteSingleTargetInstant(ability, context);
+                    ExecuteSingleTargetInstant(ability, converted);
                     break;
                 case AreaShape.Sphere:
-                    ExecuteSphereInstant(ability, context);
+                    ExecuteSphereInstant(ability, converted);
                     break;
                 case AreaShape.Cone:
-                    ExecuteConeInstant(ability, context);
+                    ExecuteConeInstant(ability, converted);
                     break;
                 default:
                     break;
@@ -88,7 +95,7 @@ namespace Project.Systems.Ability
         {
             GameObject runnerGO = new GameObject("Delayed Ability");
 
-            var runner = runnerGO.AddComponent<DelayedAbilityRunner>();
+            var runner = runnerGO.AddComponent<DelayedAbilityRunner>(); 
 
             runner.Init(this, ability, context, tempDebugMaterial);
         }
@@ -218,7 +225,7 @@ namespace Project.Systems.Ability
                 case TargetingType.Point:
                     return null;
                 case TargetingType.Target:
-                    return context.target;
+                    return context.castTarget;
                 case TargetingType.Self:
                     return gameObject;
                 default:
@@ -303,7 +310,7 @@ namespace Project.Systems.Ability
                     return context.hasPoint;
 
                 case TargetingType.Target:
-                    return context.target != null;
+                    return context.castTarget != null;
 
                 case TargetingType.Self:
                 case TargetingType.None:
@@ -321,10 +328,17 @@ namespace Project.Systems.Ability
 /// </summary>
 public struct AbilityContext
 {
-    public GameObject target;
+    //cast-time selection only
+    public GameObject castTarget;
 
     public Vector3 point;
     public bool hasPoint;
 
+    public Vector3 direction;
+}
+
+public struct ImpactContext
+{
+    public Vector3 point;
     public Vector3 direction;
 }

@@ -137,7 +137,7 @@ namespace Project.Entities.Player
             {
                 case TargetingType.None:
                 case TargetingType.Self:
-                    context.target = abilityUser.gameObject;
+                    context.castTarget = abilityUser.gameObject;
                     context.direction = _targetResolver.GetAimDirection();
                     break;
 
@@ -153,10 +153,10 @@ namespace Project.Entities.Player
                     break;
 
                 case TargetingType.Target:
-                    context.target = _targetResolver.RaycastEnemy();
-                    if (context.target != null)
+                    context.castTarget = _targetResolver.RaycastEnemy();
+                    if (context.castTarget != null)
                     {
-                        Vector3 dir = context.target.transform.position - abilityUser.transform.position;
+                        Vector3 dir = context.castTarget.transform.position - abilityUser.transform.position;
 
                         context.direction = dir.normalized;
                     }

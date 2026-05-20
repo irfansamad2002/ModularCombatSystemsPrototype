@@ -40,9 +40,22 @@ public class DelayedAbilityRunner : MonoBehaviour
     {
         yield return new WaitForSeconds(ability.delay);
 
-        user.ResolveAreaImpact(ability, context);
+        var impact = BuildImpactContext(ability, context);
+
+        user.ResolveAreaImpact(ability, impact);
 
         Destroy(_debugSphere);
         Destroy(gameObject);
+    }
+
+    private ImpactContext BuildImpactContext(AbilityData ability, AbilityContext context)
+    {
+        Vector3 point = context.point;
+
+        return new ImpactContext
+        {
+            point = point,
+            direction = context.direction
+        };
     }
 }
