@@ -66,7 +66,7 @@ namespace Project.Systems.Ability
         /// Resolves final area shape (None, Sphere, Cone) and applies effects
         /// using the stored AbilityContext snapshot.
         /// </summary>
-        public void ExecuteDelayedImpact(AbilityData ability, AbilityContext context)
+        public void ResolveAreaImpact(AbilityData ability, AbilityContext context)
         {
             switch (ability.areaShape)
             {

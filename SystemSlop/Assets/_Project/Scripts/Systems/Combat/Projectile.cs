@@ -56,17 +56,20 @@ namespace Project.Systems.Combat
 
             Collider[] hitColliders = Physics.OverlapSphere(explosionCenter, _explosionRadius, _damageLayers);
 
-            foreach (var hitCollider in hitColliders)
+            var targets = AreaQuery.GetTargetsSphere(explosionCenter, _explosionRadius, _damageLayers);
+            
+            foreach (var target in targets)
             {
 
-                ApplyAOE(hitCollider, explosionCenter);
+                ApplyAOE(target, explosionCenter);
             }
+
         }
 
-        private void ApplyAOE(Collider hitCollider, Vector3 explosionCenter)
+        private void ApplyAOE(GameObject target, Vector3 explosionCenter)
         {
           
-            float distance = Vector3.Distance(explosionCenter, hitCollider.ClosestPoint(explosionCenter));
+            float distance = Vector3.Distance(explosionCenter, target.GetComponent<Collider>().ClosestPoint(explosionCenter));
 
             if (distance <= _minDistanceThreshold)
             {
@@ -82,7 +85,7 @@ namespace Project.Systems.Combat
 
             foreach (var effect in _effects)
             {
-                effect.Apply(hitCollider.gameObject,default, falloff);
+                effect.Apply(target,default, falloff);
             }
                 
         }

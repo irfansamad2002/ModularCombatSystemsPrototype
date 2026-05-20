@@ -40,7 +40,7 @@ public class DelayedAbilityRunner : MonoBehaviour
     {
         yield return new WaitForSeconds(ability.delay);
 
-        user.ExecuteDelayedImpact(ability, context);
+        user.ResolveAreaImpact(ability, context);
 
         Destroy(_debugSphere);
         Destroy(gameObject);

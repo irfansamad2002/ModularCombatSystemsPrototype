@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.LowLevelPhysics2D;
 /// <summary>
 /// Handles spatial target collection for area-based abilities.
 /// Determines which targets are affected based on AreaShape rules.
@@ -28,6 +29,23 @@ public static class AreaQuery
 
             results.Add(hit.gameObject);
         }
+        return results;
+    }
+
+    public static List<GameObject> GetTargetsSphere(
+        Vector3 center,
+        float radius,
+        LayerMask layerMask)
+    {
+        Collider[] hits = Physics.OverlapSphere(center, radius, layerMask);
+
+        List<GameObject> results = new();
+
+        foreach (var hit in hits)
+        {
+            results.Add(hit.gameObject);
+        }
+
         return results;
     }
 

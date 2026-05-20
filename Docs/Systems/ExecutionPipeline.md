@@ -73,6 +73,17 @@ This includes:
 
 These values are NOT recomputed after delay.
 
+Delayed area abilities resolve targets at impact time
+using the current world state.
+
+This means:
+- targets can dodge out
+- new targets can enter
+- impact resolution is spatially dynamic
+
+AbilityContext stores cast intent and impact location,
+not guaranteed future victims.
+
 ---
 
 ### Live Resolution Rule (Area Queries)
