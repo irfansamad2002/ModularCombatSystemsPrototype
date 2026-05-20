@@ -124,14 +124,14 @@ namespace Project.Entities.Player
 
         private void CastInstantAbility(AbilityData ability)
         {
-            AbilityContext context = BuildInstantContext(ability);
+            ExecutionContext context = BuildInstantContext(ability);
 
             abilityUser.UseAbility(ability, context);
         }
 
-        private AbilityContext BuildInstantContext(AbilityData ability)
+        private ExecutionContext BuildInstantContext(AbilityData ability)
         {
-            AbilityContext context = new AbilityContext();
+            ExecutionContext context = new ExecutionContext();
 
             switch (ability.targetingType)
             {
@@ -144,8 +144,8 @@ namespace Project.Entities.Player
                 case TargetingType.Point:
                     if (_targetResolver.TryGetAimPoint(out Vector3 point))
                     {
-                        context.point = point;
-                        context.hasPoint = true;
+                        context.aimPoint = point;
+                        context.hasAimPoint = true;
                         Vector3 origin = abilityUser.Firepoint.position;
 
                         context.direction = (point - origin).normalized;

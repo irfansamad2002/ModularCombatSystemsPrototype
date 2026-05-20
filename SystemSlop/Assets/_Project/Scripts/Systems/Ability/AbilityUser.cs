@@ -30,7 +30,7 @@ namespace Project.Systems.Ability
         /// Routes the ability into the correct execution pipeline
         /// based on DeliveryType and starts cooldown management.
         /// </summary>
-        public void UseAbility(AbilityData ability, AbilityContext context)
+        public void UseAbility(AbilityData ability, ExecutionContext context)
         {
             int index = abilities.IndexOf(ability);
 
@@ -43,7 +43,7 @@ namespace Project.Systems.Ability
             StartCooldown(index, ability);
         }
 
-        private void ExecuteAbility(AbilityData ability, AbilityContext context)
+        private void ExecuteAbility(AbilityData ability, ExecutionContext context)
         {
             switch (ability.deliveryType)
             {
@@ -66,32 +66,26 @@ namespace Project.Systems.Ability
         /// Resolves final area shape (None, Sphere, Cone) and applies effects
         /// using ImpactContext contex
         /// </summary>
-        public void ResolveAreaImpact(AbilityData ability, ImpactContext context)
+        public void ResolveAreaImpact(AbilityData ability, ExecutionContext context)
         {
-            AbilityContext converted = new AbilityContext
-            {
-                point = context.point,
-                direction = context.direction,
-                castTarget = null, //AOE no need target
-                hasPoint = true
-            };
+            
             switch (ability.areaShape)  
             {
                 case AreaShape.None:
-                    ExecuteSingleTargetInstant(ability, converted);
+                    ExecuteSingleTargetInstant(ability, context);
                     break;
                 case AreaShape.Sphere:
-                    ExecuteSphereInstant(ability, converted);
+                    ExecuteSphereInstant(ability, context);
                     break;
                 case AreaShape.Cone:
-                    ExecuteConeInstant(ability, converted);
+                    ExecuteConeInstant(ability, context);
                     break;
                 default:
                     break;
             }
         }
 
-        private void ExecuteDelayed(AbilityData ability, AbilityContext context)
+        private void ExecuteDelayed(AbilityData ability, ExecutionContext context)
         {
             GameObject runnerGO = new GameObject("Delayed Ability");
 
@@ -100,7 +94,7 @@ namespace Project.Systems.Ability
             runner.Init(this, ability, context, tempDebugMaterial);
         }
 
-        private void ExecuteInstant(AbilityData ability, AbilityContext context)
+        private void ExecuteInstant(AbilityData ability, ExecutionContext context)
         {
            
             switch (ability.areaShape)
@@ -117,7 +111,7 @@ namespace Project.Systems.Ability
             }
         }
 
-        private void ExecuteSingleTargetInstant(AbilityData ability, AbilityContext context)
+        private void ExecuteSingleTargetInstant(AbilityData ability, ExecutionContext context)
         {
             GameObject target = ResolveTarget(ability, context);
 
@@ -133,7 +127,7 @@ namespace Project.Systems.Ability
             }
         }
 
-        private void ExecuteSphereInstant(AbilityData ability, AbilityContext context)
+        private void ExecuteSphereInstant(AbilityData ability, ExecutionContext context)
         {
             Vector3 center = ResolvePoint(ability, context);
 
@@ -148,7 +142,7 @@ namespace Project.Systems.Ability
             }
         }
 
-        private void ExecuteConeInstant(AbilityData ability, AbilityContext context)
+        private void ExecuteConeInstant(AbilityData ability, ExecutionContext context)
         {
             Vector3 origin = transform.position;
 
@@ -192,7 +186,7 @@ namespace Project.Systems.Ability
             }
         }
 
-        private void ExecuteProjectile(AbilityData ability, AbilityContext context)
+        private void ExecuteProjectile(AbilityData ability, ExecutionContext context)
         {
             Vector3 point = ResolvePoint(ability, context);
 
@@ -216,7 +210,7 @@ namespace Project.Systems.Ability
             Destroy(projectileGO, ability.projectile.lifetime);
         }
 
-        private GameObject ResolveTarget(AbilityData ability, AbilityContext context)
+        private GameObject ResolveTarget(AbilityData ability, ExecutionContext context)
         {
             switch (ability.targetingType)
             {
@@ -233,12 +227,12 @@ namespace Project.Systems.Ability
             }
         }
 
-        private Vector3 ResolvePoint(AbilityData ability, AbilityContext context)
+        private Vector3 ResolvePoint(AbilityData ability, ExecutionContext context)
         {
             switch (ability.targetingType)
             {
                 case TargetingType.Point:
-                    return context.point;
+                    return context.aimPoint;
                 case TargetingType.Self:
                     return transform.position;
                 case TargetingType.Target:
@@ -290,7 +284,7 @@ namespace Project.Systems.Ability
             return abilities[index];
         }
 
-        public bool CanUseAbility(AbilityData ability, AbilityContext context)
+        public bool CanUseAbility(AbilityData ability, ExecutionContext context)
         {
             int index = abilities.IndexOf(ability);
 
@@ -307,7 +301,7 @@ namespace Project.Systems.Ability
             switch (ability.targetingType)
             {
                 case TargetingType.Point:
-                    return context.hasPoint;
+                    return context.hasAimPoint;
 
                 case TargetingType.Target:
                     return context.castTarget != null;
@@ -326,19 +320,19 @@ namespace Project.Systems.Ability
 /// information for a single ability cast.
 /// Acts as the shared data snapshot between targeting, execution, and effects.
 /// </summary>
-public struct AbilityContext
-{
-    //cast-time selection only
-    public GameObject castTarget;
+//public struct AbilityContext
+//{
+//    //cast-time selection only
+//    public GameObject castTarget;
 
-    public Vector3 point;
-    public bool hasPoint;
+//    public Vector3 point;
+//    public bool hasPoint;
 
-    public Vector3 direction;
-}
+//    public Vector3 direction;
+//}
 
-public struct ImpactContext
-{
-    public Vector3 point;
-    public Vector3 direction;
-}
+//public struct ImpactContext
+//{
+//    public Vector3 point;
+//    public Vector3 direction;
+//}

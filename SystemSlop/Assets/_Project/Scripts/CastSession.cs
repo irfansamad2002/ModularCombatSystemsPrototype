@@ -12,7 +12,7 @@ public class CastSession
     private AbilityUser _user;
 
     private AOEIndicator _indicator;
-    private AbilityContext _context;
+    private ExecutionContext _context;
 
     private bool _isActive;
     public bool IsActive => _isActive;
@@ -35,7 +35,7 @@ public class CastSession
 
         _isActive = true;
 
-        _context = new AbilityContext();
+        _context = new ExecutionContext();
 
         if (ability.indicatorPrefab != null) 
         {
@@ -126,8 +126,8 @@ public class CastSession
         }
 
         // Store FINAL corrected point
-        _context.point = point;
-        _context.hasPoint = true;
+        _context.aimPoint = point;
+        _context.hasAimPoint = true;
 
         if (_indicator != null)
         {
@@ -180,7 +180,7 @@ public class CastSession
             case TargetingType.None:
                 return true;
             case TargetingType.Point:
-                return _context.hasPoint;
+                return _context.hasImpactPoint;
             case TargetingType.Target:
                 return _context.castTarget != null;
             case TargetingType.Self:
@@ -192,7 +192,7 @@ public class CastSession
 
     private void ResetContext()
     {
-        _context = new AbilityContext();
+        _context = new ExecutionContext();
     }
 
     public void DrawDebug()
@@ -205,8 +205,8 @@ public class CastSession
         switch (_ability.targetingType)
         {
             case TargetingType.Point:
-                GUILayout.Label($"Point: {_context.point}");
-                GUILayout.Label($"HasPoint: {_context.hasPoint}");
+                GUILayout.Label($"Point: {_context.aimPoint}");
+                GUILayout.Label($"HasPoint: {_context.hasAimPoint}");
                 break;
 
             case TargetingType.Target:

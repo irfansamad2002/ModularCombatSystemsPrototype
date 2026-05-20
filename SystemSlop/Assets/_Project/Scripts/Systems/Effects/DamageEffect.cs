@@ -7,7 +7,7 @@ public class DamageEffect : EffectData
 {
     public float damage;    
 
-    public override void Apply(GameObject target,AbilityContext context, float multiplier = 1f)
+    public override void Apply(GameObject target, ExecutionContext context, float multiplier = 1f)
     {
         var health = target.GetComponent<Health>();
         if (health == null)

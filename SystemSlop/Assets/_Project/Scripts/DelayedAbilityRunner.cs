@@ -15,11 +15,11 @@ public class DelayedAbilityRunner : MonoBehaviour
     private GameObject _debugSphere;
     public void Init(AbilityUser user,
         AbilityData ability,
-        AbilityContext context,
+        ExecutionContext context,
         Material debugMaterial)
     {
         StartCoroutine(Run(user, ability, context));
-        CreateDebugSphere(context.point, ability.radius, debugMaterial);
+        CreateDebugSphere(context.aimPoint, ability.radius, debugMaterial);
         _debugMaterial = debugMaterial;
     }
 
@@ -36,26 +36,26 @@ public class DelayedAbilityRunner : MonoBehaviour
         Destroy(_debugSphere.GetComponent<Collider>());
     }
 
-    private IEnumerator Run(AbilityUser user, AbilityData ability, AbilityContext context)
+    private IEnumerator Run(AbilityUser user, AbilityData ability, ExecutionContext context)
     {
         yield return new WaitForSeconds(ability.delay);
 
-        var impact = BuildImpactContext(ability, context);
+        //var impact = BuildImpactContext(ability, context);
 
-        user.ResolveAreaImpact(ability, impact);
+        user.ResolveAreaImpact(ability, context);
 
         Destroy(_debugSphere);
         Destroy(gameObject);
     }
 
-    private ImpactContext BuildImpactContext(AbilityData ability, AbilityContext context)
-    {
-        Vector3 point = context.point;
+    //private ExecutionContext BuildImpactContext(AbilityData ability, ExecutionContext context)
+    //{
+    //    Vector3 point = context.;
 
-        return new ImpactContext
-        {
-            point = point,
-            direction = context.direction
-        };
-    }
+    //    return new ExecutionContext
+    //    {
+    //        point = point,
+    //        direction = context.direction
+    //    };
+    //}
 }
