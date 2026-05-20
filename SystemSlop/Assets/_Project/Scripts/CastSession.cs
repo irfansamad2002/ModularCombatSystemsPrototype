@@ -69,7 +69,7 @@ public class CastSession
                 UpdateSelfTargeting();
                 break;
         }
-        _isValidCast = CanConfirmCast();
+        _isValidCast = _user.CanConfirmCast(_ability, _context);
 
         Debug.DrawRay(_user.Firepoint.position, _context.direction * 5f, Color.blueViolet);
     }
@@ -173,23 +173,6 @@ public class CastSession
         float distance = Vector3.Distance(_user.transform.position, target.transform.position);
 
         return distance <= _ability.castRange;
-    }
-
-    private bool CanConfirmCast()
-    {
-        switch (_ability.targetingType)
-        {
-            case TargetingType.None:
-                return true;
-            case TargetingType.Point:
-                return _context.hasImpactPoint;
-            case TargetingType.Target:
-                return _context.castTarget != null;
-            case TargetingType.Self:
-                return true;
-        }
-
-        return false;
     }
 
     private void ResetContext()

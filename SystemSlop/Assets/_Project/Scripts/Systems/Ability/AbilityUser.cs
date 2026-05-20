@@ -96,7 +96,6 @@ namespace Project.Systems.Ability
 
         private void ExecuteInstant(AbilityData ability, ExecutionContext context)
         {
-           
             switch (ability.areaShape)
             {
                 case AreaShape.None:
@@ -331,7 +330,6 @@ namespace Project.Systems.Ability
             {
                 return false;
             }
-            Debug.Log("Test");
             return true;
         }
 

@@ -132,39 +132,24 @@ namespace Project.Entities.Player
 
         private ExecutionContext BuildInstantContext(AbilityData ability)
         {
-            ExecutionContext context = new ExecutionContext();
+            Vector3 aimPoint;
+            bool hasPoint = _targetResolver.TryGetAimPoint(out aimPoint);
 
-            switch (ability.targetingType)
+            GameObject target = null;
+
+            if (ability.targetingType == TargetingType.Target)
             {
-                case TargetingType.None:
-                case TargetingType.Self:
-                    context.castTarget = abilityUser.gameObject;
-                    context.direction = _targetResolver.GetAimDirection();
-                    break;
-
-                case TargetingType.Point:
-                    if (_targetResolver.TryGetAimPoint(out Vector3 point))
-                    {
-                        context.aimPoint = point;
-                        context.hasAimPoint = true;
-                        Vector3 origin = abilityUser.Firepoint.position;
-
-                        context.direction = (point - origin).normalized;
-                    }
-                    break;
-
-                case TargetingType.Target:
-                    context.castTarget = _targetResolver.RaycastEnemy();
-                    if (context.castTarget != null)
-                    {
-                        Vector3 dir = context.castTarget.transform.position - abilityUser.transform.position;
-
-                        context.direction = dir.normalized;
-                    }
-                    break;
+                target = _targetResolver.RaycastEnemy();
             }
+            return new ExecutionContext
+            {
+                aimPoint = aimPoint,
+                hasAimPoint = hasPoint,
+                castTarget = target,
+                direction = _targetResolver.GetAimDirection(),
+            };
 
-            return context;
+
         }
 
         private void StartConfirmCast(AbilityData ability)
