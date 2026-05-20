@@ -46,6 +46,8 @@ public class CastSession
                 _indicator.Init(ability.projectile.explosionRadius);
         }
 
+        
+
     }
     public void Update()
     {
@@ -67,7 +69,6 @@ public class CastSession
                 UpdateSelfTargeting();
                 break;
         }
-
         _isValidCast = CanConfirmCast();
 
         Debug.DrawRay(_user.Firepoint.position, _context.direction * 5f, Color.blueViolet);
@@ -106,14 +107,15 @@ public class CastSession
             if (_indicator != null)
             {
                 _indicator.gameObject.SetActive(false);
+                Debug.Log("AOEIndicator not set");
             }
 
             return;
         }
 
         Vector3 origin = _user.Firepoint.position;
-
         Vector3 toPoint = point - origin;
+
         _context.direction = toPoint.normalized;
         float dist = toPoint.magnitude;
         float range = _ability.castRange;
@@ -141,7 +143,7 @@ public class CastSession
     {
         if (!_isActive) return;
 
-       if (!_user.CanUseAbility(_ability, _context))
+       if (!_user.CanConfirmCast(_ability, _context))
        {
             Cancel();
             return;

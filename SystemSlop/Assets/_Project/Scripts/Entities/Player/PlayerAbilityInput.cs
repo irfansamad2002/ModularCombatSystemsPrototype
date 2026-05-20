@@ -2,6 +2,7 @@ using Project.Systems.Abilities;
 using Project.Systems.Ability;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 namespace Project.Entities.Player
 {
@@ -173,6 +174,10 @@ namespace Project.Entities.Player
                 _currentCast.Cancel();
             }
 
+            if (!abilityUser.CanStartCast(ability))
+            {
+                return;
+            }
             _currentCast = new CastSession(abilityUser, ability, _targetResolver);
         } 
 

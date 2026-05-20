@@ -54,8 +54,6 @@ namespace Project.Systems.Combat
 
             SpawnImpactVFX(explosionCenter);
 
-            Collider[] hitColliders = Physics.OverlapSphere(explosionCenter, _explosionRadius, _damageLayers);
-
             var targets = AreaQuery.GetTargetsSphere(explosionCenter, _explosionRadius, _damageLayers);
             
             foreach (var target in targets)

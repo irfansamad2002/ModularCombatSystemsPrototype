@@ -75,10 +75,10 @@ namespace Project.Systems.Ability
                     ExecuteSingleTargetInstant(ability, context);
                     break;
                 case AreaShape.Sphere:
-                    ExecuteSphereInstant(ability, context);
+                    ExecuteSphereArea(ability, context);
                     break;
                 case AreaShape.Cone:
-                    ExecuteConeInstant(ability, context);
+                    ExecuteConeArea(ability, context);
                     break;
                 default:
                     break;
@@ -103,10 +103,10 @@ namespace Project.Systems.Ability
                     ExecuteSingleTargetInstant(ability, context);
                     break;
                 case AreaShape.Sphere:
-                    ExecuteSphereInstant(ability, context);
+                    ExecuteSphereArea(ability, context);
                     break;
                 case AreaShape.Cone:
-                    ExecuteConeInstant(ability, context);
+                    ExecuteConeArea(ability, context);
                     break;
             }
         }
@@ -127,9 +127,9 @@ namespace Project.Systems.Ability
             }
         }
 
-        private void ExecuteSphereInstant(AbilityData ability, ExecutionContext context)
+        private void ExecuteSphereArea(AbilityData ability, ExecutionContext context)
         {
-            Vector3 center = ResolvePoint(ability, context);
+            Vector3 center = GetExecutionPosition(ability, context);
 
             var targets = AreaQuery.GetTargetsSphere(center, ability.radius, _targetLayer, transform);
 
@@ -142,7 +142,7 @@ namespace Project.Systems.Ability
             }
         }
 
-        private void ExecuteConeInstant(AbilityData ability, ExecutionContext context)
+        private void ExecuteConeArea(AbilityData ability, ExecutionContext context)
         {
             Vector3 origin = transform.position;
 
@@ -188,7 +188,7 @@ namespace Project.Systems.Ability
 
         private void ExecuteProjectile(AbilityData ability, ExecutionContext context)
         {
-            Vector3 point = ResolvePoint(ability, context);
+            Vector3 point = GetExecutionPosition(ability, context);
 
             Vector3 dir = (point - firePoint.position).normalized;
 
@@ -227,20 +227,25 @@ namespace Project.Systems.Ability
             }
         }
 
-        private Vector3 ResolvePoint(AbilityData ability, ExecutionContext context)
+        private Vector3 GetExecutionPosition(AbilityData ability, ExecutionContext context)
         {
             switch (ability.targetingType)
             {
                 case TargetingType.Point:
                     return context.aimPoint;
+
                 case TargetingType.Self:
                     return transform.position;
+
                 case TargetingType.Target:
-                case TargetingType.None:
-                default:
-                    Debug.Log("Default ResolvePoint: firePoint.position + firePoint.forward * 10f");
-                    return firePoint.position + firePoint.forward * 10f;
-            }
+                    if (context.castTarget != null)
+                    {
+                        return context.castTarget.transform.position;
+                    }
+
+                    break;
+                }
+            return firePoint.position + firePoint.forward * 2f;
         }
 
         private bool IsOnCooldown(int index)
@@ -313,6 +318,39 @@ namespace Project.Systems.Ability
             return false;
         }
 
+        public bool CanStartCast(AbilityData ability)
+        {
+            int index = abilities.IndexOf(ability);
+
+            if (index < 0)
+            {
+                return false;
+            }
+
+            if (IsOnCooldown(index))
+            {
+                return false;
+            }
+            Debug.Log("Test");
+            return true;
+        }
+
+        public bool CanConfirmCast(AbilityData ability, ExecutionContext context)
+        {
+            switch (ability.targetingType)
+            {
+                case TargetingType.Point:
+                    return context.hasAimPoint;
+
+                case TargetingType.Target:
+                    return context.castTarget != null;
+
+                case TargetingType.Self:
+                case TargetingType.None:
+                    return true;
+            }
+            return false;
+        }
     }
 }
 /// <summary>
