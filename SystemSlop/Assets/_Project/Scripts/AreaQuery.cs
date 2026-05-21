@@ -24,7 +24,7 @@ public static class AreaQuery
 
         foreach (var hit in hits)
         {
-            if (hit.transform.root == self.root)
+            if (self != null && hit.transform.root == self.root)
                 continue;
 
             results.Add(hit.gameObject);
