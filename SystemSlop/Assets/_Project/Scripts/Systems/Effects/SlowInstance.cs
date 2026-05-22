@@ -7,7 +7,6 @@ public class SlowInstance : EffectInstance
 
     public SlowInstance(float slowMultiplier, float duration)
     {
-        EffectId = "slow";
         _slowMultiplier = slowMultiplier;
         _duration = duration;
     }

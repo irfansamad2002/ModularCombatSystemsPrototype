@@ -156,7 +156,7 @@ namespace Project.Entities.Player
         {
             if (_currentCast != null && _currentCast.IsActive)
             {
-                _currentCast.Cancel();
+                _currentCast.Interrupt();
             }
 
             if (!abilityUser.CanStartCast(ability))

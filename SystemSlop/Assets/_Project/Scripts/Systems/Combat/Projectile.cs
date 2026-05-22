@@ -59,12 +59,12 @@ namespace Project.Systems.Combat
             foreach (var target in targets)
             {
 
-                ApplyAOE(target, explosionCenter);
+                ApplyExplosionImpact(target, explosionCenter);
             }
 
         }
 
-        private void ApplyAOE(GameObject target, Vector3 explosionCenter)
+        private void ApplyExplosionImpact(GameObject target, Vector3 explosionCenter)
         {
           
             float distance = Vector3.Distance(explosionCenter, target.GetComponent<Collider>().ClosestPoint(explosionCenter));
@@ -78,12 +78,17 @@ namespace Project.Systems.Combat
             normalized = Mathf.Clamp01(normalized);
 
             float falloff = Mathf.Pow(1f - normalized, .5f); // quadratic falloff
-
             falloff = Mathf.Max(falloff, _minFalloff); // ensure minimum effect
 
+            var context = new ExecutionContext
+            {
+                aimPoint = explosionCenter, 
+                hasAimPoint = true,
+                direction = transform.forward
+            };
             foreach (var effect in _effects)
             {
-                effect.Apply(target,default, falloff);
+                effect.Apply(target, context, falloff);
             }
                 
         }

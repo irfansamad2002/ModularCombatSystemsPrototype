@@ -12,10 +12,8 @@ namespace Project.Systems.Effects
         private int _stacks = 1;
         private int _maxStacks = 5;
 
-        public BurnInstance(float damage, float tickRate, float tickTimer)
+        public BurnInstance(float damage, float tickRate)
         {
-            EffectId = "burn";
-
             _damage = damage;
             _tickRate = tickRate;
         }
@@ -23,6 +21,7 @@ namespace Project.Systems.Effects
         protected override void OnStart()
         {
             _tickTimer = 0f;
+
         }
 
         protected override void OnTick(float deltaTime)

@@ -14,7 +14,7 @@ namespace Project.Systems.Effects
             if (handler == null) return;
 
             var instance = new SlowInstance(slowMultiplier, duration);
-            instance.Init(target, duration);
+            instance.Init(target, duration, effectId);
 
             handler.AddEffect(instance);
         }

@@ -4,16 +4,17 @@ namespace Project.Systems.Effects
 {
     public abstract class EffectInstance
     {
-        public string EffectId { get; protected set; }
+        public string EffectId { get; private set; }
 
         protected GameObject _target;
         protected float _duration;
         protected float _timer;
 
-        public void Init(GameObject target, float duration)
+        public void Init(GameObject target, float duration, string effectId)
         {
             _target = target;
             _duration = duration;
+            EffectId = effectId;
             OnStart();
         }
 

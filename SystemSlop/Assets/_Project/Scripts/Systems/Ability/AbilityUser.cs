@@ -16,9 +16,10 @@ namespace Project.Systems.Ability
         [SerializeField] private Material tempDebugMaterial;
         [SerializeField] private LayerMask _targetLayer;
 
-        //[SerializeField] private float offsetForFirePointZAxis = 1f;
         public Transform Firepoint => firePoint;
         private float[] _cooldowns;
+
+        private CastSession _currentCast;
 
         private void Awake()
         {
@@ -349,26 +350,16 @@ namespace Project.Systems.Ability
             }
             return false;
         }
+
+        public void InterruptCurrentCast()
+        {
+            _currentCast?.Interrupt();
+        }
+
+        public void NotifyCastFinished(CastSession session)
+        {
+            if (_currentCast == session)
+                _currentCast = null;
+        }
     }
 }
-/// <summary>
-/// Runtime data container that stores all targeting and execution-relevant
-/// information for a single ability cast.
-/// Acts as the shared data snapshot between targeting, execution, and effects.
-/// </summary>
-//public struct AbilityContext
-//{
-//    //cast-time selection only
-//    public GameObject castTarget;
-
-//    public Vector3 point;
-//    public bool hasPoint;
-
-//    public Vector3 direction;
-//}
-
-//public struct ImpactContext
-//{
-//    public Vector3 point;
-//    public Vector3 direction;
-//}

@@ -17,10 +17,9 @@ namespace Project.Systems.Effects
 
             var instance = new BurnInstance(
                 damagePerTick * multiplier,
-                tickRate,
-                duration);
+                tickRate);
 
-            instance.Init(target, duration);
+            instance.Init(target, duration, effectId);
 
             handler.AddEffect(instance);
         }

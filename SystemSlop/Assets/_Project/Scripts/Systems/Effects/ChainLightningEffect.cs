@@ -56,7 +56,7 @@ public class ChainLightningEffect : EffectData
             targetLayer,
             null);
 
-        Debug.Log($"Nearby Count: {nearby.Count}");
+        //Debug.Log($"Nearby Count: {nearby.Count}");
 
         GameObject nextTarget = null;
         float closestDistance = float.MaxValue;
