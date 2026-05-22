@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ChainLightning
   m_EditorClassIdentifier: Assembly-CSharp::ChainLightningEffect
   effectId: ChainLightning
+  chainVfxPrefab: {fileID: 2712417980350963805, guid: 28980f11eb6373c4282ff352cfa3fa07, type: 3}
   maxChains: 5
   chainRadius: 5
   damageFalloff: 0.8

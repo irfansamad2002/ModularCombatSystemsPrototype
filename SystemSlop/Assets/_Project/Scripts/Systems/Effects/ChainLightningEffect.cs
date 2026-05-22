@@ -6,18 +6,27 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Effects/Chain Lightning")]
 public class ChainLightningEffect : EffectData
 {
+    [SerializeField] private GameObject chainVfxPrefab;
     public int maxChains = 5;
     public float chainRadius = 5f;
     public float damageFalloff = .8f;
     public LayerMask targetLayer;
     public int damage = 10;
 
+    private List<(GameObject from, GameObject to)> _chainLinks = new();
 
     public override void Apply(GameObject target, ExecutionContext context, float multiplier = 1f)
     {
+        _chainLinks.Clear();
+
         HashSet<GameObject> hitTargets = new();
 
         Chain(target, multiplier, hitTargets, 0);
+
+        var vfxObj = Instantiate(chainVfxPrefab);
+        var vfx = vfxObj.GetComponent<ChainLightningVFX>();
+
+        vfx.Play(_chainLinks);
     }
 
     private void Chain(
@@ -47,7 +56,7 @@ public class ChainLightningEffect : EffectData
             targetLayer,
             null);
 
-        //Debug.Log($"Nearby Count: {nearby.Count}");
+        Debug.Log($"Nearby Count: {nearby.Count}");
 
         GameObject nextTarget = null;
         float closestDistance = float.MaxValue;
@@ -68,7 +77,7 @@ public class ChainLightningEffect : EffectData
         }
 
         if(nextTarget == null) return;
-
+        _chainLinks.Add((currentTarget, nextTarget));
         Chain(nextTarget, multiplier * damageFalloff, hitTargets, depth + 1);
     }
 }
