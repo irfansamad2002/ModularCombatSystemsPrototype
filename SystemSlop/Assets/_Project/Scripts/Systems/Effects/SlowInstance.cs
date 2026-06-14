@@ -1,3 +1,4 @@
+using Project.Entities;
 using Project.Systems.Effects;
 
 public class SlowInstance : EffectInstance

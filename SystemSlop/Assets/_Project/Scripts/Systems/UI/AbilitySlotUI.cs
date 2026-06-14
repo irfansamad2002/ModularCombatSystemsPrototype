@@ -1,4 +1,4 @@
-using Project.Systems.Ability;
+using Project.Systems.Abilities.Runtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

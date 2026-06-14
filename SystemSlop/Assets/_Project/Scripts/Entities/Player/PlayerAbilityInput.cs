@@ -1,8 +1,7 @@
-using Project.Systems.Abilities;
-using Project.Systems.Ability;
+using Project.Systems.Abilities.Data;
+using Project.Systems.Abilities.Runtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 namespace Project.Entities.Player
 {

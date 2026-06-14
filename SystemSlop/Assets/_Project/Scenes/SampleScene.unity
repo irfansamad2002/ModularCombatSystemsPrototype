@@ -302,7 +302,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 20}
-  m_SizeDelta: {x: 400, y: 150}
+  m_SizeDelta: {x: 450, y: 150}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &239790389
 MonoBehaviour:
@@ -1142,7 +1142,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.8
+  m_fontSize: 28.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1463,7 +1463,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.8
+  m_fontSize: 28.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2092,7 +2092,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.8
+  m_fontSize: 28.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2329,9 +2329,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AbilityUser
   abilities:
-  - {fileID: 11400000, guid: ba1c058f19e47ce4bb81b3ec78ef8e1d, type: 2}
-  - {fileID: 11400000, guid: cda56d1adca55a74e8c442640ad92b69, type: 2}
   - {fileID: 11400000, guid: 75b5d207da10823439a2277082ff9b5a, type: 2}
+  - {fileID: 11400000, guid: cda56d1adca55a74e8c442640ad92b69, type: 2}
+  - {fileID: 11400000, guid: ba1c058f19e47ce4bb81b3ec78ef8e1d, type: 2}
+  - {fileID: 11400000, guid: 056614264ceef7f4f9b0978c05cf3405, type: 2}
   firePoint: {fileID: 299118869}
   tempDebugMaterial: {fileID: 2100000, guid: f9c0d1d464da298458562a96a3dcf080, type: 2}
   _targetLayer:
@@ -2435,7 +2436,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.8
+  m_fontSize: 28.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3315,13 +3316,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1565975507}
+  - component: {fileID: 1565975508}
   m_Layer: 5
   m_Name: Slot_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1565975507
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3339,11 +3341,28 @@ RectTransform:
   - {fileID: 948261380}
   m_Father: {fileID: 239790388}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1565975508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565975506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 116fc65b9be41364eba966d8bc053680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Systems.UI.AbilitySlotUI
+  slotIndex: 3
+  abilityUser: {fileID: 946442424}
+  cooldownOverlay: {fileID: 1337809920}
+  icon: {fileID: 1807243848}
+  cooldownText: {fileID: 948261381}
 --- !u!1 &1807243846
 GameObject:
   m_ObjectHideFlags: 0

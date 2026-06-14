@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace Project.Systems.Ability
+namespace Project.Systems.Ability.Data
 {
     [CreateAssetMenu(menuName = "Abilities/Projectile")]
     public class ProjectileData : ScriptableObject

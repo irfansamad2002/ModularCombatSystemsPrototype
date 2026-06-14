@@ -1,9 +1,11 @@
-using Project.Systems.Abilities;
+using Project.Systems.Abilities.Data;
+using Project.Systems.Abilities.Runtime;
 using Project.Systems.Combat;
+using Project.Systems.Combat.Query;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Project.Systems.Ability
+namespace Project.Systems.Abilities.Runtime
 {
     /// <summary>
     /// Coordinates ability execution, cooldowns,

@@ -1,9 +1,9 @@
-using Project.Systems.Ability;
+using Project.Systems.Ability.Data;
 using Project.Systems.Effects;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Project.Systems.Abilities
+namespace Project.Systems.Abilities.Data
 {
     [CreateAssetMenu(menuName = "Abilities/Ability")]
     public class AbilityData : ScriptableObject
