@@ -4,11 +4,17 @@ namespace Project.Entities
 {
     public class SimpleEnemyAI : MonoBehaviour
     {
-        [SerializeField] private Transform target;
+        [SerializeField] private bool chasePlayer;
+        [SerializeField] private Transform player;
         [SerializeField] private float baseMoveSpeed = 3f;
-        [SerializeField] private float stopDistance = 1.5f;
+        [SerializeField] private float stopDistance = .1f;
 
-        public float currentMoveSpeed;
+        [SerializeField] private Transform[] patrolPoints;
+        [SerializeField] private bool loop;
+
+        private int _currentIndex;
+
+        private float currentMoveSpeed;
 
         private void Awake()
         {
@@ -17,31 +23,55 @@ namespace Project.Entities
 
         private void Start()
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
+            GameObject p = GameObject.FindGameObjectWithTag("Player");
+            if (p != null)
             {
-                target = player.transform;
+                player = p.transform;
             }
         }
 
         private void Update()
         {
+            Transform target = GetTarget();
             if (target == null) return;
 
             Vector3 direction = target.position - transform.position;
+            direction.y = 0;
+
             float distance = direction.magnitude;
 
-            if(distance <= stopDistance)
+            if (!chasePlayer && distance <= stopDistance)
             {
-                // Stop moving if within stop distance
+                AdvancePoint();
                 return;
             }
 
-            direction.y = 0;
             direction.Normalize();
 
             transform.position += direction * currentMoveSpeed * Time.deltaTime;
 
+
+        }
+
+        private Transform GetTarget()
+        {
+            if (chasePlayer && player != null)
+                return player;
+
+            if (patrolPoints == null || patrolPoints.Length == 0)
+                return null;
+
+            return patrolPoints[_currentIndex];
+        }
+
+        private void AdvancePoint()
+        {
+            _currentIndex++;
+
+            if (_currentIndex >= patrolPoints.Length)
+            {
+                _currentIndex = 0;
+            }
 
         }
 
