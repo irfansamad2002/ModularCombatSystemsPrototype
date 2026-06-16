@@ -204,7 +204,7 @@ namespace Project.Systems.Abilities.Runtime
                 ability.projectile.speed,
                 ability.projectile.explosionRadius,
                 ability.projectile.targetLayers,
-                ability.projectile.prefab,
+                ability.projectile.impactVFX,
                 ability.projectile.minDistanceThreshold,
                 ability.projectile.minFalloff
                 );

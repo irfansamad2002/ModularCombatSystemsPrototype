@@ -26,7 +26,7 @@ public class SlowInstance : EffectInstance
 
     protected override void OnTick(float deltaTime)
     {
-        //nth on tick
+
     }
 
     public override void OnReapply(EffectInstance newInstance)
@@ -43,7 +43,5 @@ public class SlowInstance : EffectInstance
         }
 
         _ai.ResetSpeed();
-        //restore speed
-        //_ai.currentMoveSpeed = _ai.baseMoveSpeed;
     }
 }

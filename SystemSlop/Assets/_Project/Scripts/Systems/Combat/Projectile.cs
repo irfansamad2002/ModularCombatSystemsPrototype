@@ -42,10 +42,11 @@ namespace Project.Systems.Combat
             if (_hasHit) return; // prevent multiple hits
             _hasHit = true;
 
+            Debug.Log(other.name);
             Explode();
 
-
             SpawnDebugSphere(transform.position, _explosionRadius);
+    
             Destroy(gameObject);
 
         }
@@ -114,6 +115,7 @@ namespace Project.Systems.Combat
 
         private void SpawnImpactVFX(Vector3 position)
         {
+            Debug.Log($"Impact VFX :{_impactVFX}");
             if (_impactVFX == null) return;
 
             var vfx = Instantiate(_impactVFX, position, Quaternion.identity);
