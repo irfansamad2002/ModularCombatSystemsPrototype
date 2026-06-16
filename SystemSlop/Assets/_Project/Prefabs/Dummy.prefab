@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 8442361778099903249}
   - component: {fileID: 8080094643411389951}
   - component: {fileID: 7694132181892235861}
+  - component: {fileID: 2285648423697592856}
   m_Layer: 7
   m_Name: Dummy
   m_TagString: Enemy
@@ -153,10 +154,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd3d9308da5d09945a63a3df38928e99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleEnemyAI
-  target: {fileID: 0}
+  chasePlayer: 0
+  player: {fileID: 0}
   baseMoveSpeed: 1
   stopDistance: 1.5
-  currentMoveSpeed: 0
+  patrolPoints: []
+  loop: 0
+--- !u!114 &2285648423697592856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249208843697698491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e170646b2c02d46846d9686a28991e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.VFX.EnemyVisualFeedback
+  meshRenderer: {fileID: 3059205235500247668}
 --- !u!1 &777779623820047744
 GameObject:
   m_ObjectHideFlags: 0
