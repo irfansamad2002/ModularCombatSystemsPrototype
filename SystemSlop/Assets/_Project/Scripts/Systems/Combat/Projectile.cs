@@ -42,7 +42,7 @@ namespace Project.Systems.Combat
             if (_hasHit) return; // prevent multiple hits
             _hasHit = true;
 
-            Debug.Log(other.name);
+            //Debug.Log(other.name);
             Explode();
 
             SpawnDebugSphere(transform.position, _explosionRadius);
@@ -102,6 +102,7 @@ namespace Project.Systems.Combat
 
             sphere.transform.position = position;
             sphere.transform.localScale = Vector3.one * radius * 2f; // scale to match explosion radius
+            Debug.Log("Debug Sphere localscale " + radius);
 
             // remove collider so it doesn't interfere
             Destroy(sphere.GetComponent<Collider>());
@@ -115,7 +116,7 @@ namespace Project.Systems.Combat
 
         private void SpawnImpactVFX(Vector3 position)
         {
-            Debug.Log($"Impact VFX :{_impactVFX}");
+            //Debug.Log($"Impact VFX :{_impactVFX}");
             if (_impactVFX == null) return;
 
             var vfx = Instantiate(_impactVFX, position, Quaternion.identity);

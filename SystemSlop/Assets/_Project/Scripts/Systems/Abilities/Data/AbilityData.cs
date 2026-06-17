@@ -14,18 +14,22 @@ namespace Project.Systems.Abilities.Data
 
         public float cooldown;
         public float castRange = 10f; //Optional
+        public float radius;
         public TargetingType targetingType;
         public DeliveryType deliveryType;
 
         public List<EffectData> effects;
-        public ProjectileData projectile; //Optional
-        public GameObject indicatorPrefab;//Optional : if null which mean no need indicators
 
+        public ProjectileData projectile; //Optional
+        public float minDistanceThreshold = 0.1f;
+        public float minFalloff = 0.2f;
+        public LayerMask targetLayers;
+
+        public GameObject indicatorPrefab;//Optional : if null which mean no need indicators
         public CastMode castMode;
 
         [Header("Area")]
         public AreaShape areaShape;
-        public float radius = 3f;
         [Range(0f, 360f)]
         public float coneAngle = 90f;
 

@@ -7,10 +7,6 @@ using UnityEngine;
 
 namespace Project.Systems.Abilities.Runtime
 {
-    /// <summary>
-    /// Coordinates ability execution, cooldowns,
-    /// and execution routing for abilities.
-    /// </summary>
     public class AbilityUser : MonoBehaviour
     {
         [SerializeField] private List<AbilityData> abilities;
@@ -28,11 +24,6 @@ namespace Project.Systems.Abilities.Runtime
             _cooldowns = new float[abilities.Count];
         }
 
-        /// <summary>
-        /// Entry point for executing an ability after validation.
-        /// Routes the ability into the correct execution pipeline
-        /// based on DeliveryType and starts cooldown management.
-        /// </summary>
         public void UseAbility(AbilityData ability, ExecutionContext context)
         {
             int index = abilities.IndexOf(ability);
@@ -64,11 +55,7 @@ namespace Project.Systems.Abilities.Runtime
             }
 
         }
-        /// <summary>
-        /// Handles the impact phase of delayed abilities after delay completion.
-        /// Resolves final area shape (None, Sphere, Cone) and applies effects
-        /// using ImpactContext contex
-        /// </summary>
+
         public void ResolveAreaImpact(AbilityData ability, ExecutionContext context)
         {
             
@@ -202,11 +189,11 @@ namespace Project.Systems.Abilities.Runtime
 
             projectile.Init(ability.effects,
                 ability.projectile.speed,
-                ability.projectile.explosionRadius,
-                ability.projectile.targetLayers,
+                ability.radius,
+                ability.targetLayers,
                 ability.projectile.impactVFX,
-                ability.projectile.minDistanceThreshold,
-                ability.projectile.minFalloff
+                ability.minDistanceThreshold,
+                ability.minFalloff
                 );
 
             Destroy(projectileGO, ability.projectile.lifetime);

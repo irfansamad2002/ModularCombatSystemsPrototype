@@ -43,11 +43,14 @@ namespace Project.Systems.Abilities.Runtime
                 var obj = GameObject.Instantiate(_ability.indicatorPrefab);
                 _indicator = obj.GetComponent<AOEIndicator>();
 
-                if(_ability.projectile != null)
-                    _indicator.Init(ability.projectile.explosionRadius);
+                if (_indicator != null)
+                {
+                    _indicator.Init(_ability.radius);
+                }
+                
             }
 
-        
+           
 
         }
         public void Update()
