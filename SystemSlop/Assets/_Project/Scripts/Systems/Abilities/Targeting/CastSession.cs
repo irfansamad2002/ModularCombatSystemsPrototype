@@ -8,7 +8,7 @@ namespace Project.Systems.Abilities.Runtime
         private AbilityData _ability;
         private AbilityUser _user;
 
-        private AOEIndicator _indicator;
+        private TargetingPreview _indicator;
         private ExecutionContext _context;
 
         private bool _isActive;
@@ -41,7 +41,7 @@ namespace Project.Systems.Abilities.Runtime
             if (ability.indicatorPrefab != null) 
             {
                 var obj = GameObject.Instantiate(_ability.indicatorPrefab);
-                _indicator = obj.GetComponent<AOEIndicator>();
+                _indicator = obj.GetComponent<TargetingPreview>();
 
                 if (_indicator != null)
                 {

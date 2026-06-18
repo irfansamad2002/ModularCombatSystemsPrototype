@@ -42,7 +42,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4494617534100734494}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f7c9a67d5735cc4e8f340eaafc5a204, type: 3}
+  m_Script: {fileID: 11500000, guid: 254b82fbc0790774a99d0c84577635dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AOEIndicator
   _renderer: {fileID: 155406000485920470}

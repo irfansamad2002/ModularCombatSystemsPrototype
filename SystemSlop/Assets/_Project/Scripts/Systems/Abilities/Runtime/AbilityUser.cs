@@ -1,3 +1,4 @@
+using Project.Core.Event;
 using Project.Systems.Abilities.Data;
 using Project.Systems.Abilities.Runtime;
 using Project.Systems.Combat;
@@ -53,6 +54,8 @@ namespace Project.Systems.Abilities.Runtime
                 default:
                     break;
             }
+
+            AbilityEvents.OnAbilityExecuted?.Invoke(ability, context);
 
         }
 
@@ -191,7 +194,7 @@ namespace Project.Systems.Abilities.Runtime
                 ability.projectile.speed,
                 ability.radius,
                 ability.targetLayers,
-                ability.projectile.impactVFX,
+                ability.impactVFX,
                 ability.minDistanceThreshold,
                 ability.minFalloff
                 );

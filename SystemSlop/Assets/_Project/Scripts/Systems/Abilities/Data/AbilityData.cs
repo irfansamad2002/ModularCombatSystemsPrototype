@@ -20,13 +20,21 @@ namespace Project.Systems.Abilities.Data
 
         public List<EffectData> effects;
 
+        [Header("VFX")]
+        public GameObject impactVFX;
+        public GameObject telegraphVFX;
+        //public GameObject castVFX; // example: glowly hand type shit
+
+        [Header("Projectile")]
         public ProjectileData projectile; //Optional
+        public CastMode castMode;
+        public LayerMask targetLayers;
+        [Space(10)]
+        public GameObject indicatorPrefab;//Optional : if null which mean no need indicators
+        [Space(10)]
         public float minDistanceThreshold = 0.1f;
         public float minFalloff = 0.2f;
-        public LayerMask targetLayers;
 
-        public GameObject indicatorPrefab;//Optional : if null which mean no need indicators
-        public CastMode castMode;
 
         [Header("Area")]
         public AreaShape areaShape;

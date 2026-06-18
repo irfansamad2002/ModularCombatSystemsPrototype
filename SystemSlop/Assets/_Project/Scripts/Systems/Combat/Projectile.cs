@@ -102,7 +102,7 @@ namespace Project.Systems.Combat
 
             sphere.transform.position = position;
             sphere.transform.localScale = Vector3.one * radius * 2f; // scale to match explosion radius
-            Debug.Log("Debug Sphere localscale " + radius);
+            //Debug.Log("Debug Sphere localscale " + radius);
 
             // remove collider so it doesn't interfere
             Destroy(sphere.GetComponent<Collider>());

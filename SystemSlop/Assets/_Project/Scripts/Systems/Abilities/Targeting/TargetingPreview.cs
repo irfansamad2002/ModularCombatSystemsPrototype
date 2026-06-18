@@ -2,13 +2,12 @@ using UnityEngine;
 
 namespace Project.Systems.VFX
 {
-    public class AOEIndicator : MonoBehaviour
+    public class TargetingPreview : MonoBehaviour
     {
         [SerializeField] private Renderer _renderer;
 
         private Color _validColor = new Color(0, 1, 0, .3f);
         private Color _invalidColor = new Color(1, 0, 0, .3f);
-        private float _radius;
         private Vector3 _targetPosition;
         private bool _isValid;
 
@@ -16,17 +15,12 @@ namespace Project.Systems.VFX
         {
             _isValid = isValid;
             _renderer.material.color = isValid ? _validColor : _invalidColor;
-            //gameObject.SetActive(isValid);
         }
 
         public void Init(float radius)
         {
-            _radius = radius;
-
-            //scale to match explosion EXACTLY
-
             transform.localScale = Vector3.one * radius * 2f;
-            Debug.Log("AOE indicator" + transform.localScale);
+            //Debug.Log("AOE indicator" + transform.localScale);
         }
 
         public Vector3 GetCurrentPosition()

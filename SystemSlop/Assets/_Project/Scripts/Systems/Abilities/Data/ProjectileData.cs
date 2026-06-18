@@ -7,10 +7,5 @@ namespace Project.Systems.Ability.Data
         public GameObject prefab;
         public float speed = 10f;
         public float lifetime = 5f;
-        //public float minDistanceThreshold = 0.1f;
-        //public float minFalloff = 0.2f;
-        //public LayerMask targetLayers;
-        //[Header("VFX")]
-        public GameObject impactVFX;
     }
 }
