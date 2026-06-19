@@ -5,25 +5,23 @@ namespace Project.Systems.Abilities.Runtime
 {
     public class CastSession
     {
-        private AbilityData _ability;
-        private AbilityUser _user;
+        // ==================== Core References ====================
+        private readonly AbilityData _ability;
+        private readonly AbilityUser _user;
+        private readonly AbilityTargetResolver _targetResolver;
 
-        private TargetingPreview _indicator;
         private ExecutionContext _context;
+        private TargetingPreview _indicator;
 
+        // ==================== Lifecycle ====================
         private bool _isActive;
         public bool IsActive => _isActive;
 
-        private bool _isValidCast;
-        public bool IsValidCast => _isValidCast;
-
-        private AbilityTargetResolver _targetResolver;
-
         private CastState _state;
         public CastState State => _state;
-
         public bool IsInterruptible => _state == CastState.Casting;
 
+        // ==================== Constructor ====================
         public CastSession(
             AbilityUser user,
             AbilityData ability,
@@ -33,31 +31,21 @@ namespace Project.Systems.Abilities.Runtime
             _ability = ability;
             _targetResolver = targetResolver;
 
-            _isActive = true;
-
             _context = new ExecutionContext();
+
+            _isActive = true;
             _state = CastState.Casting;
 
-            if (ability.indicatorPrefab != null) 
-            {
-                var obj = GameObject.Instantiate(_ability.indicatorPrefab);
-                _indicator = obj.GetComponent<TargetingPreview>();
-
-                if (_indicator != null)
-                {
-                    _indicator.Init(_ability.radius);
-                }
-                
-            }
-
-           
-
+            CreateIndicator();
         }
+
+        // ========================================
+        // 1. Targetting responsibility
+        // ========================================
         public void Update()
         {
-            if (!IsActive) return;
-
-            if (_state != CastState.Casting) return;
+            if (!IsActive || _state != CastState.Casting) 
+                return;
 
             switch (_ability.targetingType)
             {
@@ -74,48 +62,33 @@ namespace Project.Systems.Abilities.Runtime
                     break;
             }
 
-
-            _isValidCast = _user.CanConfirmCast(_ability, _context);
-
             Debug.DrawRay(_user.Firepoint.position, _context.direction * 5f, Color.blueViolet);
         }
 
-        private void UpdateSelfTargeting()
+        private void UpdateSelfTargeting() //target
         {
             _context.castTarget = _user.gameObject;
             _context.direction = _targetResolver.GetAimDirection();
         }
 
-        private void UpdateTargetTargeting()
+        private void UpdateTargetTargeting() //target
         {
             GameObject target = _targetResolver.RaycastEnemy();
 
-            if (target == null)
-            {
-                _context.castTarget = null;
-                return;
-            }
-
-            if (!IsTargetInRange(target))
+            if (target == null|| !IsTargetInRange(target))
             {
                 _context.castTarget = null;
                 return;
             }
 
             _context.castTarget = target;
-
         }
 
-        private void UpdatePointTargeting()
+        private void UpdatePointTargeting() //target
         {
             if (!_targetResolver.TryGetAimPoint(out var point))
             {
-                if (_indicator != null)
-                {
-                    _indicator.gameObject.SetActive(false);
-                    Debug.Log("AOEIndicator not set");
-                }
-
+                _indicator?.SetValid(false);
                 return;
             }
 
@@ -123,32 +96,28 @@ namespace Project.Systems.Abilities.Runtime
             Vector3 toPoint = point - origin;
 
             _context.direction = toPoint.normalized;
-            float dist = toPoint.magnitude;
-            float range = _ability.castRange;
 
             //Clamp to range
-            if (dist > range)
-            {
-                toPoint = toPoint.normalized * range;
-                point = origin + toPoint;
-            }
+            if (toPoint.magnitude > _ability.castRange)
+                point = origin + toPoint.normalized * _ability.castRange;
+            
 
             // Store FINAL corrected point
             _context.aimPoint = point;
             _context.hasAimPoint = true;
-
-            if (_indicator != null)
-            {
-                _indicator.gameObject.SetActive(true);
-                _indicator.SetPosition(point);
-                _indicator.SetValid(true);
-            }
+           
+            _indicator?.SetPosition(point);
+            _indicator?.SetValid(true);
+            
         }
-
-        public void Confirm()
+        
+        // ========================================
+        // 2. Execution Trigger Responibility
+        // ========================================
+        public void Confirm() //Execution
         {
             if (!_isActive) return;
-
+            
            if (!_user.CanConfirmCast(_ability, _context))
            {
                 Cancel();
@@ -159,8 +128,19 @@ namespace Project.Systems.Abilities.Runtime
             CleanUp();
         }
 
-        public void Cancel()
+        // ========================================
+        // 3. Lifestyle Responibility
+        // ========================================
+        public void Cancel() // Session Control
         {
+            CleanUp();
+        }
+
+        public void Interrupt() // Session Control
+        {
+            if (_state == CastState.Completed || _state == CastState.Interrupted) return;
+
+            _state = CastState.Interrupted;
             CleanUp();
         }
 
@@ -168,24 +148,37 @@ namespace Project.Systems.Abilities.Runtime
         {
             _user.NotifyCastFinished(this);
             if (_indicator != null)
-            {
-
                 GameObject.Destroy(_indicator.gameObject);
-            }
 
             _isActive = false;
         }
 
-        private bool IsTargetInRange(GameObject target)
+        // ========================================
+        // Indicator
+        // ========================================
+        private void CreateIndicator()
         {
-            float distance = Vector3.Distance(_user.transform.position, target.transform.position);
+            if (_ability.indicatorPrefab == null)
+                return;
 
-            return distance <= _ability.castRange;
+            var obj = Object.Instantiate(_ability.indicatorPrefab);
+            _indicator = obj.GetComponent<TargetingPreview>();
+
+            _indicator?.Init(_ability.radius);
+        }
+        // ========================================
+        // Util
+        // ========================================
+        private bool IsTargetInRange(GameObject target) //targetValidation
+        {
+            return Vector3.Distance(_user.transform.position, target.transform.position) 
+                <= _ability.castRange;
         }
 
-    
-
-        public void DrawDebug()
+        // ========================================
+        // DEBUG
+        // ========================================
+        public void DrawDebug() //Debug
         {
             GUILayout.BeginVertical("box");
 
@@ -193,7 +186,6 @@ namespace Project.Systems.Abilities.Runtime
             GUILayout.Label($"ABILITY: {_ability.abilityName}");
             GUILayout.Label($"ACTIVE: {_isActive}");
             GUILayout.Label($"STATE: {_state}");
-            GUILayout.Label($"VALID CAST: {_isValidCast}");
 
             GUILayout.Space(5);
 
@@ -229,7 +221,7 @@ namespace Project.Systems.Abilities.Runtime
             GUILayout.EndVertical();
         }
 
-        private string FormatTarget(GameObject target)
+        private string FormatTarget(GameObject target) //Debug UI
         {
             if (target == null)
                 return "NULL";
@@ -237,7 +229,7 @@ namespace Project.Systems.Abilities.Runtime
             return target.name;
         }
 
-        private bool IsTargetInRangeDebug()
+        private bool IsTargetInRangeDebug() // Debug TargetValidation
         {
             if (_context.castTarget == null) return false;
 
@@ -245,7 +237,7 @@ namespace Project.Systems.Abilities.Runtime
                    <= _ability.castRange;
         }
 
-        private bool IsContextValidDebug()
+        private bool IsContextValidDebug() //Debug ContextValidation
         {
             switch (_ability.targetingType)
             {
@@ -263,7 +255,10 @@ namespace Project.Systems.Abilities.Runtime
             }
         }
 
-        public enum CastState
+        // ========================================
+        // State
+        // ========================================
+        public enum CastState //State of Casting
         {
             Idle,
             Casting,
@@ -272,13 +267,7 @@ namespace Project.Systems.Abilities.Runtime
             Completed
         }
 
-        public void Interrupt()
-        {
-            if (_state == CastState.Completed || _state == CastState.Interrupted) return;
-
-            _state = CastState.Interrupted;
-            CleanUp();
-        }
+        
 
 
     }
