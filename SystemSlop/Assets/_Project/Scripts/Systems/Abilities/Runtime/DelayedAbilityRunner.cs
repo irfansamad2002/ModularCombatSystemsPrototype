@@ -47,11 +47,12 @@ namespace Project.Systems.Abilities
 
             SpawnImpactVFX(ability, context);
             Destroy(_debugSphere);
+            Destroy(_telegraphInstace);
             Destroy(gameObject);
         }
 
-        
-        
+
+
         private GameObject SpawnTelegraphVFX(AbilityData ability, ExecutionContext context)
         {
             if (ability.deliveryType != DeliveryType.Delayed) return null;
