@@ -3,6 +3,9 @@ This project is a Unity-based combat system focused on **clean architecture and 
 
 The goal is to demonstrate how a combat system can be structured so that abilities can be added, modified, and combined without changing core logic.
 
+# Trello
+https://trello.com/b/lMqxyECt/modular-ability-combat-framework-project
+
 ---
 
 ## 🧠 Core Idea
