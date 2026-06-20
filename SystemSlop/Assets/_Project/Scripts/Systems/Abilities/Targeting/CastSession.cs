@@ -146,7 +146,6 @@ namespace Project.Systems.Abilities.Runtime
 
         private void CleanUp()
         {
-            _user.NotifyCastFinished(this);
             if (_indicator != null)
                 GameObject.Destroy(_indicator.gameObject);
 

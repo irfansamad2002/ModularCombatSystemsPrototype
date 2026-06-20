@@ -18,8 +18,6 @@ namespace Project.Systems.Abilities.Runtime
         public Transform Firepoint => firePoint;
         private float[] _cooldowns;
 
-        private CastSession _currentCast;
-
         private void Awake()
         {
             _cooldowns = new float[abilities.Count];
@@ -43,7 +41,7 @@ namespace Project.Systems.Abilities.Runtime
             switch (ability.deliveryType)
             {
                 case DeliveryType.Instant:
-                    ExecuteInstant(ability, context);
+                    ResolveAreaImpact(ability, context);
                     break;
                 case DeliveryType.Projectile:
                     ExecuteProjectile(ability, context);
@@ -85,22 +83,6 @@ namespace Project.Systems.Abilities.Runtime
             var runner = runnerGO.AddComponent<DelayedAbilityRunner>(); 
 
             runner.Init(this, ability, context, tempDebugMaterial);
-        }
-
-        private void ExecuteInstant(AbilityData ability, ExecutionContext context)
-        {
-            switch (ability.areaShape)
-            {
-                case AreaShape.None:
-                    ExecuteSingleTargetInstant(ability, context);
-                    break;
-                case AreaShape.Sphere:
-                    ExecuteSphereArea(ability, context);
-                    break;
-                case AreaShape.Cone:
-                    ExecuteConeArea(ability, context);
-                    break;
-            }
         }
 
         private void ExecuteSingleTargetInstant(AbilityData ability, ExecutionContext context)
@@ -343,15 +325,6 @@ namespace Project.Systems.Abilities.Runtime
             return false;
         }
 
-        public void InterruptCurrentCast()
-        {
-            _currentCast?.Interrupt();
-        }
-
-        public void NotifyCastFinished(CastSession session)
-        {
-            if (_currentCast == session)
-                _currentCast = null;
-        }
+        
     }
 }
