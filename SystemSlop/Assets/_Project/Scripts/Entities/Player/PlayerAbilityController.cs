@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 namespace Project.Entities.Player
 {
-    public class PlayerAbilityInput : MonoBehaviour
+    public class PlayerAbilityController : MonoBehaviour
     {
         [SerializeField] private InputActionAsset inputActions;
         [SerializeField] private AbilityUser abilityUser;
@@ -17,11 +17,13 @@ namespace Project.Entities.Player
         private InputAction _confirmCast;
         private InputAction _cancelCast;
 
-        private CastSession _currentCast;
+        private AbilityCast _activeCast;
 
         private AbilityTargetResolver _targetResolver;
 
         public bool newAbilityCancelsOldOne;
+
+        private AbilityTargetingCalculator _targetingCalculator;
     
         private void Awake()
         {
@@ -38,6 +40,7 @@ namespace Project.Entities.Player
             _cancelCast = map.FindAction("Cancel Cast");
 
             _targetResolver = new AbilityTargetResolver(cam, worldLayer, targetLayer);
+            _targetingCalculator = new AbilityTargetingCalculator(_targetResolver);
         }
 
         private void OnEnable()
@@ -62,17 +65,17 @@ namespace Project.Entities.Player
 
         private void Update()
         {
-            HandleAbilityInputs();
+            ReadAbilityInput();
 
-            HandleCastControls();
+            ReadCastInput();
 
-            _currentCast?.Update();
+            _activeCast?.Update();
 
         }
 
-        private void HandleCastControls()
+        private void ReadCastInput()
         {
-            if (_currentCast == null)
+            if (_activeCast == null)
             {
                 return;
             }
@@ -90,13 +93,13 @@ namespace Project.Entities.Player
         
         private void CancelCurrentCast()
         {
-            if (_currentCast == null) return;
+            if (_activeCast == null) return;
 
-            _currentCast.Cancel();
+            _activeCast.CancelCast();
             ClearCurrentCast();
         }
 
-        private void HandleAbilityInputs()
+        private void ReadAbilityInput()
         {
             for (int i = 0; i < _abilityActions.Length; i++)
             {
@@ -114,86 +117,64 @@ namespace Project.Entities.Player
             switch (ability.castMode)
             {
                 case CastMode.Instant:
-                    CastInstantAbility(ability);
+                    ExecuteInstantAbility(ability);
                     break;
                 case CastMode.Confirm:
-                    StartConfirmCast(ability);
+                    BeginCast(ability);
                     break;
             }
         }
 
-        private void CastInstantAbility(AbilityData ability)
+        private void ExecuteInstantAbility(AbilityData ability)
         {
-            ExecutionContext context = BuildInstantContext(ability);
+            AbilityTargetingData context = _targetingCalculator.CalculateTargeting(ability);
 
             abilityUser.UseAbility(ability, context);
         }
 
-        private ExecutionContext BuildInstantContext(AbilityData ability)
+        private void BeginCast(AbilityData ability)
         {
-            Vector3 aimPoint;
-            bool hasPoint = _targetResolver.TryGetAimPoint(out aimPoint);
-
-            GameObject target = null;
-
-            if (ability.targetingType == TargetingType.Target)
+            if (_activeCast != null && _activeCast.IsActive)
             {
-                target = _targetResolver.RaycastEnemy();
-            }
-            return new ExecutionContext
-            {
-                aimPoint = aimPoint,
-                hasAimPoint = hasPoint,
-                castTarget = target,
-                direction = _targetResolver.GetAimDirection(),
-            };
-
-
-        }
-
-        private void StartConfirmCast(AbilityData ability)
-        {
-            if (_currentCast != null && _currentCast.IsActive)
-            {
-                _currentCast.Interrupt();
+                _activeCast.InterruptCast();
             }
 
             if (!abilityUser.CanStartCast(ability))
             {
                 return;
             }
-            _currentCast = new CastSession(abilityUser, ability, _targetResolver);
+            _activeCast = new AbilityCast(abilityUser, ability, _targetingCalculator);
         } 
 
         private void ConfirmCurrentCast()
         {
-            if (_currentCast == null)
+            if (_activeCast == null)
             {
                 return;
             }
 
-            if (!_currentCast.IsActive)
+            if (!_activeCast.IsActive)
             {
                 ClearCurrentCast();
 
                 return;
             }
 
-            _currentCast.Confirm();
+            _activeCast.ConfirmCast();
 
             ClearCurrentCast();
        }
 
         private void ClearCurrentCast()
         {
-            _currentCast = null;
+            _activeCast = null;
         }
 
         private void OnGUI()
         {
-            if (_currentCast != null && _currentCast.IsActive)
+            if (_activeCast != null && _activeCast.IsActive)
             {
-                _currentCast.DrawDebug();
+                _activeCast.DrawDebug();
             }
         }
 

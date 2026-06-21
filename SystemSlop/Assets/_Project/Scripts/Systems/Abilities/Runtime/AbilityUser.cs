@@ -23,7 +23,7 @@ namespace Project.Systems.Abilities.Runtime
             _cooldowns = new float[abilities.Count];
         }
 
-        public void UseAbility(AbilityData ability, ExecutionContext context)
+        public void UseAbility(AbilityData ability, AbilityTargetingData context)
         {
             int index = abilities.IndexOf(ability);
 
@@ -36,7 +36,7 @@ namespace Project.Systems.Abilities.Runtime
             StartCooldown(index, ability);
         }
 
-        private void ExecuteAbility(AbilityData ability, ExecutionContext context)
+        private void ExecuteAbility(AbilityData ability, AbilityTargetingData context)
         {
             switch (ability.deliveryType)
             {
@@ -57,7 +57,7 @@ namespace Project.Systems.Abilities.Runtime
 
         }
 
-        public void ResolveAreaImpact(AbilityData ability, ExecutionContext context)
+        public void ResolveAreaImpact(AbilityData ability, AbilityTargetingData context)
         {
             
             switch (ability.areaShape)  
@@ -76,7 +76,7 @@ namespace Project.Systems.Abilities.Runtime
             }
         }
 
-        private void ExecuteDelayed(AbilityData ability, ExecutionContext context)
+        private void ExecuteDelayed(AbilityData ability, AbilityTargetingData context)
         {
             GameObject runnerGO = new GameObject("Delayed Ability");
 
@@ -85,7 +85,7 @@ namespace Project.Systems.Abilities.Runtime
             runner.Init(this, ability, context, tempDebugMaterial);
         }
 
-        private void ExecuteSingleTargetInstant(AbilityData ability, ExecutionContext context)
+        private void ExecuteSingleTargetInstant(AbilityData ability, AbilityTargetingData context)
         {
             GameObject target = ResolveTarget(ability, context);
 
@@ -101,7 +101,7 @@ namespace Project.Systems.Abilities.Runtime
             }
         }
 
-        private void ExecuteSphereArea(AbilityData ability, ExecutionContext context)
+        private void ExecuteSphereArea(AbilityData ability, AbilityTargetingData context)
         {
             Vector3 center = GetExecutionPosition(ability, context);
 
@@ -116,7 +116,7 @@ namespace Project.Systems.Abilities.Runtime
             }
         }
 
-        private void ExecuteConeArea(AbilityData ability, ExecutionContext context)
+        private void ExecuteConeArea(AbilityData ability, AbilityTargetingData context)
         {
             Vector3 origin = transform.position;
 
@@ -160,7 +160,7 @@ namespace Project.Systems.Abilities.Runtime
             }
         }
 
-        private void ExecuteProjectile(AbilityData ability, ExecutionContext context)
+        private void ExecuteProjectile(AbilityData ability, AbilityTargetingData context)
         {
             Vector3 point = GetExecutionPosition(ability, context);
 
@@ -184,7 +184,7 @@ namespace Project.Systems.Abilities.Runtime
             Destroy(projectileGO, ability.projectile.lifetime);
         }
 
-        private GameObject ResolveTarget(AbilityData ability, ExecutionContext context)
+        private GameObject ResolveTarget(AbilityData ability, AbilityTargetingData context)
         {
             switch (ability.targetingType)
             {
@@ -201,7 +201,7 @@ namespace Project.Systems.Abilities.Runtime
             }
         }
 
-        private Vector3 GetExecutionPosition(AbilityData ability, ExecutionContext context)
+        private Vector3 GetExecutionPosition(AbilityData ability, AbilityTargetingData context)
         {
             switch (ability.targetingType)
             {
@@ -263,7 +263,7 @@ namespace Project.Systems.Abilities.Runtime
             return abilities[index];
         }
 
-        public bool CanUseAbility(AbilityData ability, ExecutionContext context)
+        public bool CanUseAbility(AbilityData ability, AbilityTargetingData context)
         {
             int index = abilities.IndexOf(ability);
 
@@ -308,7 +308,7 @@ namespace Project.Systems.Abilities.Runtime
             return true;
         }
 
-        public bool CanConfirmCast(AbilityData ability, ExecutionContext context)
+        public bool CanConfirmCast(AbilityData ability, AbilityTargetingData context)
         {
             switch (ability.targetingType)
             {

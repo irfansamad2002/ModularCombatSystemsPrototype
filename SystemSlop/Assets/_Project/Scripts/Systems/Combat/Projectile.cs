@@ -82,7 +82,7 @@ namespace Project.Systems.Combat
             float falloff = Mathf.Pow(1f - normalized, .5f); // quadratic falloff
             falloff = Mathf.Max(falloff, _minFalloff); // ensure minimum effect
 
-            var context = new ExecutionContext
+            var context = new AbilityTargetingData
             {
                 aimPoint = explosionCenter, 
                 hasAimPoint = true,

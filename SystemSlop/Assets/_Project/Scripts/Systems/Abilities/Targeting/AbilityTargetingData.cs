@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public struct ExecutionContext
+public struct AbilityTargetingData
 {
     // ==== CAST / INTENT ====
 

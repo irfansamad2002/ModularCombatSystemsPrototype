@@ -13,7 +13,7 @@ namespace Project.Systems.Effects
 
         public virtual void Apply(
          GameObject target,
-         ExecutionContext context = default,
+         AbilityTargetingData context = default,
          float multiplier = 1f)
         {
             Apply(target, multiplier);

@@ -12,7 +12,7 @@ namespace Project.Systems.Abilities
 
         public void Init(AbilityUser user,
             AbilityData ability,
-            ExecutionContext context,
+            AbilityTargetingData context,
             Material debugMaterial)
         {
 
@@ -34,7 +34,7 @@ namespace Project.Systems.Abilities
             Destroy(_debugSphere.GetComponent<Collider>());
         }
 
-        private IEnumerator Run(AbilityUser user, AbilityData ability, ExecutionContext context)
+        private IEnumerator Run(AbilityUser user, AbilityData ability, AbilityTargetingData context)
         {
             _telegraphInstace = SpawnTelegraphVFX(ability, context);
 
@@ -53,7 +53,7 @@ namespace Project.Systems.Abilities
 
 
 
-        private GameObject SpawnTelegraphVFX(AbilityData ability, ExecutionContext context)
+        private GameObject SpawnTelegraphVFX(AbilityData ability, AbilityTargetingData context)
         {
             if (ability.deliveryType != DeliveryType.Delayed) return null;
 
@@ -71,7 +71,7 @@ namespace Project.Systems.Abilities
             return obj;
         }
 
-        private void SpawnImpactVFX(AbilityData ability, ExecutionContext context)
+        private void SpawnImpactVFX(AbilityData ability, AbilityTargetingData context)
         {
             if (ability.impactVFX == null)
                 return;

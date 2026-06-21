@@ -5,6 +5,6 @@ namespace Project.Core.Event
 {
     public static class AbilityEvents
     {
-        public static Action<AbilityData, ExecutionContext> OnAbilityExecuted;
+        public static Action<AbilityData, AbilityTargetingData> OnAbilityExecuted;
     }   
 }

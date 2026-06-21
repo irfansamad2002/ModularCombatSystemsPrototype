@@ -8,7 +8,7 @@ namespace Project.Systems.Effects
     {
         public float dashDistance = 5f;
 
-        public override void Apply(GameObject target , ExecutionContext context, float multiplier = 1)
+        public override void Apply(GameObject target , AbilityTargetingData context, float multiplier = 1)
         {
             var controller = target.GetComponent<CharacterController>();
 

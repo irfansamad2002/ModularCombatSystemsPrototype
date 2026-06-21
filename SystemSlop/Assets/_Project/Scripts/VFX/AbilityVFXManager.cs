@@ -19,7 +19,7 @@ namespace Project.Systems.VFX
             AbilityEvents.OnAbilityExecuted -= HandleAbility;
         }
 
-        private void HandleAbility(AbilityData ability, ExecutionContext context)
+        private void HandleAbility(AbilityData ability, AbilityTargetingData context)
         {
 
         }
