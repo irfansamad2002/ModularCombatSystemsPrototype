@@ -17,6 +17,34 @@ The system is split into 3 parts
 
 This separation allows new abilities to be created through configuration instead of new gameplay code.
 
+```mermaid
+flowchart TD
+
+    A[Ability User]
+    B[Ability Execution Controller]
+
+    C{Cast Mode}
+
+    A --> B
+    B --> C
+
+    %% INSTANT PATH
+    C -->|Instant| D[Resolve Target Immediately]
+    D --> E[Build Ability Context]
+
+    %% CONFIRM PATH
+    C -->|Confirm| F[Create Cast Session]
+    F --> G[Player Aims / Adjusts Target]
+    G --> H[Confirm Cast]
+    H --> E[Build Ability Context]
+
+    %% SHARED EXECUTION PIPELINE
+    E --> I["Target Resolver (final validation)"]
+    I --> J[Delivery Handler]
+    J --> K[Effect System]
+
+```
+
 ---
 
 ## ⚙️ System Overview
