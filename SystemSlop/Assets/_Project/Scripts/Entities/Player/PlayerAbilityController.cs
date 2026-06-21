@@ -129,7 +129,7 @@ namespace Project.Entities.Player
         {
             AbilityTargetingData context = _targetingCalculator.CalculateTargeting(ability);
 
-            abilityUser.UseAbility(ability, context);
+            abilityUser.TryUseAbility(ability, context);
         }
 
         private void BeginCast(AbilityData ability)

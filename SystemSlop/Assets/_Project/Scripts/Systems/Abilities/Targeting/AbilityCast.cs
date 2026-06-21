@@ -56,7 +56,7 @@ namespace Project.Systems.Abilities.Runtime
                 return;
            }
 
-            _user.UseAbility(_ability, _targetingData);
+            _user.TryUseAbility(_ability, _targetingData);
             CleanUp();
         }
 

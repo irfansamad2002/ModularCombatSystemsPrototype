@@ -23,7 +23,7 @@ namespace Project.Systems.Abilities.Runtime
             _cooldowns = new float[abilities.Count];
         }
 
-        public void UseAbility(AbilityData ability, AbilityTargetingData context)
+        public void TryUseAbility(AbilityData ability, AbilityTargetingData context)
         {
             int index = abilities.IndexOf(ability);
 
@@ -103,7 +103,7 @@ namespace Project.Systems.Abilities.Runtime
 
         private void ExecuteSphereArea(AbilityData ability, AbilityTargetingData context)
         {
-            Vector3 center = GetExecutionPosition(ability, context);
+            Vector3 center = GetTargetPosition(ability, context);
 
             var targets = AreaQuery.GetTargetsSphere(center, ability.radius, _targetLayer, transform);
 
@@ -162,7 +162,7 @@ namespace Project.Systems.Abilities.Runtime
 
         private void ExecuteProjectile(AbilityData ability, AbilityTargetingData context)
         {
-            Vector3 point = GetExecutionPosition(ability, context);
+            Vector3 point = GetTargetPosition(ability, context);
 
             Vector3 dir = (point - firePoint.position).normalized;
 
@@ -201,7 +201,7 @@ namespace Project.Systems.Abilities.Runtime
             }
         }
 
-        private Vector3 GetExecutionPosition(AbilityData ability, AbilityTargetingData context)
+        private Vector3 GetTargetPosition(AbilityData ability, AbilityTargetingData context)
         {
             switch (ability.targetingType)
             {
