@@ -17,10 +17,6 @@ namespace Project.Systems.Abilities.Runtime
         private bool _isActive;
         public bool IsActive => _isActive;
 
-        private CastState _state;
-        public CastState State => _state;
-        public bool IsInterruptible => _state == CastState.Casting;
-
         // ==================== Constructor ====================
         public CastSession(
             AbilityUser user,
@@ -34,7 +30,6 @@ namespace Project.Systems.Abilities.Runtime
             _context = new ExecutionContext();
 
             _isActive = true;
-            _state = CastState.Casting;
 
             CreateIndicator();
         }
@@ -44,7 +39,7 @@ namespace Project.Systems.Abilities.Runtime
         // ========================================
         public void Update()
         {
-            if (!IsActive || _state != CastState.Casting) 
+            if (!IsActive) 
                 return;
 
             switch (_ability.targetingType)
@@ -138,9 +133,6 @@ namespace Project.Systems.Abilities.Runtime
 
         public void Interrupt() // Session Control
         {
-            if (_state == CastState.Completed || _state == CastState.Interrupted) return;
-
-            _state = CastState.Interrupted;
             CleanUp();
         }
 
@@ -184,7 +176,6 @@ namespace Project.Systems.Abilities.Runtime
             // ================= BASIC INFO =================
             GUILayout.Label($"ABILITY: {_ability.abilityName}");
             GUILayout.Label($"ACTIVE: {_isActive}");
-            GUILayout.Label($"STATE: {_state}");
 
             GUILayout.Space(5);
 
@@ -257,14 +248,7 @@ namespace Project.Systems.Abilities.Runtime
         // ========================================
         // State
         // ========================================
-        public enum CastState //State of Casting
-        {
-            Idle,
-            Casting,
-            Executing,
-            Interrupted,
-            Completed
-        }
+        
 
         
 
