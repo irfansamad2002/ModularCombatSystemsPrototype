@@ -17,14 +17,21 @@ MonoBehaviour:
   icon: {fileID: 0}
   cooldown: 1
   castRange: 10
+  radius: 3
   targetingType: 2
   deliveryType: 0
+  castMode: 0
   effects:
   - {fileID: 11400000, guid: 60d0e922914a4a14fb29256729d93e01, type: 2}
+  impactVFX: {fileID: 0}
+  telegraphVFX: {fileID: 0}
   projectile: {fileID: 0}
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
   indicatorPrefab: {fileID: 0}
-  castMode: 0
+  minDistanceThreshold: 0.1
+  minFalloff: 0.2
   areaShape: 0
-  radius: 3
   coneAngle: 90
   delay: 1

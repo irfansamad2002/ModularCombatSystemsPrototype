@@ -40,7 +40,7 @@ namespace Project.Entities.Player
             _cancelCast = map.FindAction("Cancel Cast");
 
             _targetResolver = new AbilityTargetResolver(cam, worldLayer, targetLayer);
-            _targetingCalculator = new AbilityTargetingCalculator(_targetResolver);
+            _targetingCalculator = new AbilityTargetingCalculator(_targetResolver, abilityUser.transform);
         }
 
         private void OnEnable()
@@ -136,13 +136,17 @@ namespace Project.Entities.Player
         {
             if (_activeCast != null && _activeCast.IsActive)
             {
-                _activeCast.InterruptCast();
-            }
+                if (!abilityUser.CanStartCast(ability))
+                    return;
 
+                _activeCast.CancelCast();
+            }
+                
             if (!abilityUser.CanStartCast(ability))
             {
                 return;
             }
+
             _activeCast = new AbilityCast(abilityUser, ability, _targetingCalculator);
         } 
 

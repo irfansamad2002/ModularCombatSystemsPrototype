@@ -5,7 +5,6 @@ namespace Project.Systems.Abilities.Runtime
 {
     public class AbilityCast
     {
-        // ==================== Core References ====================
         private readonly AbilityData _ability;
         private readonly AbilityUser _user;
         private readonly AbilityTargetingCalculator _targetingCalculator;
@@ -13,11 +12,11 @@ namespace Project.Systems.Abilities.Runtime
         private AbilityTargetingData _targetingData;
         private AbilityTargetingIndicator _indicator;
 
-        // ==================== Lifecycle ====================  
         private bool _isCasting;
-        public bool IsActive => _isCasting;
 
-        // ==================== Constructor ====================
+        public bool IsActive => _isCasting;
+        public AbilityData Ability => _ability;
+
         public AbilityCast(
             AbilityUser user,
             AbilityData ability,
@@ -65,12 +64,6 @@ namespace Project.Systems.Abilities.Runtime
             CleanUp();
         }
 
-        public void InterruptCast()
-        {
-            if (!_isCasting) return;
-
-            CleanUp();
-        }
 
         private void CleanUp()
         {

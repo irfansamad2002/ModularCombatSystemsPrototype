@@ -132,24 +132,6 @@ namespace Project.Systems.Abilities.Runtime
                 context.direction,
                 ability.coneAngle);
 
-           
-            //Debug.DrawRay(
-            //    origin,
-            //    forward * ability.radius,
-            //    Color.red,
-            //    1f);
-
-            //Debug.DrawRay(
-            //    origin,
-            //    leftEdge * ability.radius,
-            //    Color.green,
-            //    1f);
-
-            //Debug.DrawRay(
-            //    origin,
-            //    rightEdge * ability.radius,
-            //    Color.green,
-            //    1f);
 
             foreach (var target in coneTargets)
             {

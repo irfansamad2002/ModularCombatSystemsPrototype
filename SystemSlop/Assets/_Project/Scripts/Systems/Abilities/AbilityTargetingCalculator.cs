@@ -4,10 +4,12 @@ using UnityEngine;
 public class AbilityTargetingCalculator
 {
     private readonly AbilityTargetResolver _resolver;
+    private readonly Transform _caster;
 
-    public AbilityTargetingCalculator(AbilityTargetResolver resolver)
+    public AbilityTargetingCalculator(AbilityTargetResolver resolver, Transform caster)
     {
         _resolver = resolver;
+        _caster = caster;
     }
 
     public AbilityTargetingData CalculateTargeting(AbilityData ability)
@@ -26,12 +28,25 @@ public class AbilityTargetingCalculator
                 }
                 break;
             case TargetingType.Target:
-                context.castTarget = _resolver.RaycastEnemy();
+                var target = _resolver.RaycastEnemy();
+
+                if (target != null &&
+                    IsTargetInRange(target, ability))
+                {
+
+                    context.castTarget = _resolver.RaycastEnemy();
+                }
+                
                 break;
             case TargetingType.Self:
                 context.castTarget = null;
                 break;
         }
         return context;
+    }
+
+    private bool IsTargetInRange(GameObject target, AbilityData ability)
+    {
+        return Vector3.Distance(_caster.position, target.transform.position) <= ability.castRange;
     }
 }

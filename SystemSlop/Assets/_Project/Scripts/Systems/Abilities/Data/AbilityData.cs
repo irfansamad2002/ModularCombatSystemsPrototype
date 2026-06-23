@@ -17,6 +17,7 @@ namespace Project.Systems.Abilities.Data
         public float radius;
         public TargetingType targetingType;
         public DeliveryType deliveryType;
+        public CastMode castMode;
 
         public List<EffectData> effects;
 
@@ -27,7 +28,6 @@ namespace Project.Systems.Abilities.Data
 
         [Header("Projectile")]
         public ProjectileData projectile; //Optional
-        public CastMode castMode;
         public LayerMask targetLayers;
         [Space(10)]
         public GameObject indicatorPrefab;//Optional : if null which mean no need indicators
