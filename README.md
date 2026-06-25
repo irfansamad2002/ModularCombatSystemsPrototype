@@ -1,191 +1,342 @@
 # Modular Ability Combat Framework (Unity)
-This project is a Unity-based combat system focused on **clean architecture and reusable gameplay systems**, rather than building a full content-heavy game.(not yet at least)
 
-The goal is to demonstrate how a combat system can be structured so that abilities can be added, modified, and combined without changing core logic.
+A Unity combat framework built to explore reusable gameplay systems and combat architecture.
+
+The goal of this project is to create abilities that can be added, modified, and combined through configuration rather than rewriting gameplay code.
+
+---
+
+<p align="center">
+  <img src="SystemSlop/Media/Fireball (damage + slowed effect).gif" width="800">
+</p>
+
+<p align="center">
+  Projectile execution applying Damage and Slow effects.
+</p>
+
+<p align="center">
+  <img src="SystemSlop/Media/Fireball (changing effects to only heal).gif" width="350">
+</p>
+
+<p align="center">
+  Ability behaviour modified entirely through data configuration.
+</p>
+
+<p align="center">
+  <img src="SystemSlop/Media/Fireball (heal effect).gif" width="800">
+</p>
+
+<p align="center">
+  The same projectile execution applying a HealEffect without code changes.
+</p>
+
+---
 
 # Trello
+
 https://trello.com/b/lMqxyECt/modular-ability-combat-framework-project
 
 ---
 
-## 🧠 Core Idea
-The system is split into 3 parts
+# 🧠 Core Idea
 
-- **Abilities = what you use**
-- **Execution = how it happens**
-- **Effects = what it does**
+The framework separates combat into three independent concerns:
 
-This separation allows new abilities to be created through configuration instead of new gameplay code.
+* **Abilities** = What the player uses
+* **Delivery** = How the ability reaches targets
+* **Effects** = What gameplay outcome occurs
+
+This makes it easier to create new abilities by reusing existing systems instead of writing new code for every ability.
+
+---
+
+# 🏗 Architecture Overview
 
 ```mermaid
 flowchart TD
 
-    A[Ability User]
-    B[Ability Execution Controller]
+    A[Player Input]
+    B[PlayerAbilityController]
 
-    C{Cast Mode}
+    C[AbilityTargetingCalculator]
+    D[AbilityTargetingData]
+
+    E{Cast Mode}
+
+    F[AbilityCast]
+    G[AbilityUser]
+
+    H[Delivery System]
+    I[Effect System]
 
     A --> B
     B --> C
+    C --> D
 
-    %% INSTANT PATH
-    C -->|Instant| D[Resolve Target Immediately]
-    D --> E[Build Ability Context]
+    D --> E
 
-    %% CONFIRM PATH
-    C -->|Confirm| F[Create Cast Session]
-    F --> G[Player Aims / Adjusts Target]
-    G --> H[Confirm Cast]
-    H --> E[Build Ability Context]
+    E -->|Instant| G
+    E -->|Confirm| F
 
-    %% SHARED EXECUTION PIPELINE
-    E --> I["Target Resolver (final validation)"]
-    I --> J[Delivery Handler]
-    J --> K[Effect System]
+    F --> G
 
+    G --> H
+    H --> I
 ```
 
 ---
 
-## ⚙️ System Overview
+# 🔄 Example Execution Flow
 
-### 1. Ability (Setup Layer)
-Abilities are defined as data objects (ScriptableObjects). They contain configuration only:
+Fireball (Projectile Ability)
 
-- Targeting type (Point / Target / Self)
-- Delivery type (Instant / Projectile / Delayed / Chain)
-- Area shape (None / Sphere / Cone)
-- Effect list (Damage, Heal, Slow, etc.)
+```text
+Input
+→ PlayerAbilityController
+→ AbilityTargetingCalculator
+→ AbilityTargetingData
+→ AbilityUser
+→ Projectile Delivery
+→ Damage Effect
+```
 
-Abilities do not contain gameplay logic.
+Meteor (Confirm Cast Ability)
 
----
-
-### 2. Execution (Runtime Layer)
-Execution defines how the ability is processed in-game:
-
-- **Instant Execution**
-  - Resolves immediately within an area
-
-- **Projectile Execution**
-  - Spawns a projectile that travels and resolves on impact
-
-- **Delayed Execution**
-  - Waits for a duration before resolving
-
-- **Chain Execution**
-  - Transfers effects across multiple targets based on rules
-
----
-
-### 3. Targeting System
-The targeting system handles how valid targets are selected:
-
-- Aim direction and point calculation
-- Target detection (raycast / overlap checks)
-- Range and angle validation
-
-This ensures consistent targeting behavior across all abilities.
+```text
+Input
+→ PlayerAbilityController
+→ AbilityCast
+→ AbilityTargetingCalculator
+→ AbilityTargetingData
+→ Confirm Cast
+→ AbilityUser
+→ Delayed Delivery
+→ Damage Effect
+```
 
 ---
 
-### 4. Effect System
-Effects define what happens to targets after execution:
+# 🎯 System Responsibilities
 
-- Damage
-- Heal
-- Slow / movement modifiers
+Each system has a single responsibility within the ability pipeline.
 
-Important rule
-- Abilities never modify health or stats directly
-- All changes are applied through effects
+| System                     | Responsibility                                         |
+| -------------------------- | ------------------------------------------------------ |
+| PlayerAbilityController    | Reads player input and starts ability flow             |
+| AbilityCast                | Manages temporary cast lifecycle and confirmation flow |
+| AbilityTargetingCalculator | Builds and validates targeting information             |
+| AbilityTargetingData       | Stores targeting information for the current cast      |
+| AbilityUser                | Manages cooldowns and ability usage                    |
+| Delivery Systems           | Control how abilities reach targets                    |
+| Effects                    | Apply gameplay outcomes                                |
 
-This keeps gameplay logic modular and consistent.
+Design Rule:
+
+* Systems own one responsibility.
+* Gameplay effects never bypass the effect system.
 
 ---
 
-## 🔥 Example Abilities
-These abilities demonstrate different execution patterns:
+# ⚙️ System Overview
+
+## 1. Ability Layer
+
+Abilities are stored as ScriptableObjects.
+
+An ability defines:
+
+* Targeting Type (Point / Target / Self)
+* Cast Mode (Instant / Confirm)
+* Delivery Type (Instant / Projectile / Delayed / Chain)
+* Area Shape (None / Sphere / Cone)
+* Effect List
+
+Abilities contain configuration only.
+
+They do not contain gameplay logic.
 
 ---
 
-### 1. Fireball (Projectile AoE System)
-A projectile that explodes on impact, dealing area damage.
+## 2. Targeting Layer
+
+The targeting system determines where an ability should be used and which targets are valid.
+
+Responsibilities include:
+
+* Aim direction calculation
+* Aim point calculation
+* Target detection
+* Range validation
+* Angle validation
+
+Targeting information is stored in AbilityTargetingData and passed through the execution pipeline.
+
+---
+
+## 3. Cast Layer
+
+Abilities using Confirm Cast create a temporary AbilityCast instance.
+
+Responsibilities include:
+
+* Maintaining cast state
+* Updating targeting information
+* Displaying targeting indicators
+* Confirming or cancelling casts
+
+This system only exists while the player is preparing a confirm-cast ability.
+
+---
+
+## 4. Delivery Layer
+
+Delivery determines how an ability reaches its targets.
+
+Current delivery types:
+
+### Instant
+
+Resolves immediately.
+
+### Projectile
+
+Spawns a projectile and resolves on impact.
+
+### Delayed
+
+Waits before resolving.
+
+### Chain
+
+Transfers effects between valid targets.
+
+---
+
+## 5. Effect Layer
+
+Effects define gameplay outcomes.
+
+Current examples:
+
+* Damage
+* Heal
+* Slow
+
+Design Rule:
+
+Effects are the only systems allowed to directly modify gameplay state.
+
+Abilities and delivery systems never directly modify health, movement speed, or combat stats.
+
+---
+
+# 🔥 Example Abilities
+
+## Fireball
+
+Projectile ability that explodes on impact.
 
 Demonstrates:
-- Projectile lifecycle (spawn → travel → impact)
-- Collision-based resolution
-- Area-of-effect damage handling
+
+* Projectile delivery
+* Area damage
+* Reusable effects
 
 ---
 
-### 2. Chain Lightning (Multi-Target Chain)
-An ability that jumps between multiple enemies.
+## Chain Lightning
+
+Ability that jumps between nearby enemies.
 
 Demonstrates:
-- Multi-target selection logic
-- Distance-based chaining rules
-- Prevention of duplicate hits
+
+* Multi-target execution
+* Chaining logic
+* Target filtering
 
 ---
 
-### 3. Cleave (Directional Melee)
-A fast melee attack that hits enemies in front of the player.
+## Cleave
+
+Instant frontal attack.
 
 Demonstrates:
-- Cone-based hit detection
-- Instant execution flow
-- Close-range combat logic
+
+* Cone targeting
+* Instant execution
+* Directional hit detection
 
 ---
 
-### 4. Meteor (Delayed Impact)
-A targeted location is marked, then a meteor falls after a delay.
+## Meteor
+
+Targeted delayed impact.
 
 Demonstrates:
-- Delayed execution system
-- Separation of cast time and impact time
-- Position-based validation at impact
+
+* Confirm cast flow
+* Delayed delivery
+* Position-based execution
 
 ---
 
-## 🧩 Key Technical Highlights
+# 🧩 Technical Highlights
 
-- Fully data-driven ability system using ScriptableObjects
-- Clear separation between ability, execution, and effects
-- Reusable effect system across all abilities
-- Consistent targeting system across melee, ranged, and AoE
-- Modular execution types (instant, projectile, delayed, chain)
-
----
-
-## 🧪 Design Intent
-
-This project is not a game content demo.
-
-It is a **combat system framework**, designed to demonstrate:
-
-- scalable gameplay architecture
-- reusable system design
-- clean separation of responsibilities
-- predictable execution flow
+* Data-driven ability creation using ScriptableObjects
+* Shared targeting pipeline across all abilities
+* Modular delivery architecture
+* Reusable effect system
+* Confirm-cast and instant-cast support
+* Clear separation of responsibilities
+* Easily expandable ability pipeline
 
 ---
 
-## 🚧 Future Improvements
+# 🧪 Design Goals
 
-- Interruptible abilities and reaction system
-- Buff / debuff (status effect) system
-- Advanced crowd control system
-- Multiplayer-safe deterministic execution
-- Animation-event driven execution hooks
+This project is intended as a gameplay systems portfolio project.
+
+The primary goals are:
+
+* Build reusable gameplay systems
+* Practice clean system architecture
+* Build systems with clear responsibilities
+* Create a consistent ability workflow
+* Support extension without modifying core systems
 
 ---
 
-## 📌 Summary
+# 🚧 Future Improvements
 
-Abilities are defined as configuration.
-Execution controls how they run.
-Effects handle all gameplay changes.
+* Buff / debuff framework
+* Status effect system
+* Animation-driven ability execution
+* Advanced cast interruption framework
+* Gameplay tags and ability requirements
+* AI integration using the same ability pipeline
 
-This results in a combat system that is modular, extensible, and easy to expand without modifying core logic.
+---
+
+# 📌 Summary
+
+Abilities define configuration.
+
+Targeting determines intent.
+
+Delivery determines how abilities execute.
+
+Effects determine gameplay outcomes.
+
+The result is a modular combat framework that can be extended with new abilities while minimizing changes to existing systems.
+
+---
+
+# Why I Built This
+
+I enjoy building gameplay systems and understanding how different combat mechanics fit together.
+
+Many games contain abilities, cooldowns, projectiles, targeting systems, status effects, and execution pipelines. Rather than implementing each ability as a one-off solution, I wanted to explore how these mechanics could be built from reusable systems.
+
+This project started as an experiment to see how a reusable combat system could be built. Along the way, it became a way to practice gameplay programming, system design, and building systems that are easy to extend.
+
+One interesting side effect is that I now analyze abilities in games differently. When playing games such as Overwatch or League of Legends, I often find myself breaking abilities down into targeting, delivery, and effect layers and thinking about how they could be implemented within a reusable framework.
