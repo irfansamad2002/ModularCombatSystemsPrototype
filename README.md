@@ -32,7 +32,9 @@ The goal of this project is to create abilities that can be added, modified, and
 
 ---
 
-# Trello
+# Development Board
+
+Project planning and task tracking:
 
 https://trello.com/b/lMqxyECt/modular-ability-combat-framework-project
 
