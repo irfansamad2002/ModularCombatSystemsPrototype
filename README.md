@@ -19,7 +19,7 @@ The goal of this project is to create abilities that can be added, modified, and
 </p>
 
 <p align="center">
-  Ability behaviour modified entirely through data configuration.
+  Swapping DamageEffect for HealEffect through ScriptableObject configuration.
 </p>
 
 <p align="center">
