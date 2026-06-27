@@ -10,7 +10,10 @@ namespace Project.Core.Health
 
         private void Awake()
         {
-            currentHealth = maxHealth;
+            if (currentHealth == 0)
+            {
+                currentHealth = maxHealth;
+            }
         }
 
         public void TakeDamage(float damage)
