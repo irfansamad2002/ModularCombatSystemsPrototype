@@ -22,26 +22,26 @@ namespace Project.Systems.Abilities.Runtime
         private ProjectileDelivery _projectileDelivery;
         private DelayedDelivery _delayedDelivery;
         private InstantDelivery _instantDelivery;
+        private AbilityValidator _validator;
 
         private void Awake()
         {
             _cooldowns = new float[abilities.Count];
+
+            _validator = new AbilityValidator(); 
+
             _instantDelivery = new InstantDelivery();
             _projectileDelivery = new ProjectileDelivery();
             _delayedDelivery = new DelayedDelivery();
         }
 
-        public void TryUseAbility(AbilityData ability, AbilityTargetingData context)
+        public void TryUseAbility(AbilityData ability, AbilityTargetingData targetingData)
         {
-            int index = abilities.IndexOf(ability);
-
-            if (!CanUseAbility(ability, context))
-            {
+            if (!_validator.CanUse(this, ability, targetingData))
                 return;
-            }
 
-            ExecuteAbility(ability, context);
-            StartCooldown(index, ability);
+            ExecuteAbility(ability, targetingData);
+            StartCooldown(ability);
         }
 
         private void ExecuteAbility(AbilityData ability, AbilityTargetingData targetingData)
@@ -65,23 +65,22 @@ namespace Project.Systems.Abilities.Runtime
 
         }
 
-       
-
-       
-
-       
-
-        
-
-       
-
-        private bool IsOnCooldown(int index)
+        public bool IsOnCooldown(AbilityData ability)
         {
-            return _cooldowns[index] > 0f;
+            int index = GetAbilityIndex(ability);
+
+            if (index < 0)
+                return false;
+
+            return _cooldowns[index] > 0f;  
         }
 
-        private void StartCooldown(int index, AbilityData ability)
+        private void StartCooldown(AbilityData ability)
         {
+            int index = GetAbilityIndex(ability);
+
+            if (index < 0) return;
+
             _cooldowns[index] = ability.cooldown;
         }
 
@@ -116,66 +115,9 @@ namespace Project.Systems.Abilities.Runtime
             return abilities[index];
         }
 
-        public bool CanUseAbility(AbilityData ability, AbilityTargetingData context)
+        private int GetAbilityIndex(AbilityData ability)
         {
-            int index = abilities.IndexOf(ability);
-
-            if (index < 0)
-            {
-                return false;
-            }
-
-            if (IsOnCooldown(index))
-            {
-                return false;
-            }
-
-            switch (ability.targetingType)
-            {
-                case TargetingType.Point:
-                    return context.hasTargetPoint;
-
-                case TargetingType.Target:
-                    return context.target != null;
-
-                case TargetingType.Self:
-                case TargetingType.None:
-                    return true;
-            }
-            return false;
-        }
-
-        public bool CanStartCast(AbilityData ability)
-        {
-            int index = abilities.IndexOf(ability);
-
-            if (index < 0)
-            {
-                return false;
-            }
-
-            if (IsOnCooldown(index))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public bool CanConfirmCast(AbilityData ability, AbilityTargetingData context)
-        {
-            switch (ability.targetingType)
-            {
-                case TargetingType.Point:
-                    return context.hasTargetPoint;
-
-                case TargetingType.Target:
-                    return context.target != null;
-
-                case TargetingType.Self:
-                case TargetingType.None:
-                    return true;
-            }
-            return false;
+            return abilities.IndexOf(ability);
         }
 
         private Vector3 GetTargetPosition(AbilityData ability, AbilityTargetingData targetingData)
@@ -210,5 +152,16 @@ namespace Project.Systems.Abilities.Runtime
             return transform.position;
         }
 
+        public bool CanConfirmCast(AbilityData ability, AbilityTargetingData targetingData)
+        {
+            return _validator.CanConfirmCast(ability, targetingData);
+        }
+
+        public bool CanStartCast(AbilityData ability)
+        {
+            return _validator.CanStartCast(this,ability);
+        }
+
     }
+
 }
