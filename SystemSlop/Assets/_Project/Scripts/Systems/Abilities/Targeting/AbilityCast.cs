@@ -79,14 +79,14 @@ namespace Project.Systems.Abilities.Runtime
             switch (_ability.targetingType)
             {
                 case TargetingType.Point:
-                    _indicator.SetPosition(_targetingData.aimPoint);
-                    _indicator.SetValid(_targetingData.hasAimPoint);
+                    _indicator.SetPosition(_targetingData.targetPoint);
+                    _indicator.SetValid(_targetingData.hasTargetPoint);
                     break;
 
                 case TargetingType.Target:
-                    if (_targetingData.castTarget != null)
+                    if (_targetingData.target != null)
                     {
-                        _indicator.SetPosition(_targetingData.castTarget.transform.position);
+                        _indicator.SetPosition(_targetingData.target.transform.position);
                         _indicator.SetValid(true);
                     }
                     else
@@ -135,18 +135,18 @@ namespace Project.Systems.Abilities.Runtime
             switch (_ability.targetingType)
             {
                 case TargetingType.Point:
-                    GUILayout.Label($"Aim Point: {_targetingData.aimPoint}");
-                    GUILayout.Label($"Has Aim Point: {_targetingData.hasAimPoint}");
+                    GUILayout.Label($"Aim Point: {_targetingData.targetPoint}");
+                    GUILayout.Label($"Has Aim Point: {_targetingData.hasTargetPoint}");
                     GUILayout.Label($"Direction: {_targetingData.direction}");
                     break;
 
                 case TargetingType.Target:
-                    GUILayout.Label($"Cast Target: {FormatTarget(_targetingData.castTarget)}");
+                    GUILayout.Label($"Cast Target: {FormatTarget(_targetingData.target)}");
                     GUILayout.Label($"In Range: {IsTargetInRangeDebug()}");
                     break;
 
                 case TargetingType.Self:
-                    GUILayout.Label($"Self Target: {_targetingData.castTarget}");
+                    GUILayout.Label($"Self Target: {_targetingData.target}");
                     break;
             }
 
@@ -171,9 +171,9 @@ namespace Project.Systems.Abilities.Runtime
 
         private bool IsTargetInRangeDebug() // Debug TargetValidation
         {
-            if (_targetingData.castTarget == null) return false;
+            if (_targetingData.target == null) return false;
 
-            return Vector3.Distance(_user.transform.position, _targetingData.castTarget.transform.position)
+            return Vector3.Distance(_user.transform.position, _targetingData.target.transform.position)
                    <= _ability.castRange;
         }
 
@@ -182,10 +182,10 @@ namespace Project.Systems.Abilities.Runtime
             switch (_ability.targetingType)
             {
                 case TargetingType.Point:
-                    return _targetingData.hasAimPoint;
+                    return _targetingData.hasTargetPoint;
 
                 case TargetingType.Target:
-                    return _targetingData.castTarget != null;
+                    return _targetingData.target != null;
 
                 case TargetingType.Self:
                     return true;

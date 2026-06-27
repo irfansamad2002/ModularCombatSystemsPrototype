@@ -84,8 +84,8 @@ namespace Project.Systems.Combat
 
             var context = new AbilityTargetingData
             {
-                aimPoint = explosionCenter, 
-                hasAimPoint = true,
+                targetPoint = explosionCenter, 
+                hasTargetPoint = true,
                 direction = transform.forward
             };
             foreach (var effect in _effects)

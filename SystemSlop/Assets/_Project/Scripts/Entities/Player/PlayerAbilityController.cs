@@ -38,7 +38,7 @@ namespace Project.Entities.Player
             _cancelCast = map.FindAction("Cancel Cast");
 
             _targetResolver = new AbilityTargetResolver(cam, worldLayer, targetLayer);
-            _targetingCalculator = new AbilityTargetingCalculator(_targetResolver, abilityUser.transform);
+            _targetingCalculator = new AbilityTargetingCalculator(_targetResolver);
         }
 
         private void OnEnable()

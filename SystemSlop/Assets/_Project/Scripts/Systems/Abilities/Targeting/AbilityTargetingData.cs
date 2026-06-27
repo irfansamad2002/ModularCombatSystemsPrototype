@@ -5,16 +5,16 @@ public struct AbilityTargetingData
     // ==== CAST / INTENT ====
 
     // Optional cast-time selected target
-    public GameObject castTarget;
+    public GameObject target;
 
     // Raw aimed point from targeting
-    public Vector3 aimPoint;
+    public Vector3 targetPoint;
 
     // Shared directinal intent
     public Vector3 direction;
 
-    // Whether aim point exists
-    public bool hasAimPoint;
+    // Whether target point exists
+    public bool hasTargetPoint;
 
     // ==== IMPACT / RESOLUTION ====
 

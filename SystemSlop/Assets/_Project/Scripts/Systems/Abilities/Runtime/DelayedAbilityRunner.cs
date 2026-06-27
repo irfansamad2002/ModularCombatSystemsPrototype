@@ -10,13 +10,17 @@ namespace Project.Systems.Abilities
         private GameObject _debugSphere;
         private GameObject _telegraphInstace;
 
+        private InstantDelivery _instantDelivery;
+
         public void Init(AbilityUser user,
             AbilityData ability,
-            AbilityTargetingData context,
-            Material debugMaterial)
+            AbilityTargetingData targetingData,
+            Material debugMaterial,
+            InstantDelivery instantDelivery)
         {
+            _instantDelivery = instantDelivery;
 
-            StartCoroutine(Run(user, ability, context));
+            StartCoroutine(Run(user, ability, targetingData));
             //CreateDebugSphere(context.aimPoint, ability.radius, debugMaterial);
 
         }
@@ -34,18 +38,19 @@ namespace Project.Systems.Abilities
             Destroy(_debugSphere.GetComponent<Collider>());
         }
 
-        private IEnumerator Run(AbilityUser user, AbilityData ability, AbilityTargetingData context)
+        private IEnumerator Run(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
         {
-            _telegraphInstace = SpawnTelegraphVFX(ability, context);
+            _telegraphInstace = SpawnTelegraphVFX(ability, targetingData);
 
             yield return new WaitForSeconds(ability.delay);
 
-            //var impact = BuildImpactContext(ability, context);
-            context.impactPoint = context.aimPoint;
-            context.hasImpactPoint = true;
-            user.ResolveAreaImpact(ability, context);
+            targetingData.impactPoint = targetingData.targetPoint;
+            targetingData.hasImpactPoint = true;
 
-            SpawnImpactVFX(ability, context);
+            _instantDelivery.Execute(user, ability, targetingData);
+
+            SpawnImpactVFX(ability, targetingData);
+
             Destroy(_debugSphere);
             Destroy(_telegraphInstace);
             Destroy(gameObject);
@@ -59,7 +64,7 @@ namespace Project.Systems.Abilities
 
             if (ability.telegraphVFX == null) return null;
 
-            GameObject obj = Instantiate(ability.telegraphVFX, context.aimPoint,Quaternion.identity);
+            GameObject obj = Instantiate(ability.telegraphVFX, context.targetPoint,Quaternion.identity);
 
             var telegraphVFX = obj.GetComponent<DelayedTelegraphVFX>();
 
@@ -78,7 +83,7 @@ namespace Project.Systems.Abilities
 
             Instantiate(
                 ability.impactVFX,
-                context.aimPoint,
+                context.targetPoint,
                 Quaternion.identity
             );
         }
