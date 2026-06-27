@@ -21,8 +21,6 @@ namespace Project.Entities.Player
 
         private AbilityTargetResolver _targetResolver;
 
-        public bool newAbilityCancelsOldOne;
-
         private AbilityTargetingCalculator _targetingCalculator;
     
         private void Awake()
