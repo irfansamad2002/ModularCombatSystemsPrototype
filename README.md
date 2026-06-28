@@ -57,63 +57,44 @@ This makes it easier to create new abilities by reusing existing systems instead
 ```mermaid
 flowchart TD
 
-    A[Player Input]
-    B[PlayerAbilityController]
+Input[Player Input]
+Controller[PlayerAbilityController]
 
-    C[AbilityTargetingCalculator]
-    D[AbilityTargetingData]
+Resolver[AbilityTargetResolver]
+Calculator[AbilityTargetingCalculator]
+TargetData[AbilityTargetingData]
 
-    E{Cast Mode}
+Cast{Cast Mode}
 
-    F[AbilityCast]
-    G[AbilityUser]
+AbilityCast[AbilityCast]
+Validator[AbilityValidator]
+User[AbilityUser]
 
-    H[Delivery System]
-    I[Effect System]
+Delivery[Delivery Strategy]
+Impact[AbilityImpactExecutor]
+Effects[Effect System]
 
-    A --> B
-    B --> C
-    C --> D
+Input --> Controller
 
-    D --> E
+Controller --> Cast
 
-    E -->|Instant| G
-    E -->|Confirm| F
+Cast -->|Instant| Resolver
+Cast -->|Confirm| AbilityCast
 
-    F --> G
+AbilityCast --> Resolver
 
-    G --> H
-    H --> I
-```
+Resolver --> Calculator
+Calculator --> TargetData
 
----
+TargetData --> Validator
 
-# 🔄 Example Execution Flow
+Validator --> User
 
-Fireball (Projectile Ability)
+User --> Delivery
 
-```text
-Input
-→ PlayerAbilityController
-→ AbilityTargetingCalculator
-→ AbilityTargetingData
-→ AbilityUser
-→ Projectile Delivery
-→ Damage Effect
-```
+Delivery --> Impact
 
-Meteor (Confirm Cast Ability)
-
-```text
-Input
-→ PlayerAbilityController
-→ AbilityCast
-→ AbilityTargetingCalculator
-→ AbilityTargetingData
-→ Confirm Cast
-→ AbilityUser
-→ Delayed Delivery
-→ Damage Effect
+Impact --> Effects
 ```
 
 ---
@@ -125,12 +106,18 @@ Each system has a single responsibility within the ability pipeline.
 | System                     | Responsibility                                         |
 | -------------------------- | ------------------------------------------------------ |
 | PlayerAbilityController    | Reads player input and starts ability flow             |
-| AbilityCast                | Manages temporary cast lifecycle and confirmation flow |
-| AbilityTargetingCalculator | Builds and validates targeting information             |
+| AbilityCast                | Temporary confirm-cast lifecycle                       |
+| AbilityTargetingCalculator | Builds AbilityTargetingData from raw targeting queries |
 | AbilityTargetingData       | Stores targeting information for the current cast      |
-| AbilityUser                | Manages cooldowns and ability usage                    |
-| Delivery Systems           | Control how abilities reach targets                    |
+| AbilityTargetResolver      | Raw camera/world queries                               |
+| AbilityUser                | Ability orchestration and cooldown storage             |
+| AbilityValidator           | Cast, confirm and execute validation                   |
+| Delivery Strategies        | Spawns projectile only                                 |
+| Projectile                 | Projectile movement and collision                      |
+| InstantDelivery            | Determines affected targets                            |
+| AbilityImpactExecutor      | Applies effects to resolved targets                    |
 | Effects                    | Apply gameplay outcomes                                |
+
 
 Design Rule:
 
@@ -168,8 +155,7 @@ Responsibilities include:
 * Aim direction calculation
 * Aim point calculation
 * Target detection
-* Range validation
-* Angle validation
+* Building AbilityTargetingData
 
 Targeting information is stored in AbilityTargetingData and passed through the execution pipeline.
 
@@ -214,7 +200,19 @@ Transfers effects between valid targets.
 
 ---
 
-## 5. Effect Layer
+## 5. Validation Layer
+
+AbilityValidator determines whether an ability can proceed.
+
+Responsiblities include:
+
+* Cooldown validation
+* Target validation
+* Cast confirmation validation
+
+---
+
+## 6. Effect Layer
 
 Effects define gameplay outcomes.
 
@@ -284,13 +282,12 @@ Demonstrates:
 
 # 🧩 Technical Highlights
 
-* Data-driven ability creation using ScriptableObjects
-* Shared targeting pipeline across all abilities
-* Modular delivery architecture
+* Data-driven abilities using ScriptableObjects
+* Shared targeting pipeline
+* Modular delivery system
 * Reusable effect system
-* Confirm-cast and instant-cast support
-* Clear separation of responsibilities
-* Easily expandable ability pipeline
+* Instant-cast and confirm-cast support
+* Clear system ownership (single responsibility)
 
 ---
 
