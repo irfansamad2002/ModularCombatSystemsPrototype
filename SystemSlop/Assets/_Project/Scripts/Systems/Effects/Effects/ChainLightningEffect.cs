@@ -1,3 +1,14 @@
+// TODO:
+// ChainLightningEffect currently owns:
+// - target selection
+// - chain traversal
+// - gameplay application
+// - VFX spawning
+//
+// Future refactor:
+// Extract ChainLightningResolver and reuse AbilityImpactExecutor.
+
+
 using Project.Core.Health;
 using Project.Systems.Combat.Query;
 using Project.Systems.Effects;

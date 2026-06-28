@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class ProjectileDelivery
 {
+    private readonly AbilityImpactExecutor _executor;
+
+    public ProjectileDelivery(AbilityImpactExecutor executor)
+    {
+        _executor = executor;
+    }
+
     public void Execute(Transform firePoint, Vector3 destination, AbilityData ability)
     {
 

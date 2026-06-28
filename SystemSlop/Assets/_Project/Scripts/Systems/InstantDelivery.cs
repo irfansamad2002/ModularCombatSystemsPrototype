@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class InstantDelivery
 {
+    private readonly AbilityImpactExecutor _impactExecutor;
+
+    public InstantDelivery(AbilityImpactExecutor impactExecutor)
+    {
+        _impactExecutor = impactExecutor;
+    }
+
     public void Execute(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
     {
         switch (ability.areaShape)
@@ -34,12 +41,8 @@ public class InstantDelivery
             return;
         }
 
-        foreach (var effect in ability.effects)
-        {
-            effect.Apply(target, targetingData);
-        }
+        _impactExecutor.ExecuteTarget(target,ability,targetingData);
     }
-
     private GameObject ResolveTarget(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
     {
         switch (ability.targetingType)
@@ -57,22 +60,17 @@ public class InstantDelivery
         }
     }
 
+
     private void ExecuteSphereArea(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
     {
         Vector3 center = user.GetTargetPosition(targetingData);
 
         var targets = AreaQuery.GetTargetsSphere(center, ability.radius, user.TargetLayer, user.transform);
 
-        foreach (var target in targets)
-        {
-            foreach (var effect in ability.effects)
-            {
-                effect.Apply(target, targetingData);
-            }
-        }
+        _impactExecutor.ExecuteTargets(targets,ability,targetingData);
     }
 
-    private void ExecuteConeArea(AbilityUser user, AbilityData ability, AbilityTargetingData context)
+    private void ExecuteConeArea(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
     {
         Vector3 origin = user.transform.position;
 
@@ -85,17 +83,10 @@ public class InstantDelivery
         var coneTargets = AreaQuery.FilterCone(
             sphereTargets,
             origin,
-            context.direction,
+            targetingData.direction,
             ability.coneAngle);
 
-
-        foreach (var target in coneTargets)
-        {
-            foreach (var effect in ability.effects)
-            {
-                effect.Apply(target, context);
-            }
-        }
+        _impactExecutor.ExecuteTargets(coneTargets, ability, targetingData);
     }
 
 }

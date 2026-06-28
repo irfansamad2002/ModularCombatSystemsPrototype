@@ -1,8 +1,5 @@
 using Project.Core.Event;
 using Project.Systems.Abilities.Data;
-using Project.Systems.Abilities.Runtime;
-using Project.Systems.Combat;
-using Project.Systems.Combat.Query;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,6 +20,7 @@ namespace Project.Systems.Abilities.Runtime
         private DelayedDelivery _delayedDelivery;
         private InstantDelivery _instantDelivery;
         private AbilityValidator _validator;
+        private AbilityImpactExecutor _impactExecutor;
 
         private void Awake()
         {
@@ -30,8 +28,10 @@ namespace Project.Systems.Abilities.Runtime
 
             _validator = new AbilityValidator(); 
 
-            _instantDelivery = new InstantDelivery();
-            _projectileDelivery = new ProjectileDelivery();
+            _impactExecutor = new AbilityImpactExecutor();
+
+            _instantDelivery = new InstantDelivery(_impactExecutor);
+            _projectileDelivery = new ProjectileDelivery(_impactExecutor);
             _delayedDelivery = new DelayedDelivery();
         }
 
