@@ -103,20 +103,21 @@ Impact --> Effects
 
 Each system has a single responsibility within the ability pipeline.
 
-| System                     | Responsibility                                         |
-| -------------------------- | ------------------------------------------------------ |
-| PlayerAbilityController    | Reads player input and starts ability flow             |
-| AbilityCast                | Temporary confirm-cast lifecycle                       |
-| AbilityTargetingCalculator | Builds AbilityTargetingData from raw targeting queries |
-| AbilityTargetingData       | Stores targeting information for the current cast      |
-| AbilityTargetResolver      | Raw camera/world queries                               |
-| AbilityUser                | Ability orchestration and cooldown storage             |
-| AbilityValidator           | Cast, confirm and execute validation                   |
-| Delivery Strategies        | Spawns projectile only                                 |
-| Projectile                 | Projectile movement and collision                      |
-| InstantDelivery            | Determines affected targets                            |
-| AbilityImpactExecutor      | Applies effects to resolved targets                    |
-| Effects                    | Apply gameplay outcomes                                |
+| System                     | Responsibility                                                                     |
+| -------------------------- | ------------------------------------------------------                             |
+| PlayerAbilityController    | Reads player input and starts ability flow                                         |
+| AbilityCast                | Temporary confirm-cast lifecycle                                                   |
+| AbilityTargetingCalculator | Builds AbilityTargetingData from resolver output                                   |
+| AbilityTargetingData       | Stores targeting information for the current cast                                  |
+| AbilityTargetResolver      | Raw camera/world queries                                                           |
+| AbilityUser                | Starts ability execution and cooldowns                                             |
+| AbilityTargetingAdjuster   | Adjusts targeting before validation (for example, clamping point targets to range) |
+| AbilityValidator           | Checks cooldowns and whether the requested target is valid                         |
+| Delivery Strategies        | Spawns projectile only                                                             |
+| Projectile                 | Projectile movement and collision                                                  |
+| InstantDelivery            | Determines affected targets                                                        |
+| AbilityImpactExecutor      | Applies effects to resolved targets                                                |
+| Effects                    | Apply gameplay outcomes                                                            |
 
 
 Design Rule:
