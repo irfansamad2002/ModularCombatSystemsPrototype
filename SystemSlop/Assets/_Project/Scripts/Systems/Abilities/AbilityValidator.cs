@@ -36,7 +36,7 @@ public class AbilityValidator
                 if (targetingData.target == null)
                     return false;
 
-                if(!IsTargetInRange(user.Firepoint, ability, targetingData))
+                if(!IsTargetInRange(user.transform, ability, targetingData))
                     return false;
 
                 return true;
