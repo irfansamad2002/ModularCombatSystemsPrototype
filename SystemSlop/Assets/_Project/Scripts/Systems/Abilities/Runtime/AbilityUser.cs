@@ -21,11 +21,13 @@ namespace Project.Systems.Abilities.Runtime
         private InstantDelivery _instantDelivery;
         private AbilityValidator _validator;
         private AbilityImpactExecutor _impactExecutor;
+        private AbilityTargetAdjuster _targetAdjuster;
 
         private void Awake()
         {
             _cooldowns = new float[abilities.Count];
 
+            _targetAdjuster = new AbilityTargetAdjuster();
             _validator = new AbilityValidator(); 
 
             _impactExecutor = new AbilityImpactExecutor();
@@ -33,10 +35,13 @@ namespace Project.Systems.Abilities.Runtime
             _instantDelivery = new InstantDelivery(_impactExecutor);
             _projectileDelivery = new ProjectileDelivery(_impactExecutor);
             _delayedDelivery = new DelayedDelivery();
+
         }
 
         public void TryUseAbility(AbilityData ability, AbilityTargetingData targetingData)
         {
+            _targetAdjuster.Adjust(firePoint, ability, ref targetingData);
+
             if (!_validator.CanUse(this, ability, targetingData))
                 return;
 
@@ -154,7 +159,7 @@ namespace Project.Systems.Abilities.Runtime
 
         public bool CanConfirmCast(AbilityData ability, AbilityTargetingData targetingData)
         {
-            return _validator.CanConfirmCast(ability, targetingData);
+            return _validator.CanConfirmCast(this, ability, targetingData);
         }
 
         public bool CanStartCast(AbilityData ability)

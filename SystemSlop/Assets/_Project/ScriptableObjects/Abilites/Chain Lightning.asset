@@ -16,7 +16,7 @@ MonoBehaviour:
   description: 
   icon: {fileID: 0}
   cooldown: 1
-  castRange: 10
+  castRange: 2.96
   radius: 3
   targetingType: 2
   deliveryType: 0

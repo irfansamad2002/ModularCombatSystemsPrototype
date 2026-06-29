@@ -9,15 +9,15 @@ public class AbilityValidator
         return ValidateCooldown(user, ability);
     }
 
-    public bool CanConfirmCast(AbilityData ability, AbilityTargetingData targetingData)
+    public bool CanConfirmCast(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
     {
-        return ValidateTargeting(ability, targetingData);
+        return ValidateTargeting(user,ability, targetingData);
     }
 
 
     public bool CanUse(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
     {
-        return ValidateCooldown(user,ability) && ValidateTargeting(ability, targetingData);
+        return ValidateCooldown(user,ability) && ValidateTargeting(user, ability, targetingData);
     }
 
     private bool ValidateCooldown(AbilityUser user, AbilityData ability)
@@ -25,7 +25,7 @@ public class AbilityValidator
         return !user.IsOnCooldown(ability);
     }
 
-    private bool ValidateTargeting(AbilityData ability, AbilityTargetingData targetingData)
+    private bool ValidateTargeting(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
     {
         switch (ability.targetingType)
         {
@@ -33,7 +33,13 @@ public class AbilityValidator
                 return targetingData.hasTargetPoint;
 
             case TargetingType.Target:
-                return targetingData.target != null;
+                if (targetingData.target == null)
+                    return false;
+
+                if(!IsTargetInRange(user.Firepoint, ability, targetingData))
+                    return false;
+
+                return true;
 
             case TargetingType.Self:
             case TargetingType.None:
@@ -42,5 +48,11 @@ public class AbilityValidator
             default:
                 return false;
         }
+    }
+
+    private bool IsTargetInRange(Transform caster, AbilityData ability, AbilityTargetingData targetingData)
+    {
+        return Vector3.Distance(caster.position, targetingData.target.transform.position) <= ability.castRange;
+
     }
 }

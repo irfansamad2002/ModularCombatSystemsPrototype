@@ -11,6 +11,7 @@ namespace Project.Systems.Abilities.Runtime
 
         private AbilityTargetingData _targetingData;
         private AbilityTargetingIndicator _indicator;
+        private AbilityTargetAdjuster _targetAdjuster;
 
         private bool _isCasting;
 
@@ -27,7 +28,7 @@ namespace Project.Systems.Abilities.Runtime
             _targetingCalculator = calculator;
 
             _targetingData = _targetingCalculator.CalculateTargeting(_ability);
-
+            _targetAdjuster = new AbilityTargetAdjuster();
 
             CreateIndicator();
 
@@ -40,6 +41,8 @@ namespace Project.Systems.Abilities.Runtime
                 return;
 
             _targetingData = _targetingCalculator.CalculateTargeting(_ability);
+
+            _targetAdjuster.Adjust(_user.Firepoint, _ability, ref _targetingData);
 
             UpdateIndicator();
         

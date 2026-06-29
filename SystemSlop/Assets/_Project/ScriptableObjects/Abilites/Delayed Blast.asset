@@ -21,13 +21,13 @@ MonoBehaviour:
   radius: 2
   targetingType: 1
   deliveryType: 2
+  castMode: 1
   effects:
   - {fileID: 11400000, guid: 2ebed502e72e5bb4abcaeeb0d179aeab, type: 2}
   - {fileID: 11400000, guid: 1ebc22b40ca7cc04386d530aa7a2ad68, type: 2}
   impactVFX: {fileID: 8194992990867289339, guid: 99bc28c0d45f51c4fbac01080b73edc7, type: 3}
   telegraphVFX: {fileID: 2291292041173185548, guid: 3defaafd10448c94190ef745ed94f77a, type: 3}
   projectile: {fileID: 0}
-  castMode: 1
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
