@@ -16,7 +16,7 @@ public class AbilityTargetingCalculator
 
         targetingData.direction = _resolver.GetAimDirection();
                 
-        switch (ability.targetingType)
+        switch (ability.targetingSettings.targetingType)
         {
             case TargetingType.Point:
                 if (_resolver.TryGetAimPoint(out var point))

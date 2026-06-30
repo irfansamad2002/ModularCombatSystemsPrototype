@@ -17,22 +17,22 @@ public class ProjectileDelivery
 
         Vector3 dir = (destination - firePoint.position).normalized;
 
-        var projectileGO = Object.Instantiate(ability.projectile.prefab,
+        var projectileGO = Object.Instantiate(ability.deliverySettings.projectile.prefab,
             firePoint.position,
             Quaternion.LookRotation(dir));
 
         var projectile = projectileGO.GetComponent<Projectile>();
 
         projectile.Init(ability.effects,
-            ability.projectile.speed,
-            ability.radius,
-            ability.targetLayers,
-            ability.impactVFX,
-            ability.minDistanceThreshold,
-            ability.minFalloff
+            ability.deliverySettings.projectile.speed,
+            ability.impactSettings.radius,
+            ability.impactSettings.targetLayers,
+            ability.deliverySettings.impactVFX,
+            ability.deliverySettings.projectile.minDistanceThreshold,
+            ability.deliverySettings.projectile.minFalloff
             );
 
-        Object.Destroy(projectileGO, ability.projectile.lifetime);
+        Object.Destroy(projectileGO, ability.deliverySettings.projectile.lifetime);
     }
 
     

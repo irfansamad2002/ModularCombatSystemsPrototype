@@ -14,7 +14,7 @@ public class InstantDelivery
 
     public void Execute(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
     {
-        switch (ability.areaShape)
+        switch (ability.impactSettings.areaShape)
         {
             case AreaShape.None:
                 ExecuteSingleTargetInstant(user, ability, targetingData);
@@ -45,7 +45,7 @@ public class InstantDelivery
     }
     private GameObject ResolveTarget(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
     {
-        switch (ability.targetingType)
+        switch (ability.targetingSettings.targetingType)
         {
             case TargetingType.Target:
                 return targetingData.target;
@@ -65,7 +65,7 @@ public class InstantDelivery
     {
         Vector3 center = user.GetTargetPosition(targetingData);
 
-        var targets = AreaQuery.GetTargetsSphere(center, ability.radius, user.TargetLayer, user.transform);
+        var targets = AreaQuery.GetTargetsSphere(center, ability.impactSettings.radius, user.TargetLayer, user.transform);
 
         _impactExecutor.ExecuteTargets(targets,ability,targetingData);
     }
@@ -76,7 +76,7 @@ public class InstantDelivery
 
         var sphereTargets = AreaQuery.GetTargetsSphere(
             origin,
-            ability.radius,
+            ability.impactSettings.radius,
             user.TargetLayer,
             user.transform);
 
@@ -84,7 +84,7 @@ public class InstantDelivery
             sphereTargets,
             origin,
             targetingData.direction,
-            ability.coneAngle);
+            ability.impactSettings.coneAngle);
 
         _impactExecutor.ExecuteTargets(coneTargets, ability, targetingData);
     }

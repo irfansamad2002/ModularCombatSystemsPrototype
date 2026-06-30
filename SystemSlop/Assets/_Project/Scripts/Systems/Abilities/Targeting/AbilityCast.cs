@@ -79,7 +79,7 @@ namespace Project.Systems.Abilities.Runtime
             if (_indicator == null)
                 return;
 
-            switch (_ability.targetingType)
+            switch (_ability.targetingSettings.targetingType)
             {
                 case TargetingType.Point:
                     _indicator.SetPosition(_targetingData.targetPoint);
@@ -109,14 +109,14 @@ namespace Project.Systems.Abilities.Runtime
 
         private void CreateIndicator()
         {
-            if (_ability.indicatorPrefab == null)
+            if (_ability.targetingSettings.indicatorPrefab == null)
                 return;
 
-            var obj = Object.Instantiate(_ability.indicatorPrefab);
+            var obj = Object.Instantiate(_ability.targetingSettings.indicatorPrefab);
 
             _indicator = obj.GetComponent<AbilityTargetingIndicator>();
 
-            _indicator?.Initialize(_ability.radius);
+            _indicator?.Initialize(_ability.impactSettings.radius);
         }
 
         // ========================================
@@ -133,9 +133,9 @@ namespace Project.Systems.Abilities.Runtime
             GUILayout.Space(5);
 
             // ================= TARGETING =================
-            GUILayout.Label($"TARGETING TYPE: {_ability.targetingType}");
+            GUILayout.Label($"TARGETING TYPE: {_ability.targetingSettings.targetingType}");
 
-            switch (_ability.targetingType)
+            switch (_ability.targetingSettings.targetingType)
             {
                 case TargetingType.Point:
                     GUILayout.Label($"Aim Point: {_targetingData.targetPoint}");
@@ -177,12 +177,12 @@ namespace Project.Systems.Abilities.Runtime
             if (_targetingData.target == null) return false;
 
             return Vector3.Distance(_user.transform.position, _targetingData.target.transform.position)
-                   <= _ability.castRange;
+                   <= _ability.targetingSettings.castRange;
         }
 
         private bool IsContextValidDebug() //Debug ContextValidation
         {
-            switch (_ability.targetingType)
+            switch (_ability.targetingSettings.targetingType)
             {
                 case TargetingType.Point:
                     return _targetingData.hasTargetPoint;

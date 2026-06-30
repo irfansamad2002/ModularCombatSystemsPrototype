@@ -13,36 +13,14 @@ namespace Project.Systems.Abilities.Data
         public Sprite icon;
 
         public float cooldown;
-        public float castRange = 10f; //Optional
-        public float radius;
-        public TargetingType targetingType;
-        public DeliveryType deliveryType;
-        public CastMode castMode;
 
+        public TargetingSettings targetingSettings;
+        public DeliverySettings deliverySettings;
+        public ImpactSettings impactSettings;
+
+        [Header("Effects")]
         public List<EffectData> effects;
 
-        [Header("VFX")]
-        public GameObject impactVFX;
-        public GameObject telegraphVFX;
-        //public GameObject castVFX; // example: glowly hand type shit
-
-        [Header("Projectile")]
-        public ProjectileData projectile; //Optional
-        public LayerMask targetLayers;
-        [Space(10)]
-        public GameObject indicatorPrefab;//Optional : if null which mean no need indicators
-        [Space(10)]
-        public float minDistanceThreshold = 0.1f;
-        public float minFalloff = 0.2f;
-
-
-        [Header("Area")]
-        public AreaShape areaShape;
-        [Range(0f, 360f)]
-        public float coneAngle = 90f;
-
-        [Header("Delayed")]
-        public float delay = 1f;
     }
 }
 

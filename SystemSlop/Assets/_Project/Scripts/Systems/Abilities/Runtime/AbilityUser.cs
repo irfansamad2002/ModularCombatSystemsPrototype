@@ -51,7 +51,7 @@ namespace Project.Systems.Abilities.Runtime
 
         private void ExecuteAbility(AbilityData ability, AbilityTargetingData targetingData)
         {
-            switch (ability.deliveryType)
+            switch (ability.deliverySettings.deliveryType)
             {
                 case DeliveryType.Instant:
                     _instantDelivery.Execute(this, ability, targetingData);
@@ -127,7 +127,7 @@ namespace Project.Systems.Abilities.Runtime
 
         private Vector3 GetTargetPosition(AbilityData ability, AbilityTargetingData targetingData)
         {
-            switch (ability.targetingType)
+            switch (ability.targetingSettings.targetingType)
             {
                 case TargetingType.Point:
                     return targetingData.targetPoint;

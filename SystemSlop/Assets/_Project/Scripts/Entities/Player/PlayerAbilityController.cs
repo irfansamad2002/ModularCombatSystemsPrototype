@@ -112,7 +112,7 @@ namespace Project.Entities.Player
         {
             var ability = abilityUser.GetAbility(index);
 
-            switch (ability.castMode)
+            switch (ability.targetingSettings.castMode)
             {
                 case CastMode.Instant:
                     ExecuteInstantAbility(ability);

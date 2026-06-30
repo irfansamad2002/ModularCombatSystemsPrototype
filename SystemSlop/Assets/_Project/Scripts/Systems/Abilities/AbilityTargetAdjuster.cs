@@ -9,10 +9,10 @@ public class AbilityTargetAdjuster
            ref AbilityTargetingData targetingData)
     {
 
-        switch (ability.targetingType)
+        switch (ability.targetingSettings.targetingType)
         {
             case TargetingType.Point:
-                if (ability.deliveryType == DeliveryType.Projectile)
+                if (ability.deliverySettings.deliveryType == DeliveryType.Projectile)
                     return;
                 ClampPointToRange(caster, ability, ref targetingData);
                 break;
@@ -37,14 +37,14 @@ public class AbilityTargetAdjuster
     {
         Vector3 toPoint = targetingData.targetPoint - caster.position;
 
-        if (toPoint.magnitude <= ability.castRange)
+        if (toPoint.magnitude <= ability.targetingSettings.castRange)
         {
             return;
         }
 
         Vector3 direction = toPoint.normalized;
 
-        targetingData.targetPoint = caster.position + direction * ability.castRange;
+        targetingData.targetPoint = caster.position + direction * ability.targetingSettings.castRange;
         
     }
 }

@@ -27,7 +27,7 @@ public class AbilityValidator
 
     private bool ValidateTargeting(AbilityUser user, AbilityData ability, AbilityTargetingData targetingData)
     {
-        switch (ability.targetingType)
+        switch (ability.targetingSettings.targetingType)
         {
             case TargetingType.Point:
                 return targetingData.hasTargetPoint;
@@ -52,7 +52,7 @@ public class AbilityValidator
 
     private bool IsTargetInRange(Transform caster, AbilityData ability, AbilityTargetingData targetingData)
     {
-        return Vector3.Distance(caster.position, targetingData.target.transform.position) <= ability.castRange;
+        return Vector3.Distance(caster.position, targetingData.target.transform.position) <= ability.targetingSettings.castRange;
 
     }
 }

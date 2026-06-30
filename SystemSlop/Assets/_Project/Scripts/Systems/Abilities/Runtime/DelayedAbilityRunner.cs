@@ -42,7 +42,7 @@ namespace Project.Systems.Abilities
         {
             _telegraphInstace = SpawnTelegraphVFX(ability, targetingData);
 
-            yield return new WaitForSeconds(ability.delay);
+            yield return new WaitForSeconds(ability.deliverySettings.delay);
 
             targetingData.impactPoint = targetingData.targetPoint;
             targetingData.hasImpactPoint = true;
@@ -60,17 +60,17 @@ namespace Project.Systems.Abilities
 
         private GameObject SpawnTelegraphVFX(AbilityData ability, AbilityTargetingData context)
         {
-            if (ability.deliveryType != DeliveryType.Delayed) return null;
+            if (ability.deliverySettings.deliveryType != DeliveryType.Delayed) return null;
 
-            if (ability.telegraphVFX == null) return null;
+            if (ability.deliverySettings.telegraphVFX == null) return null;
 
-            GameObject obj = Instantiate(ability.telegraphVFX, context.targetPoint,Quaternion.identity);
+            GameObject obj = Instantiate(ability.deliverySettings.telegraphVFX, context.targetPoint,Quaternion.identity);
 
             var telegraphVFX = obj.GetComponent<DelayedTelegraphVFX>();
 
             if (telegraphVFX != null)
             {
-                telegraphVFX.Init(ability.delay);
+                telegraphVFX.Init(ability.deliverySettings.delay);
             }
 
             return obj;
@@ -78,11 +78,11 @@ namespace Project.Systems.Abilities
 
         private void SpawnImpactVFX(AbilityData ability, AbilityTargetingData context)
         {
-            if (ability.impactVFX == null)
+            if (ability.deliverySettings.impactVFX == null)
                 return;
 
             Instantiate(
-                ability.impactVFX,
+                ability.deliverySettings.impactVFX,
                 context.targetPoint,
                 Quaternion.identity
             );
