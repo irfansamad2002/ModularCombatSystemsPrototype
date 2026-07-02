@@ -16,15 +16,23 @@ MonoBehaviour:
   description: Unleash a wide frontal attack that damages enemies in a cone.
   icon: {fileID: 0}
   cooldown: 1
-  castRange: 0
-  targetingType: 3
-  deliveryType: 0
+  targetingSettings:
+    targetingType: 0
+    castMode: 0
+    castRange: 0
+    indicatorPrefab: {fileID: 0}
+  deliverySettings:
+    deliveryType: 0
+    projectile: {fileID: 0}
+    delay: 1
+    telegraphVFX: {fileID: 0}
+    impactVFX: {fileID: 0}
+  impactSettings:
+    radius: 3
+    areaShape: 2
+    coneAngle: 90
+    targetLayers:
+      serializedVersion: 2
+      m_Bits: 128
   effects:
   - {fileID: 11400000, guid: 2ebed502e72e5bb4abcaeeb0d179aeab, type: 2}
-  projectile: {fileID: 0}
-  indicatorPrefab: {fileID: 0}
-  castMode: 0
-  areaShape: 2
-  radius: 3
-  coneAngle: 60
-  delay: 0

@@ -16,24 +16,25 @@ MonoBehaviour:
   description: Marks a target area. After a short delay, the area erupts, damaging
     all enemies within the blast radius.
   icon: {fileID: 0}
-  cooldown: 0
-  castRange: 10
-  radius: 2
-  targetingType: 1
-  deliveryType: 2
-  castMode: 1
+  cooldown: 1
+  targetingSettings:
+    targetingType: 1
+    castMode: 1
+    castRange: 3
+    indicatorPrefab: {fileID: 1582818396920697875, guid: 69bff5117ab654241b8476cfd341c38d, type: 3}
+  deliverySettings:
+    deliveryType: 2
+    projectile: {fileID: 0}
+    delay: 2.5
+    telegraphVFX: {fileID: 2291292041173185548, guid: 3defaafd10448c94190ef745ed94f77a, type: 3}
+    impactVFX: {fileID: 8194992990867289339, guid: 99bc28c0d45f51c4fbac01080b73edc7, type: 3}
+  impactSettings:
+    radius: 1
+    areaShape: 1
+    coneAngle: 90
+    targetLayers:
+      serializedVersion: 2
+      m_Bits: 128
   effects:
   - {fileID: 11400000, guid: 2ebed502e72e5bb4abcaeeb0d179aeab, type: 2}
   - {fileID: 11400000, guid: 1ebc22b40ca7cc04386d530aa7a2ad68, type: 2}
-  impactVFX: {fileID: 8194992990867289339, guid: 99bc28c0d45f51c4fbac01080b73edc7, type: 3}
-  telegraphVFX: {fileID: 2291292041173185548, guid: 3defaafd10448c94190ef745ed94f77a, type: 3}
-  projectile: {fileID: 0}
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  indicatorPrefab: {fileID: 1582818396920697875, guid: 69bff5117ab654241b8476cfd341c38d, type: 3}
-  minDistanceThreshold: 0.1
-  minFalloff: 0.2
-  areaShape: 1
-  coneAngle: 360
-  delay: 3

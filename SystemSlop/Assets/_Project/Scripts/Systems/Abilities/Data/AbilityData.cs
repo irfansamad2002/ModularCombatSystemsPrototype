@@ -18,7 +18,6 @@ namespace Project.Systems.Abilities.Data
         public DeliverySettings deliverySettings;
         public ImpactSettings impactSettings;
 
-        [Header("Effects")]
         public List<EffectData> effects;
 
     }
