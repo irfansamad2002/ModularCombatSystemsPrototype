@@ -1,4 +1,6 @@
 using Project.Systems.Abilities.Data;
+using Project.Systems.Effects;
+using Unity.VisualScripting;
 using UnityEditor;
 [CustomEditor(typeof(AbilityData))]
 public class AbilityDataEditor : Editor
@@ -97,16 +99,22 @@ public class AbilityDataEditor : Editor
         EditorGUILayout.PropertyField(castModeProp);
 
         var targetingType = (TargetingType)targetingTypeProp.enumValueIndex;
-
+        var castMode = (CastMode)castModeProp.enumValueIndex;
+        
         if (targetingType == TargetingType.Point ||
            targetingType == TargetingType.Target)
         {
             EditorGUILayout.PropertyField(castRangeProp);
+           
         }
 
-        if ((CastMode)castModeProp.enumValueIndex == CastMode.Confirm)
+        if (castMode == CastMode.Confirm)
         {
             EditorGUILayout.PropertyField(indicatorPrefabProp);
+            if (indicatorPrefabProp.objectReferenceValue == null)
+            {
+                EditorGUILayout.HelpBox("CastMode Confirm requires a indicatorPrefab asset.", MessageType.Warning);
+            }
         }
 
         EditorGUILayout.Space();
@@ -118,6 +126,9 @@ public class AbilityDataEditor : Editor
 
         EditorGUILayout.PropertyField(deliveryTypeProp);
         var deliveryType = (DeliveryType)deliveryTypeProp.enumValueIndex;
+
+        
+
         switch (deliveryType)
         {
             case DeliveryType.Instant:
@@ -125,6 +136,12 @@ public class AbilityDataEditor : Editor
             case DeliveryType.Projectile:
                 EditorGUILayout.PropertyField(projectileProp);
                 EditorGUILayout.PropertyField(impactVFXProp);
+                if (projectileProp.objectReferenceValue == null)
+                {
+                    EditorGUILayout.HelpBox(
+                        "Projectile Delivery requires a ProjectileData asset.",
+                        MessageType.Error);
+                }
                 break;
             case DeliveryType.Delayed:
                 EditorGUILayout.PropertyField(delayProp);
@@ -145,6 +162,8 @@ public class AbilityDataEditor : Editor
 
         var areaShape = (AreaShape)areaShapeProp.enumValueIndex;
 
+        
+
         switch (areaShape)
         {
             case AreaShape.None:
@@ -159,17 +178,41 @@ public class AbilityDataEditor : Editor
                 EditorGUILayout.PropertyField(radiusProp);
                 EditorGUILayout.PropertyField(coneAngleProp);
                 EditorGUILayout.PropertyField(targetLayersProp);
+                
                 break;
             default:
                 break;
         }
+
+        if ((areaShape == AreaShape.Cone || areaShape == AreaShape.Sphere) && radiusProp.floatValue <= 0)
+        {
+            EditorGUILayout.HelpBox("Radius should be greater than 0.", MessageType.Warning);
+        }
+
+
         EditorGUILayout.Space();
     }
 
     private void DrawEffect()
     {
-        EditorGUILayout.PropertyField(effectsProp);
+        bool hasValidEffect = false;
 
+        for (int i = 0; i < effectsProp.arraySize; i++)
+        {
+            var effect = effectsProp.GetArrayElementAtIndex(i);
+
+            if (effect.objectReferenceValue != null)
+            {
+                hasValidEffect = true;
+                break;
+            }
+        }
+
+        if (!hasValidEffect)
+        {
+            EditorGUILayout.HelpBox("This ability has no valid effects assigned.",MessageType.Warning);
+        }
+        EditorGUILayout.PropertyField(effectsProp, true);
         EditorGUILayout.Space();
 
     }
