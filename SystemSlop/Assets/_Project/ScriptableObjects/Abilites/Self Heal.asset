@@ -16,11 +16,23 @@ MonoBehaviour:
   description: Restore a portion of your health instantly.
   icon: {fileID: 0}
   cooldown: 1
-  castRange: 0
-  targetingType: 3
-  deliveryType: 0
+  targetingSettings:
+    targetingType: 3
+    castMode: 0
+    castRange: 0
+    indicatorPrefab: {fileID: 0}
+  deliverySettings:
+    deliveryType: 0
+    projectile: {fileID: 0}
+    delay: 1
+    telegraphVFX: {fileID: 0}
+    impactVFX: {fileID: 0}
+  impactSettings:
+    radius: 0
+    areaShape: 0
+    coneAngle: 90
+    targetLayers:
+      serializedVersion: 2
+      m_Bits: 0
   effects:
   - {fileID: 11400000, guid: 331c3cd5358a20b4cab6e504a0e8e0c4, type: 2}
-  projectile: {fileID: 0}
-  indicatorPrefab: {fileID: 0}
-  castMode: 0

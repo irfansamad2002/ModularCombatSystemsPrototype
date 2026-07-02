@@ -28,6 +28,9 @@ public class AbilityDataEditor : Editor
     private SerializedProperty coneAngleProp;
     private SerializedProperty targetLayersProp;
 
+    private SerializedProperty effectsProp; 
+
+
 
     private void OnEnable()
     {
@@ -55,6 +58,10 @@ public class AbilityDataEditor : Editor
         coneAngleProp = impactSettingsProp.FindPropertyRelative("coneAngle");
         targetLayersProp = impactSettingsProp.FindPropertyRelative("targetLayers");
 
+        effectsProp = serializedObject.FindProperty("effects");
+
+
+
     }
     public override void OnInspectorGUI()
     {
@@ -64,6 +71,7 @@ public class AbilityDataEditor : Editor
         DrawTargeting();
         DrawDelivery();
         DrawImpact();
+        DrawEffect();
 
         serializedObject.ApplyModifiedProperties();
 
@@ -156,5 +164,13 @@ public class AbilityDataEditor : Editor
                 break;
         }
         EditorGUILayout.Space();
+    }
+
+    private void DrawEffect()
+    {
+        EditorGUILayout.PropertyField(effectsProp);
+
+        EditorGUILayout.Space();
+
     }
 }

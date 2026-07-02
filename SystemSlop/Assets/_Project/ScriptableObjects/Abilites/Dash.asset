@@ -16,11 +16,23 @@ MonoBehaviour:
   description: Quickly surge forward to reposition or evade danger.
   icon: {fileID: 0}
   cooldown: 1
-  castRange: 10
-  targetingType: 3
-  deliveryType: 0
+  targetingSettings:
+    targetingType: 3
+    castMode: 0
+    castRange: 0
+    indicatorPrefab: {fileID: 0}
+  deliverySettings:
+    deliveryType: 0
+    projectile: {fileID: 0}
+    delay: 1
+    telegraphVFX: {fileID: 0}
+    impactVFX: {fileID: 0}
+  impactSettings:
+    radius: 0
+    areaShape: 0
+    coneAngle: 90
+    targetLayers:
+      serializedVersion: 2
+      m_Bits: 0
   effects:
   - {fileID: 11400000, guid: d57357f07cc6e3346b739fe59a0d5594, type: 2}
-  projectile: {fileID: 0}
-  indicatorPrefab: {fileID: 0}
-  castMode: 0
